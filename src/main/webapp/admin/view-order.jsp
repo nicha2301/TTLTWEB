@@ -141,6 +141,12 @@
                                         </option>
                                     </select>
                                 </div>
+                                <c:if test="${not empty errorMessage}">
+                                    <div style="color: red;">${errorMessage}</div>
+                                </c:if>
+                                <c:if test="${not empty updateMessage}">
+                                    <div style="color: green;">${updateMessage}</div>
+                                </c:if>
                                 <div class="col-md-3">
                                     <button class="btn btn-primary">Lưu thay đổi</button>
                                 </div>

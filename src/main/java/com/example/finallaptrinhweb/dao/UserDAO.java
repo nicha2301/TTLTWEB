@@ -120,7 +120,7 @@ public class UserDAO {
         if (!passwords.isEmpty()) {
             return passwords.get(0);
         } else {
-            return null; // Hoặc giá trị mặc định khác tùy thuộc vào logic của bạn
+            return null;
         }
     }
 
@@ -178,6 +178,7 @@ public class UserDAO {
             String hashedPasswordFromDatabase = user.getPassword();
             return username.equals(user.getUsername()) && BCrypt.checkpw(password, hashedPasswordFromDatabase) ? user : null;
         }
+        
     }
 
     public void addAdmin(String username, String email, String password) throws SQLException {

@@ -86,7 +86,7 @@
                     <div class="user-dropdown-content" id="user-dropdown-content">
                         <ul class="user-menu">
                             <li class="user-menu-item">
-                                <a href="updateinfouser"><span class="nav-link-text">Quản lý thông tin cá
+                                <a href="updateinfouser?action=show"><span class="nav-link-text">Quản lý thông tin cá
                                                 nhân</span></a>
                             </li>
                             <li class="user-menu-item">

@@ -36,7 +36,7 @@ public class OrderProductDAO {
                     orderProduct.setQuantity(resultSet.getInt("quantity"));
                     orderProduct.setPrice(resultSet.getDouble("price"));
                     orderProduct.setImageUrl(resultSet.getString("imageUrl"));
-                    orderProduct.setTotal(resultSet.getDouble("price"), resultSet.getInt("quantity"));
+//                    orderProduct.setTotal(resultSet.getDouble("price"), resultSet.getInt("quantity"));
                     productList.add(orderProduct);
                 }
                 resultSet.close();
@@ -49,7 +49,7 @@ public class OrderProductDAO {
         return productList;
     }
     public static void main(String[] args) {
-        System.out.println(loadOrderProductByOrderId(1));
+        System.out.println(loadOrderProductByOrderId(111118));
     }
 
     public static int addOrderProduct(int orderId, int productId, int quantity, double price, double totalPrice) {

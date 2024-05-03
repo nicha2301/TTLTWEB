@@ -1,5 +1,6 @@
 package com.example.finallaptrinhweb.controller.admin;
 
+import com.example.finallaptrinhweb.dao.CategoryDao;
 import com.example.finallaptrinhweb.model.Order;
 import com.example.finallaptrinhweb.model.OrderProduct;
 import jakarta.servlet.ServletException;
@@ -27,10 +28,21 @@ public class ViewOrder extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         String status = request.getParameter("status");
 
-        if (status != null)
-            updateStatusById(id, status);
+        CategoryDao dao = new CategoryDao();
 
-        Order order = loadOrder_view(id);
+
+        if(status != null) {
+            Order order = dao.loadOrder_view(id);
+            String currentStatus = order.getStatus();
+            // Kiểm tra trạng thái hợp lệ
+            if(canChangeState(currentStatus, status)) {
+                updateStatusById(id, status);
+                request.setAttribute("updateMessage", "Trạng thái đơn hàng đã được cập nhật thành: " + status);
+            } else {
+                request.setAttribute("errorMessage", "Không thể chuyển từ trạng thái " + currentStatus + " sang trạng thái " + status);
+            }
+        }
+        Order order = dao.loadOrder_view(id);
         request.setAttribute("view_order", order);
         request.setAttribute("t_p",order.getTotalPay());
         request.setAttribute("ship",order.getShipPrice());
@@ -43,4 +55,20 @@ public class ViewOrder extends HttpServlet {
         request.getRequestDispatcher("view-order.jsp").forward(request, response);
 
     }
+
+    private boolean canChangeState(String currentState, String desiredState) {
+        switch (currentState) {
+            case "Đã hủy":
+            case "Bị từ chối":
+            case "Giao hàng thành công":
+                return false;
+            case "Chờ xử lý":
+                return desiredState.equals("Đang giao hàng") || desiredState.equals("Đã hủy");
+            case "Đang giao hàng":
+                return desiredState.equals("Giao hàng thành công") || desiredState.equals("Bị từ chối");
+            default:
+                return false;
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.finallaptrinhweb.controller.admin;
 
+import com.example.finallaptrinhweb.dao.CategoryDao;
 import com.example.finallaptrinhweb.dao.OrderDAO;
 import com.example.finallaptrinhweb.model.Order;
 import jakarta.servlet.ServletException;
@@ -22,12 +23,13 @@ public class TotalReport extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String type_view = request.getParameter("type_view");
+        CategoryDao dao = new CategoryDao();
         List<Order> orderList;
 
         if(type_view == null) {
-            orderList = loadAllOrder();
+            orderList = dao.loadAllOrder();
         } else {
-            orderList = loadOrderByStatus(type_view);
+            orderList = dao.loadOrderByStatus(type_view);
         }
 
         List<String> listStatus = getAllStatus();

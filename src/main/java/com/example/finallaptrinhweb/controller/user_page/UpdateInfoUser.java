@@ -9,6 +9,7 @@ import com.example.finallaptrinhweb.model.User;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+
 import java.util.List;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -25,7 +26,7 @@ public class UpdateInfoUser extends HttpServlet {
         // Lấy thông tin người dùng từ session
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("auth");
-
+        String action = request.getParameter("action");
         // Kiểm tra xem user có tồn tại không
         if (user == null) {
             // Xử lý khi người dùng không tồn tại, có thể chuyển hướng hoặc xử lý khác tùy vào yêu cầu của bạn.
@@ -42,16 +43,21 @@ public class UpdateInfoUser extends HttpServlet {
         String ward = request.getParameter("ward");
         String detail_address = request.getParameter("address");
 
-
-        List<Order> orders = OrderDAO.loadOrderByUserId(user.getId());
-        request.setAttribute("order", orders);
-
         try {
-            UserDAO.getInstance().updateUserInfor(user.getEmail(), fullName, birthday, city, district, ward, detail_address, phone);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("./user_info.jsp");
-            dispatcher.forward(request, response);
+            if (action.equalsIgnoreCase("show")) {
+                List<Order> orders = OrderDAO.loadOrderByUserId(user.getId());
+                request.setAttribute("order", orders);
+            } else if (action.equalsIgnoreCase("update")) {
+                UserDAO.getInstance().updateUserInfor(user.getEmail(), fullName, birthday, city, district, ward, detail_address, phone);
+            }
+
+            User info = (User) UserDAO.getInstance().GetInfor(user.getEmail());
+            request.setAttribute("info", info);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("./user_info.jsp");
+        dispatcher.forward(request, response);
     }
 }

@@ -63,23 +63,14 @@
                                     <div class="content">Quản lý thông tin hồ sơ để bảo mật tài khoản</div>
                                 </header>
                                 <%--thông tin user--%>
-                                <%
-                                    User infor = UserDAO.getInstance().GetInfor(user.getEmail());
-                                    String fullname = infor.getFullName();
-                                    String dob = String.valueOf(infor.getDateOfBirth());
-                                    String phone = infor.getPhone();
-                                    String city = infor.getCity();
-                                    String district = infor.getDistrict();
-                                    String ward = infor.getWard();
-                                    String detail_address = infor.getDetail_address();
-                                %>
-                                <form class="formAcount validate clearfix" method="post" action="updateinfouser">
+
+                                <form class="formAcount validate clearfix" method="post" action="updateinfouser?action=update">
                                     <div class="form-group clearfix">
                                         <div class="row">
                                             <label class="col-md-3 control-label"> Họ tên: <span>(*)</span></label>
                                             <div class="col-lg-6 col-md-9">
                                                 <input type="text" id="fullName" name="fullName"
-                                                       value="<%=fullname == null ? "Họ và tên": fullname%>"
+                                                       value="${info.fullName}"
                                                        placeholder="Họ tên"
                                                        class="validate[required,minSize[4],maxSize[32]] form-control input-sm"
                                                        required>
@@ -91,7 +82,7 @@
                                             <label class="col-md-3 control-label">Ngày sinh: <span></span></label>
                                             <div class="col-lg-6 col-md-9">
                                                 <input type="date" id="birthday" name="birthday"
-                                                       value="<%=dob == null ? "": dob%>"
+                                                       value="${info.dateOfBirth}"
                                                        placeholder="Ngày sinh"
                                                        class="validate[required] form-control input-sm" required>
                                             </div>
@@ -102,7 +93,7 @@
                                             <label class="col-md-3 control-label">Điện thoại: <span></span></label>
                                             <div class="col-lg-6 col-md-9">
                                                 <input type="text" id="mobile" name="phone"
-                                                       value="<%=phone == null ? "": phone%>"
+                                                       value="${info.phone}"
                                                        placeholder="Điện thoại"
                                                        class="validate[required,custom[phone]] form-control input-sm"
                                                        required>
@@ -114,7 +105,7 @@
                                             <label class="col-md-3 control-label">Email: <span>(*)</span></label>
                                             <div class="col-lg-6 col-md-9">
                                                 <input type="text" name="email"
-                                                       value="<%=user.getEmail()%>"
+                                                       value="${info.email}"
                                                        placeholder="Email"
                                                        class="validate[required,custom[email]] form-control input-sm"
                                                        required>
@@ -127,7 +118,7 @@
                                                 <span>(*)</span></label>
                                             <div class="col-lg-6 col-md-9">
                                                 <input type="text" name="city"
-                                                       value="<%=city == null ? "Tỉnh/Thành Phố" : city%>"
+                                                       value="${info.city}"
                                                        placeholder="Thành phố"
                                                        class="validate[required,custom[email]] form-control input-sm"
                                                        required>
@@ -139,7 +130,7 @@
                                             <label class="col-md-3 control-label">Quận/ Huyện: <span>(*)</span></label>
                                             <div class="col-lg-6 col-md-9">
                                                 <input type="text" id="district" name="district"
-                                                       value="<%=district == null ? "": district%>"
+                                                       value="${info.district}"
                                                        placeholder="Quận/ Huyện"
                                                        class="validate[required,custom[email]] form-control input-sm"
                                                 >
@@ -151,7 +142,7 @@
                                             <label class="col-md-3 control-label">Xã/ Phường/ Thị trấn: <span>(*)</span></label>
                                             <div class="col-lg-6 col-md-9">
                                                 <input type="text" id="ward" name="ward"
-                                                       value="<%=ward == null ? "": ward%>"
+                                                       value="${info.ward}"
                                                        placeholder="Xã/ Phường/ Thị trấn"
                                                        class="validate[required,custom[email]] form-control input-sm"
                                                 >
@@ -164,7 +155,7 @@
                                                 <span>(*)</span></label>
                                             <div class="col-lg-6 col-md-9">
                                                 <input type="text" id="address" name="address"
-                                                       value="<%=detail_address == null ? "": detail_address%>"
+                                                       value="${info.detail_address}"
                                                        placeholder="Địa chỉ chi tiết"
                                                        class="validate[required] form-control input-sm">
                                             </div>

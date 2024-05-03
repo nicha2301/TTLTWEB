@@ -83,14 +83,21 @@ public class OrderProduct {
         this.price = price;
     }
 
+//    public double getTotal() {
+//        return total;
+//    }
+//
+//
+//    public void setTotal(double price, int quantity) {
+//        this.total = price*quantity;
+//    }
     public double getTotal() {
         return total;
     }
-
-
-    public void setTotal(double price, int quantity) {
-        this.total = price*quantity;
+    public void setTotal(double total) {
+        this.total = total;
     }
+
     @Override
     public String toString() {
         return "OrderProduct{" +

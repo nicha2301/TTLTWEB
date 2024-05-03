@@ -25,6 +25,8 @@ public class Login extends HttpServlet {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
 
+            System.out.println(username + " " + password);
+
             // Kiểm tra thông tin đăng nhập cho admin
             User adminUser = userDAO.CheckLoginAdmin(username, password);
 
@@ -37,7 +39,7 @@ public class Login extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/admin/dashboard");
             } else {
                 // Đăng nhập không thành công, chuyển hướng đến trang đăng nhập với thông báo lỗi
-                response.sendRedirect(request.getContextPath() + "/user/error-404.html");
+                response.sendRedirect(request.getContextPath() + "/admin/login");
             }
         } catch (SQLException e) {
             // Xử lý ngoại lệ SQLException

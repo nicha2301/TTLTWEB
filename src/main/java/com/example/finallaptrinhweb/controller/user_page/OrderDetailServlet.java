@@ -8,6 +8,7 @@ import com.example.finallaptrinhweb.model.Order;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -34,23 +35,11 @@ public class OrderDetailServlet extends HttpServlet {
                 // Gọi hàm loadOrderProductByOrderId để lấy danh sách sản phẩm trong đơn hàng
                 List<OrderProduct> productList = OrderProductDAO.loadOrderProductByOrderId(order_id);
 
-
-                // Tính tổng tiền sản phẩm
-                double sum = order.getTotalPay();
-//                for (OrderProduct o : productList) {
-//                    sum += o.getTotal();
-//                }
-
-                // Lấy phí ship từ đơn hàng
-                double ship = order.getShipPrice();
-
-                // Tính tổng tiền cả đơn hàng
-                double total_money = sum + ship;
-
+                System.out.println(order);
                 // Thêm các giá trị vào request để sử dụng trong JSP
-                request.setAttribute("sum", sum);
-                request.setAttribute("ship", ship);
-                request.setAttribute("total_money", total_money);
+                request.setAttribute("discount", order.getTotalAmount() - order.getTotalPay());
+                request.setAttribute("ship", order.getShipPrice());
+                request.setAttribute("total_money", order.getTotalPay() + order.getShipPrice());
                 request.setAttribute("p_list", productList);
 
                 // Chuyển hướng đến trang order_detail.jsp

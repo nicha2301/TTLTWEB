@@ -126,34 +126,34 @@
                                         </div>
                                     </div>
                                     </td>
-                                <td class="price"><%= Util.formatCurrency((double) pageContext.getAttribute("price"))%> VND</td>
-                                    <td class="quantity">${pl.quantity}</td>
-                                <td class="raw-total"><%= Util.formatCurrency((double) pageContext.getAttribute("total"))%>VND</td>
-                                </tr>
+                                <td class="price">${Util.formatCurrency(price)} VND</td>
+                                <td class="quantity">${pl.quantity}</td>
+                                <td class="raw-total">${Util.formatCurrency(total)}VND</td>
+                            </tr>
                             </c:forEach>
                             </tbody>
                             <tfoot>
-                            <c:set var="sum" value="${sum}"></c:set>
+                            <c:set var="discount" value="${discount}"></c:set>
                             <c:set var="ship" value="${ship}"></c:set>
                             <c:set var="total_money" value="${total_money}"></c:set>
                             <tr>
                                 <td colspan="4">
-                                    <span>Tạm tính</span>
+                                    <span>Mã giảm</span>
                                 </td>
-                                <td><%= Util.formatCurrency((double) pageContext.getAttribute("sum"))%>VND</td>
+                                <td>- ${Util.formatCurrency(discount)}VND</td>
                             </tr>
                             <tr>
                                 <td colspan="4">
                                     <span>Phí vận chuyển</span>
                                 </td>
-                                <td><%= Util.formatCurrency((double) pageContext.getAttribute("ship"))%>VND</td>
+                                <td>${Util.formatCurrency(ship)}VND</td>
                             </tr>
                             <tr>
                                 <td colspan="4">
                                     <span>Tổng cộng</span>
                                 </td>
                                 <td>
-                                    <span class="sum"><%= Util.formatCurrency((double) pageContext.getAttribute("total_money"))%>VND</span>
+                                    <span class="sum">${Util.formatCurrency(total_money)}VND</span>
                                 </td>
                             </tr>
                             </tfoot>
@@ -189,7 +189,7 @@
                         </select>
                         <!-- <h6>Viết nhận xét của bạn vào bên dưới:</h6> -->
                         <input class="message" type="text" name="message" placeholder="Hãy chia sẻ những điều bạn thích về sản phẩm này nhé!" style="background-color: white"><br>
-                        <label for="">Thêm hình sản phẩm nếu có (tối đa 5 hình): </label> <button style="color: #ffffff;background-color:#5e6158;border-radius: 5px;" class="chonhinh">Chọn Hình</button> <br>
+                        <label>Thêm hình sản phẩm nếu có (tối đa 5 hình): </label> <button style="color: #ffffff;background-color:#5e6158;border-radius: 5px;" class="chonhinh">Chọn Hình</button> <br>
                         <button type="button" class="submit-cm" name="submit-cm">Gửi Nhận Xét</button>
                         <!--
                                         </form> -->
@@ -209,46 +209,6 @@
 <script src="js/thuvien/jquery-3.3.1.min.js"></script>
 <script src="js/thuvien/bootstrap.min.js"></script>
 <script src="js/thuvien/main.js"></script>
-<script>
-    function confirmCancelOrder() {
-        // Sử dụng hộp thoại xác nhận
-        var confirmation = confirm("Bạn có chắc chắn muốn hủy đơn hàng không?");
-
-        // Nếu người dùng xác nhận, thực hiện hành động hủy đơn hàng
-        if (confirmation) {
-            cancelOrder();
-        }
-    }
-
-    function cancelOrder() {
-        // Thêm logic xử lý khi nút được nhấn
-        // Ví dụ: hiển thị cảnh báo, gửi yêu cầu hủy đơn hàng, v.v.
-    }
-</script>
-<script>
-    function confirmCancelOrder() {
-        // Kiểm tra trạng thái đơn hàng
-        var status = "${order.status}";
-
-        // Nếu đơn hàng đang ở trạng thái "Đang giao hàng" hoặc "Giao hàng thành công", không cho phép hủy
-        if (status === "Đang giao hàng" || status === "Giao hàng thành công") {
-            alert("Không thể hủy đơn hàng ở trạng thái " + status);
-        } else {
-            // Nếu không ở trạng thái trên, hiển thị hộp thoại xác nhận
-            var confirmation = confirm("Bạn có chắc chắn muốn hủy đơn hàng không?");
-
-            // Nếu người dùng xác nhận, thực hiện hành động hủy đơn hàng
-            if (confirmation) {
-                cancelOrder();
-            }
-        }
-    }
-
-    function cancelOrder() {
-        // Thêm logic xử lý khi nút được nhấn
-        // Ví dụ: hiển thị cảnh báo, gửi yêu cầu hủy đơn hàng, v.v.
-    }
-</script>
 
 </body>
 
