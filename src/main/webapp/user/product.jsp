@@ -7,10 +7,10 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.finallaptrinhweb.model.Product" %>
-<%@ page import="com.example.finallaptrinhweb.dao.ProductDAO" %>
-<%@ page import="com.example.finallaptrinhweb.model.Product" %>
-<%@ page import="com.example.finallaptrinhweb.model.Util" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.Product" %>
+<%@ page import="vn.edu.hcmuaf.fit.dao.ProductDAO" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.Product" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.Util" %>
 <%@ page import="java.math.BigDecimal" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="java.util.Map" %>

@@ -1,5 +1,5 @@
-<%@ page import="com.example.finallaptrinhweb.model.User" %>
-<%@ page import="com.example.finallaptrinhweb.model.Cart" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.User" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.ShoppingCart" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <% User user = (User) session.getAttribute("auth");%>
@@ -69,7 +69,7 @@
             <div class="action">
                 <div class="cart" style="margin: 0 30px 0 30px;">
                     <%
-                        Cart cart = (Cart) session.getAttribute("cart");
+                        ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
                         if (cart != null) {
                     %>
                     <span class="count"><%=cart.getTotalQuantity()%></span>

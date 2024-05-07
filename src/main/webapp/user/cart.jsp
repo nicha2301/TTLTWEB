@@ -1,8 +1,8 @@
-<%@ page import="com.example.finallaptrinhweb.model.Cart" %>
-<%@ page import="com.example.finallaptrinhweb.model.CartItem" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.ShoppingCart" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.CartItem" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.example.finallaptrinhweb.model.Util" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.Util" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -42,7 +42,7 @@
     <!-- Shoping Cart Section Begin -->
     <section class="shoping-cart spad">
         <%
-            Cart cart = (Cart) session.getAttribute("cart");
+            ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
             if (cart == null || cart.isEmpty()) {
         %>
         <h1 style="text-align: center">Vui lòng mua sắm</h1>
