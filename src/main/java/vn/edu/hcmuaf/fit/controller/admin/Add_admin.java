@@ -1,6 +1,6 @@
 package vn.edu.hcmuaf.fit.controller.admin;
 
-import vn.edu.hcmuaf.fit.dao.UserDAO;
+import vn.edu.hcmuaf.fit.dao.impl.UserDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

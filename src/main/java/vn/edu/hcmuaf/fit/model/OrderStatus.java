@@ -9,4 +9,5 @@ public class OrderStatus implements Serializable {
     private Integer id;
     private String status;
     private String description;
+
 }

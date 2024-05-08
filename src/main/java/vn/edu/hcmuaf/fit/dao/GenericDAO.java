@@ -1,13 +1,16 @@
 package vn.edu.hcmuaf.fit.dao;
 
+import java.util.List;
+
 public interface GenericDAO<T> {
 
-    <T> List<T> query(String sql, RowMapper<T> rowMapper, Object... parameters);
+    List<T> query(String sql, Class<T> bean, Object... parameters);
 
-    Integer insert(String sql, Object... parameters);
+    /**
+     * This method use for insert, update and delete records from table in database
+     */
+    Integer modify(String sql, Object... parameters);
 
-    int update(String sql, Object... parameters);
-
-    int count(String sql, Object... parameters);
+    Integer count(String sql, Object... parameters);
 
 }

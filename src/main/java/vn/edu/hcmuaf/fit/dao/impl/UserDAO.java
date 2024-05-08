@@ -1,4 +1,4 @@
-package vn.edu.hcmuaf.fit.dao;
+package vn.edu.hcmuaf.fit.dao.impl;
 
 import vn.edu.hcmuaf.fit.connection_pool.JDBIConnector;
 import vn.edu.hcmuaf.fit.model.User;
@@ -10,22 +10,19 @@ import java.util.Date;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-public class UserDAO {
+public class UserDAO extends AbsDAO<User> {
     private static UserDAO instance;
 
-    public UserDAO() {
-    }
 
     public static UserDAO getInstance() {
         if (instance == null) {
             instance = new UserDAO();
         }
-
         return instance;
     }
 
     public User CheckLogin(String email, String password) throws SQLException {
-        List<User> users = JDBIConnector.me().get().withHandle((handle) -> {
+        List<User> users = JDBIConnector.get().withHandle((handle) -> {
             return handle.createQuery("SELECT * FROM users WHERE email = ?")
                     .bind(0, email)
                     .mapToBean(User.class)
@@ -41,7 +38,7 @@ public class UserDAO {
     }
 
     public boolean CheckExistUser(String email) throws SQLException {
-        List<User> users = JDBIConnector.me().get().withHandle((handle) -> {
+        List<User> users = JDBIConnector.get().withHandle((handle) -> {
             return handle.createQuery("SELECT * FROM users WHERE email = ?")
                     .bind(0, email)
                     .mapToBean(User.class)
@@ -51,7 +48,7 @@ public class UserDAO {
     }
 
     public boolean CheckVerifiedStatus(String email) throws SQLException {
-        List<User> users = JDBIConnector.me().get().withHandle((handle) -> {
+        List<User> users = JDBIConnector.get().withHandle((handle) -> {
             return handle.createQuery("SELECT * FROM users WHERE email = ? && verify_status = ?")
                     .bind(0, email)
                     .bind(1, "verified")
@@ -62,7 +59,7 @@ public class UserDAO {
     }
 
     public int GetId() throws SQLException {
-        List<User> users = JDBIConnector.me().get().withHandle((handle) -> {
+        List<User> users = JDBIConnector.get().withHandle((handle) -> {
             return handle.createQuery("SELECT * FROM users WHERE id = (SELECT MAX(id) FROM users)")
                     .mapToBean(User.class)
                     .collect(Collectors.toList());
@@ -70,21 +67,15 @@ public class UserDAO {
         return users.get(0).getId();
     }
 
-    public User GetInfor(String email) throws SQLException {
-        List<User> users = JDBIConnector.me().get().withHandle((handle) -> {
-            return handle.createQuery("SELECT * FROM users WHERE email = ?")
-                    .bind(0, email)
-                    .mapToBean(User.class)
-                    .collect(Collectors.toList());
-        });
-        return users.get(0);
+    public List<User> GetInfor(String email) {
+        return query("SELECT * FROM users WHERE email = ?", User.class, email);
     }
 
     public void SignUp(String username, String email, String password, String code, int roleId) throws SQLException {
         Date dateCreated = new Date();
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
-        JDBIConnector.me().get().withHandle((handle) -> {
+        JDBIConnector.get().withHandle((handle) -> {
             return handle.createUpdate("INSERT INTO users (id, username, email, password, verify_status, date_created, role_id) VALUES (?, ?, ?, ?, ?, ?, ?)")
                     .bind(0, this.GetId() + 1)
                     .bind(1, username)
@@ -102,7 +93,7 @@ public class UserDAO {
     }
 
     public void SetVerifiedStatus(String authcode) throws SQLException {
-        JDBIConnector.me().get().useHandle((handle) -> {
+        JDBIConnector.get().useHandle((handle) -> {
             handle.createUpdate("UPDATE users SET verify_status = 'verified' WHERE verify_status = ?")
                     .bind(0, authcode)
                     .execute();
@@ -110,7 +101,7 @@ public class UserDAO {
     }
 
     public String getPassword(String email) throws SQLException {
-        List<String> passwords = JDBIConnector.me().get().withHandle((handle) -> {
+        List<String> passwords = JDBIConnector.get().withHandle((handle) -> {
             return handle.createQuery("SELECT password FROM users WHERE email = ?")
                     .bind(0, email)
                     .mapTo(String.class)
@@ -126,7 +117,7 @@ public class UserDAO {
 
 
     public void updateUserInfor(String email, String fullName, String birthday, String city, String district, String ward, String detail_address, String phone) throws SQLException {
-        JDBIConnector.me().get().useHandle((handle) -> {
+        JDBIConnector.get().useHandle((handle) -> {
             handle.createUpdate("UPDATE users SET fullName = ?, dateOfBirth = DATE(?), city = ?, district = ?, ward = ?, detail_address = ?, phone = ? WHERE email = ?")
                     .bind(0, fullName)
                     .bind(1, birthday)
@@ -144,7 +135,7 @@ public class UserDAO {
         // Mã hóa mật khẩu trước khi cập nhật vào cơ sở dữ liệu
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
-        JDBIConnector.me().get().useHandle((handle) -> {
+        JDBIConnector.get().useHandle((handle) -> {
             handle.createUpdate("UPDATE users SET password = ? WHERE email = ?")
                     .bind(0, hashedPassword)
                     .bind(1, email)
@@ -154,7 +145,7 @@ public class UserDAO {
 
     // Trong UserDAO
     public void resetPassword(String email, String hashedPassword) throws SQLException {
-        JDBIConnector.me().get().useHandle((handle) -> {
+        JDBIConnector.get().useHandle((handle) -> {
             handle.createUpdate("UPDATE users SET password = ? WHERE email = ?")
                     .bind(0, hashedPassword)
                     .bind(1, email)
@@ -163,7 +154,7 @@ public class UserDAO {
     }
 
     public User CheckLoginAdmin(String username, String password) throws SQLException {
-        List<User> users = JDBIConnector.me().get().withHandle((handle) -> {
+        List<User> users = JDBIConnector.get().withHandle((handle) -> {
             return handle.createQuery("SELECT * FROM users WHERE username = ? AND role_id = ?")
                     .bind(0, username)
                     .bind(1, 2) // 2 là roleId của admin (hoặc giá trị mà bạn gán cho admin)
@@ -193,7 +184,7 @@ public class UserDAO {
                 Date dateCreated = new Date();
                 String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
-                JDBIConnector.me().get().withHandle((handle) -> {
+                JDBIConnector.get().withHandle((handle) -> {
                     return handle.createUpdate("INSERT INTO users (id, username, email, password, verify_status, date_created, role_id) VALUES (?, ?, ?, ?, ?, ?, ?)")
                             .bind(0, this.GetId() + 1)
                             .bind(1, username)
@@ -212,5 +203,13 @@ public class UserDAO {
         }
     }
 
+    public Integer add(User user) {
+        String sql = "INSERT INTO users (username, email, password, role_id) VALUES (?, ?, ?, ?)";
+        return modify(sql, user.getUsername(), user.getEmail(), user.getPassword(), user.getVerified(), user.getRole().getId());
+    }
 
+    public List<User> checkExistEmail(String email) {
+        String sql = "SELECT * FROM users WHERE email =?";
+        return query(sql, User.class, email);
+    }
 }

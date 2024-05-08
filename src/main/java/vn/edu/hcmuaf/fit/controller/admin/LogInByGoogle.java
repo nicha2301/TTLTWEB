@@ -2,7 +2,7 @@ package vn.edu.hcmuaf.fit.controller.admin;
 
 
 import vn.edu.hcmuaf.fit.controller.user_page.GoogleService.Service;
-import vn.edu.hcmuaf.fit.dao.UserDAO;
+import vn.edu.hcmuaf.fit.dao.impl.UserDAO;
 import vn.edu.hcmuaf.fit.model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

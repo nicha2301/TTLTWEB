@@ -1,12 +1,14 @@
 package vn.edu.hcmuaf.fit.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.jdbi.v3.core.mapper.Nested;
 
 import java.io.Serializable;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class Wishlist implements Serializable {
+public class Wishlist extends AbsModel implements Serializable {
     @Nested("users")
     private User user;
     @Nested("products")

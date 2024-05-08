@@ -1,6 +1,7 @@
 package vn.edu.hcmuaf.fit.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.jdbi.v3.core.mapper.Nested;
 
 import java.io.Serializable;
@@ -8,7 +9,8 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 @Data
-public class User implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class User extends AbsModel implements Serializable {
     private Integer id;
     private String username;
     private String email;
@@ -35,4 +37,9 @@ public class User implements Serializable {
     public void setRole(Role role) {
         this.role = role;
     }
+
+    public Integer setVerifiedForDb(Boolean verified) {
+        return verified ? 1 : 0;
+    }
+
 }

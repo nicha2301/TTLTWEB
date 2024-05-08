@@ -1,13 +1,15 @@
 package vn.edu.hcmuaf.fit.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.jdbi.v3.core.mapper.Nested;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Data
-public class Cart implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class Cart extends AbsModel implements Serializable {
     @Nested("users")
     private User user;
     @Nested("products")

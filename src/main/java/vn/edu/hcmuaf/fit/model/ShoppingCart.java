@@ -1,6 +1,6 @@
 //package vn.edu.hcmuaf.fit.model;
 //
-//import vn.edu.hcmuaf.fit.dao.CouponCodeDAO;
+//import vn.edu.hcmuaf.fit.dao.impl.DiscountDAO;
 //import vn.edu.hcmuaf.fit.dao.ProductDAO;
 //
 //import java.util.ArrayList;
@@ -13,7 +13,7 @@
 //    private double totalPrice;
 //    private int coupon_code_id;
 //    private ProductDAO productDAO = new ProductDAO();
-//    private CouponCodeDAO couponDAO = new CouponCodeDAO();
+//    private DiscountDAO couponDAO = new DiscountDAO();
 //
 //    public ShoppingCart() {
 //    }

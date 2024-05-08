@@ -1,6 +1,6 @@
 package vn.edu.hcmuaf.fit.controller.user_page.GoogleService;
 
-import vn.edu.hcmuaf.fit.dao.UserDAO;
+import vn.edu.hcmuaf.fit.dao.impl.UserDAO;
 import vn.edu.hcmuaf.fit.connection_pool.DbProperties;
 import vn.edu.hcmuaf.fit.model.User;
 import com.google.gson.Gson;

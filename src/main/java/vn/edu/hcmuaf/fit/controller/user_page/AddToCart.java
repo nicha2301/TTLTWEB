@@ -1,6 +1,6 @@
 //package vn.edu.hcmuaf.fit.controller.user_page;
 //
-//import vn.edu.hcmuaf.fit.dao.CouponCodeDAO;
+//import vn.edu.hcmuaf.fit.dao.impl.DiscountDAO;
 //import vn.edu.hcmuaf.fit.model.Cart;
 //import vn.edu.hcmuaf.fit.model.CouponCode;
 //import jakarta.servlet.*;
@@ -22,7 +22,7 @@
 //        String discount = request.getParameter("discount");
 //
 //        HttpSession session = request.getSession();
-//        CouponCodeDAO couponDao = new CouponCodeDAO();
+//        DiscountDAO couponDao = new DiscountDAO();
 //        Cart cart = (Cart) session.getAttribute("cart");
 //        // If the cart doesn't exist, create a new one
 //        if (cart == null) {
