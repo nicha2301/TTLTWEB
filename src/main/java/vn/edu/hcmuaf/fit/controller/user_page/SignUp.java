@@ -54,30 +54,5 @@ public class SignUp extends HttpServlet {
             request.getRequestDispatcher("./signUp.jsp").forward(request, response);
         }
     }
-
-    // Phương thức kiểm tra xem mật khẩu có đủ mạnh không
-    private boolean isStrongPassword(String s) {
-        // Kiểm tra độ dài
-        if (s.length() < 8) {
-            return false;
-        }
-
-        // Kiểm tra chứa số
-        if (!s.matches(".*\\d.*")) {
-            return false;
-        }
-
-        // Kiểm tra chứa chữ in hoa
-        if (!s.matches(".*[A-Z].*")) {
-            return false;
-        }
-
-        // Kiểm tra chứa ký tự đặc biệt
-        if (!s.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")) {
-            return false;
-        }
-
-        return true;
-    }
 }
 

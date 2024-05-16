@@ -6,6 +6,7 @@ import org.jdbi.v3.core.mapper.Nested;
 
 import java.io.Serializable;
 
+@Table(name = "wishlists")
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class Wishlist extends AbsModel implements Serializable {

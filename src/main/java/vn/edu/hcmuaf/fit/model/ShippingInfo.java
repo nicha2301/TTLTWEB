@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
+@Table(name = "shipping_info")
 @Data
 public class ShippingInfo implements Serializable {
     private Integer id;

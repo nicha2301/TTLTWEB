@@ -1,10 +1,10 @@
 package vn.edu.hcmuaf.fit.model;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
+@Table(name = "social_media")
 @Data
 public class SocialMedia implements Serializable {
     private Integer id;

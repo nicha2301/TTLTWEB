@@ -5,6 +5,7 @@ import org.jdbi.v3.core.mapper.Nested;
 
 import java.io.Serializable;
 
+@Table(name = "shipping_type")
 @Data
 public class ShippingType implements Serializable {
     private Integer id;

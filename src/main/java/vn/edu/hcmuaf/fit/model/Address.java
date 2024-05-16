@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+@Table(name = "address")
 @Data
 public class Address implements Serializable {
     private Integer id;

@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+@Table(name = "feedbacks")
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Feedback extends AbsModel implements Serializable {

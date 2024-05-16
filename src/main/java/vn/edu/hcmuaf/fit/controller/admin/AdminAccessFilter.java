@@ -34,15 +34,15 @@ public class AdminAccessFilter implements Filter {
         // Lấy đường dẫn yêu cầu
         String requestURI = httpRequest.getRequestURI();
 
-        // Kiểm tra nếu đường dẫn chứa "admin" và không chứa "login"
-        if (requestURI.contains("admin") && requestURI.indexOf("login") == -1) {
+        // Kiểm tra nếu đường dẫn chứa "admin" và không chứa "signIn"
+        if (requestURI.contains("admin") && requestURI.indexOf("signIn") == -1) {
             // Kiểm tra xem người dùng đã đăng nhập hay chưa
             HttpSession session = httpRequest.getSession();
             User user = (User) session.getAttribute("adminAuth");
 
             if (user == null) {
                 // Người dùng chưa đăng nhập, chuyển hướng đến trang đăng nhập admin
-                httpResponse.sendRedirect(httpRequest.getContextPath() + "/admin/login.jsp");
+                httpResponse.sendRedirect(httpRequest.getContextPath() + "/admin/signIn.jsp");
                 return;
             }
         }

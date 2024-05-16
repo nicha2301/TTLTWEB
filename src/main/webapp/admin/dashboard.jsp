@@ -1,5 +1,5 @@
 
-<%@ page import="vn.edu.hcmuaf.fit.model.Util" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -118,7 +118,7 @@
                                                <c:if test="${ol.status eq 'Giao hàng thành công'}"><span class="badge badge-success"> Giao hàng thành công</span></c:if>
                                            </td>
                                             <td>
-                                                <div class="font-weight-600"><%= Util.formatCurrency((double)pageContext.getAttribute("totalPay")) %>VND</div>
+                                                <div class="font-weight-600"><%= Utils.formatCurrency((double)pageContext.getAttribute("totalPay")) %>VND</div>
                                             </td>
 
                                         </tr>

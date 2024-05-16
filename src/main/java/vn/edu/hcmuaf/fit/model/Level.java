@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+@Table(name = "level")
 @Data
 public class Level implements Serializable {
     private Integer id;

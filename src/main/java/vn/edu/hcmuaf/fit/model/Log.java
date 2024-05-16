@@ -6,6 +6,7 @@ import org.jdbi.v3.core.mapper.Nested;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+@Table(name = "log")
 @Data
 public class Log implements Serializable {
     private Integer id;

@@ -1,5 +1,5 @@
 
-<%@ page import="vn.edu.hcmuaf.fit.model.Util" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
 <%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -83,7 +83,7 @@
                                     <label class="col-form-label col-md-2">Ngày sinh</label>
                                     <div class=" col-md-10">
                                         <input class="form-control" type="date" name="birthday"
-                                               value="<%=Util.dateFormatNoTime((Date) pageContext.getAttribute("bd"))%>">
+                                               value="<%=Utils.dateFormatNoTime((Date) pageContext.getAttribute("bd"))%>">
 
                                     </div>
                                 </div>
@@ -97,7 +97,7 @@
                                     <label class="col-form-label col-md-2">Ngày tạo</label>
                                     <div class=" col-md-10">
                                         <input class="form-control" type="date" name="createddate"
-                                               value="<%=Util.dateFormatNoTime((Date) pageContext.getAttribute("createddate"))%>">
+                                               value="<%=Utils.dateFormatNoTime((Date) pageContext.getAttribute("createddate"))%>">
                                     </div>
                                 </div>
                                 <div class="mt-4">

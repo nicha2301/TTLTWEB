@@ -9,7 +9,7 @@ public interface GenericDAO<T> {
     /**
      * This method use for insert, update and delete records from table in database
      */
-    Integer modify(String sql, Object... parameters);
+    T modify(String sql, Class<T> bean, Object... parameters);
 
     Integer count(String sql, Object... parameters);
 

@@ -1,8 +1,10 @@
 package vn.edu.hcmuaf.fit.dao.impl;
 
 import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.mapper.Nested;
 import vn.edu.hcmuaf.fit.connection_pool.JDBIConnector;
 import vn.edu.hcmuaf.fit.dao.GenericDAO;
+import vn.edu.hcmuaf.fit.model.Table;
 
 import java.util.List;
 
@@ -15,10 +17,13 @@ public class AbsDAO<T> implements GenericDAO<T> {
         );
     }
 
+    /**
+     * insert, update, or delete
+     */
     @Override
-    public Integer modify(String sql, Object... parameters) {
+    public T modify(String sql, Class<T> bean, Object... parameters) {
         return JDBIConnector.get().withHandle(handle ->
-            bindParams(handle, sql, parameters)
+            bindParams(handle, sql, bean, parameters)
         );
     }
 
@@ -31,15 +36,26 @@ public class AbsDAO<T> implements GenericDAO<T> {
         );
     }
 
-    private int bindParams(Handle handle, String sql, Object... parameters) {
+    private T bindParams(Handle handle, String sql, Class<T> bean, Object... parameters) {
         try {
             var update = handle.createUpdate(sql);
             for (int i = 0; i < parameters.length; i++) {
                 update.bind(i, parameters[i]);
             }
-            return update.execute();
-        } catch (NullPointerException e) {
-            return 0;
+            Integer id = update.executeAndReturnGeneratedKeys("id").mapTo(Integer.class).first();
+            return query("SELECT * FROM " + getTableName(bean) + " WHERE id = ?", bean, id).get(0);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    private String getTableName(Class<?> clazz) {
+        if (clazz.isAnnotationPresent(Table.class)) {
+            Table table = clazz.getAnnotation(Table.class);
+            return table.name();
+        } else {
+            throw new IllegalArgumentException("No table annotation present in class: " + clazz.getName());
         }
     }
 }

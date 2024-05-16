@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
+@Table(name = "product_groups")
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class ProductGroups extends AbsModel implements Serializable {

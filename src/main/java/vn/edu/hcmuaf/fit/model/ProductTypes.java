@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+@Table(name = "product_types")
 @Data
 public class ProductTypes implements Serializable {
     private Integer id;

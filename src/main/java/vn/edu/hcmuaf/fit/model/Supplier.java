@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
+@Table(name = "suppliers")
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class Supplier extends AbsModel implements Serializable {

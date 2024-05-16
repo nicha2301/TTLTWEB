@@ -5,6 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+@Table(name = "payment")
 @Data
 public class Payment implements Serializable {
     private Integer id;

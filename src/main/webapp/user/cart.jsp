@@ -2,7 +2,7 @@
 <%@ page import="vn.edu.hcmuaf.fit.model.CartItem" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="vn.edu.hcmuaf.fit.model.Util" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -73,7 +73,7 @@
                                     </h5>
                                 </td>
                                 <td class="shoping__cart__price">
-                                    <%= Util.formatCurrency(item.getProduct().getPrice()) %> VND
+                                    <%= Utils.formatCurrency(item.getProduct().getPrice()) %> VND
                                 </td>
                                 <td class="shoping__cart__quantity">
                                     <div class="quantity"
@@ -92,7 +92,7 @@
                                     </div>
                                 </td>
                                 <td class="shoping__cart__total">
-                                    <%= Util.formatCurrency(item.getTotalPrice()) %> VND
+                                    <%= Utils.formatCurrency(item.getTotalPrice()) %> VND
                                 </td>
                                 <td class="shoping__cart__item__close">
                                     <a style="font-size: 18px;background-color: white"

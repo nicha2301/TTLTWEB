@@ -5,7 +5,7 @@
   Time: 8:36 CH
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page import="vn.edu.hcmuaf.fit.model.Util" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="vn.edu.hcmuaf.fit.model.Product" %>
 <%@ page import="java.util.List" %>

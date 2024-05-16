@@ -25,7 +25,7 @@
 //        User admin = (User) session.getAttribute("admin");
 //
 ////        if (admin == null) {
-////            response.sendRedirect("./admin/login.jsp");
+////            response.sendRedirect("./admin/signIn.jsp");
 ////        }
 //
 //        CategoryDao dao = new CategoryDao();

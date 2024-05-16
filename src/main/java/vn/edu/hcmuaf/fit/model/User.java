@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+@Table(name = "users")
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class User extends AbsModel implements Serializable {
@@ -41,5 +42,4 @@ public class User extends AbsModel implements Serializable {
     public Integer setVerifiedForDb(Boolean verified) {
         return verified ? 1 : 0;
     }
-
 }

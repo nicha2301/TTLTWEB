@@ -28,7 +28,7 @@ public class UserVerify extends HttpServlet {
         String code = request.getParameter("verifycode");
         if (code.equals(authcode)) {
             try {
-                UserDAO.getInstance().SetVerifiedStatus(authcode);
+                UserDAO.getInstance().SetVerified(authcode);
             } catch (SQLException var7) {
                 throw new RuntimeException(var7);
             }

@@ -6,6 +6,7 @@ import org.jdbi.v3.core.mapper.Nested;
 
 import java.io.Serializable;
 
+@Table(name = "product_categories")
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class ProductCategories extends AbsModel implements Serializable {

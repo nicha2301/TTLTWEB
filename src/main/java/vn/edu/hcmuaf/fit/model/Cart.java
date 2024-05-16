@@ -7,6 +7,7 @@ import org.jdbi.v3.core.mapper.Nested;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+@Table(name = "cart")
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Cart extends AbsModel implements Serializable {
