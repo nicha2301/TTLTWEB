@@ -12,60 +12,60 @@ import java.sql.Timestamp;
 @EqualsAndHashCode(callSuper = true)
 public class Order extends AbsModel implements Serializable {
     private Integer id;
-    @Nested("users")
+    @Nested("user")
     private User user;
-    @Nested("delivery_address")
+    @Nested("address")
     private DeliveryAddress address;
-    @Nested("shipping_type")
+    @Nested("type")
     private ShippingType type;
-    @Nested("discounts")
+    @Nested("discount")
     private Discount discount;
     @Nested("payment")
     private Payment payment;
     private Timestamp dateCreated;
     private Timestamp datePayment;
     private String note;
-    @Nested("order_status")
+    @Nested("status")
     private OrderStatus status;
-    @Nested("users")
+    @Nested("admin")
     private User admin;
 
-    @Nested("users")
+    @Nested("user")
     public User getUser() {
         return user;
     }
 
-    @Nested("users")
+    @Nested("user")
     public void setUser(User user) {
         this.user = user;
     }
 
-    @Nested("delivery_address")
+    @Nested("address")
     public DeliveryAddress getAddress() {
         return address;
     }
 
-    @Nested("delivery_address")
+    @Nested("address")
     public void setAddress(DeliveryAddress address) {
         this.address = address;
     }
 
-    @Nested("shipping_type")
+    @Nested("type")
     public ShippingType getType() {
         return type;
     }
 
-    @Nested("shipping_type")
+    @Nested("type")
     public void setType(ShippingType type) {
         this.type = type;
     }
 
-    @Nested("discounts")
+    @Nested("discount")
     public Discount getDiscount() {
         return discount;
     }
 
-    @Nested("discounts")
+    @Nested("discount")
     public void setDiscount(Discount discount) {
         this.discount = discount;
     }
@@ -80,22 +80,22 @@ public class Order extends AbsModel implements Serializable {
         this.payment = payment;
     }
 
-    @Nested("order_status")
+    @Nested("status")
     public OrderStatus getStatus() {
         return status;
     }
 
-    @Nested("order_status")
+    @Nested("status")
     public void setStatus(OrderStatus status) {
         this.status = status;
     }
 
-    @Nested("users")
+    @Nested("admin")
     public User getAdmin() {
         return admin;
     }
 
-    @Nested("users")
+    @Nested("admin")
     public void setAdmin(User admin) {
         this.admin = admin;
     }

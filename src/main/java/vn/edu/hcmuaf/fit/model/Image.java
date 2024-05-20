@@ -11,16 +11,16 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 public class Image extends AbsModel implements Serializable {
     private Integer id;
-    @Nested("products")
+    @Nested("product")
     private Product product;
     private String imageUrl;
 
-    @Nested("products")
+    @Nested("product")
     public Product getProduct() {
         return product;
     }
 
-    @Nested("products")
+    @Nested("product")
     public void setProduct(Product product) {
         this.product = product;
     }

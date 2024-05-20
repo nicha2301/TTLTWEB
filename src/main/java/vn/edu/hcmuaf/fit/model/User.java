@@ -38,8 +38,4 @@ public class User extends AbsModel implements Serializable {
     public void setRole(Role role) {
         this.role = role;
     }
-
-    public Integer setVerifiedForDb(Boolean verified) {
-        return verified ? 1 : 0;
-    }
 }

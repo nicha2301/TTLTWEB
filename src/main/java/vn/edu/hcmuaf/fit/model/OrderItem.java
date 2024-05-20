@@ -10,29 +10,29 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class OrderItem extends AbsModel implements Serializable {
-    @Nested("orders")
+    @Nested("order")
     private Order order;
-    @Nested("products")
+    @Nested("product")
     private Product product;
     private Integer quantity;
     private Integer orderPrice;
 
-    @Nested("orders")
+    @Nested("order")
     public Order getOrder() {
         return order;
     }
 
-    @Nested("orders")
+    @Nested("order")
     public void setOrder(Order order) {
         this.order = order;
     }
 
-    @Nested("products")
+    @Nested("product")
     public Product getProduct() {
         return product;
     }
 
-    @Nested("products")
+    @Nested("product")
     public void setProduct(Product product) {
         this.product = product;
     }

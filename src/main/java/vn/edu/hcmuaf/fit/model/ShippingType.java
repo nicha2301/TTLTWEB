@@ -11,15 +11,15 @@ public class ShippingType implements Serializable {
     private Integer id;
     private String type;
     private String description;
-    @Nested("shipping_info")
+    @Nested("info")
     private ShippingInfo info;
 
-    @Nested("shipping_info")
+    @Nested("info")
     public ShippingInfo getInfo() {
         return info;
     }
 
-    @Nested("shipping_info")
+    @Nested("info")
     public void setInfo(ShippingInfo info) {
         this.info = info;
     }

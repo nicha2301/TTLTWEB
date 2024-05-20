@@ -10,27 +10,27 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class Wishlist extends AbsModel implements Serializable {
-    @Nested("users")
+    @Nested("user")
     private User user;
-    @Nested("products")
+    @Nested("product")
     private Product product;
 
-    @Nested("users")
+    @Nested("user")
     public User getUser() {
         return user;
     }
 
-    @Nested("users")
+    @Nested("user")
     public void setUser(User user) {
         this.user = user;
     }
 
-    @Nested("products")
+    @Nested("product")
     public Product getProduct() {
         return product;
     }
 
-    @Nested("products")
+    @Nested("product")
     public void setProduct(Product product) {
         this.product = product;
     }

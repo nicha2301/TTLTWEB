@@ -11,29 +11,29 @@ import java.sql.Timestamp;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Inventory extends AbsModel implements Serializable {
-    @Nested("users")
+    @Nested("user")
     private User user;
-    @Nested("discounts")
+    @Nested("discount")
     private Discount discount;
     private Timestamp addDate;
     private Boolean isUsed;
 
-    @Nested("users")
+    @Nested("user")
     public User getUser() {
         return user;
     }
 
-    @Nested("users")
+    @Nested("user")
     public void setUser(User user) {
         this.user = user;
     }
 
-    @Nested("discounts")
+    @Nested("discount")
     public Discount getDiscount() {
         return discount;
     }
 
-    @Nested("discounts")
+    @Nested("discount")
     public void setDiscount(Discount discount) {
         this.discount = discount;
     }

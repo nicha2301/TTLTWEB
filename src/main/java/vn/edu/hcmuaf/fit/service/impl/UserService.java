@@ -4,10 +4,13 @@ import org.mindrot.jbcrypt.BCrypt;
 import vn.edu.hcmuaf.fit.dao.impl.LevelDAO;
 import vn.edu.hcmuaf.fit.dao.impl.LogDAO;
 import vn.edu.hcmuaf.fit.dao.impl.UserDAO;
+import vn.edu.hcmuaf.fit.model.Level;
+import vn.edu.hcmuaf.fit.model.Role;
 import vn.edu.hcmuaf.fit.model.User;
 import vn.edu.hcmuaf.fit.model.Utils;
 import vn.edu.hcmuaf.fit.service.IUserService;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public class UserService extends LogDAO<User> implements IUserService {
@@ -175,6 +178,89 @@ public class UserService extends LogDAO<User> implements IUserService {
             user.setAfterData("Update failed! New password of ID=" + user.getId() + " is " + user.getId() + "'s old password!");
             super.insert(user, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
             return user;
+        }
+    }
+
+    @Override
+    public List<User> loadUsersWithRole(Role role) {
+        return UserDAO.getInstance().loadUsersWithRole(role.getId());
+    }
+
+    @Override
+    public User loadUsersWithId(User user, String ip, String address) {
+        try {
+            List<User> users = UserDAO.getInstance().loadUsersWithId(user.getId());
+            if (users.size()==1) {
+                user.setAfterData("Load successfully with ID=" + users.get(0).getId());
+            } else {
+                user.setAfterData("Load failed with ID=" + user.getId());
+                users.clear();
+            }
+            super.insert(user, LevelDAO.getInstance().getLevel(1).get(0), ip, address);
+            return users.get(0);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Integer sumOfUsers() {
+        return UserDAO.getInstance().sumOfUsers();
+    }
+
+    @Override
+    public User updateUserInAdmin(User user, String email, String name, String birthday, String detail_address, Timestamp dateCreated, String ip, String address) {
+        try {
+            user.setBeforeData("Old user info of ID=" + user.getId() + " is " + user);
+            User success = UserDAO.getInstance().updateUserInAdmin(user.getId(), email, name, birthday, detail_address, dateCreated);
+            user.setAfterData("Update successfully! New user info of ID=" + success.getId() + " is " + success);
+            super.insert(user, LevelDAO.getInstance().getLevel(1).get(0), ip, address);
+            return success;
+        } catch (Exception e) {
+            user.setAfterData("Update failed! New user info of ID=" + user.getId() + " don't change!");
+            super.insert(user, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
+            return null;
+        }
+    }
+
+    @Override
+    public User updateUserById(User user, String name, String phone, String email, String detail_address, String ip, String address) {
+        try {
+            user.setBeforeData("Old user info of ID=" + user.getId() + " is " + user);
+            User success = UserDAO.getInstance().updateUserById(user.getId(), name, phone, email, detail_address);
+            user.setAfterData("Update successfully! New user info of ID=" + success.getId() + " is " + success);
+            super.insert(user, LevelDAO.getInstance().getLevel(1).get(0), ip, address);
+            return success;
+        } catch (Exception e) {
+            user.setAfterData("Update failed! New user info of ID=" + user.getId() + " don't change!");
+            super.insert(user, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
+            return null;
+        }
+    }
+
+    @Override
+    public boolean deleteUserById(User user, String ip, String address) {
+        try {
+            Level level;
+            boolean re = false;
+            user.setBeforeData("User info of ID=" + user.getId() + " is " + user + " before delete");
+            User success = UserDAO.getInstance().deleteUserById(user.getId());
+            if(success==null) {
+                level = LevelDAO.getInstance().getLevel(1).get(0);
+                user.setAfterData("User with ID=" + user.getId() + " has been deleted");
+                re = true;
+            } else {
+                level = LevelDAO.getInstance().getLevel(2).get(0);
+                user.setAfterData("Delete failed with ID=" + user.getId());
+            }
+            super.insert(user, level, ip, address);
+            return re;
+        } catch (Exception e) {
+            List<User> list = UserDAO.getInstance().loadUsersWithId(user.getId());
+            user.setAfterData(e.getMessage() + " with ID=" + user.getId());
+            super.insert(user, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
+            if(list.isEmpty()) return true;
+            else return false;
         }
     }
 }

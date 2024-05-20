@@ -12,16 +12,16 @@ import java.io.Serializable;
 public class ProductCategories extends AbsModel implements Serializable {
     private Integer id;
     private String categoryName;
-    @Nested("product_groups")
+    @Nested("group")
     private ProductGroups group;
     private Boolean active;
 
-    @Nested("product_groups")
+    @Nested("group")
     public ProductGroups getGroup() {
         return group;
     }
 
-    @Nested("product_groups")
+    @Nested("group")
     public void setGroup(ProductGroups group) {
         this.group = group;
     }

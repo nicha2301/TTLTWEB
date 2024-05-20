@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class Product extends AbsModel implements Serializable {
     private Integer id;
     private String productName;
-    @Nested("product_categories")
+    @Nested("categories")
     private ProductCategories categories;
     private Double salePercent;
     private Integer price;
@@ -24,38 +24,38 @@ public class Product extends AbsModel implements Serializable {
     private String instructions;
     private String warrantyPeriod;
     private String storageCondition;
-    @Nested("product_types")
+    @Nested("type")
     private ProductTypes type;
-    @Nested("suppliers")
+    @Nested("supplier")
     private Supplier supplier;
     private Boolean active;
 
-    @Nested("product_categories")
+    @Nested("categories")
     public ProductCategories getCategories() {
         return categories;
     }
 
-    @Nested("product_categories")
+    @Nested("categories")
     public void setCategories(ProductCategories categories) {
         this.categories = categories;
     }
 
-    @Nested("product_types")
+    @Nested("type")
     public ProductTypes getType() {
         return type;
     }
 
-    @Nested("product_types")
+    @Nested("type")
     public void setType(ProductTypes type) {
         this.type = type;
     }
 
-    @Nested("suppliers")
+    @Nested("supplier")
     public Supplier getSupplier() {
         return supplier;
     }
 
-    @Nested("suppliers")
+    @Nested("supplier")
     public void setSupplier(Supplier supplier) {
         this.supplier = supplier;
     }

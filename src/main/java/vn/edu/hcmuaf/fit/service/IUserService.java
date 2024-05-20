@@ -1,6 +1,10 @@
 package vn.edu.hcmuaf.fit.service;
 
+import vn.edu.hcmuaf.fit.model.Role;
 import vn.edu.hcmuaf.fit.model.User;
+
+import java.sql.Timestamp;
+import java.util.List;
 
 public interface IUserService {
 
@@ -18,4 +22,15 @@ public interface IUserService {
 
     User addAdmin(User user, String ip, String address);
 
+    List<User> loadUsersWithRole(Role role);
+
+    User loadUsersWithId(User user, String ip, String address);
+
+    Integer sumOfUsers();
+
+    User updateUserInAdmin(User user, String email, String name, String birthday, String detail_address, Timestamp dateCreated, String ip, String address);
+
+    User updateUserById(User user, String name, String phone, String email, String detail_address, String ip, String address);
+
+    boolean deleteUserById(User user, String ip, String address);
 }

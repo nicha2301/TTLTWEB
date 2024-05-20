@@ -11,7 +11,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 public class DeliveryAddress extends AbsModel implements Serializable {
     private Integer id;
-    @Nested("users")
+    @Nested("user")
     private User user;
     private String fullName;
     private String phone;
@@ -22,12 +22,12 @@ public class DeliveryAddress extends AbsModel implements Serializable {
     private Boolean atHome;
     private Boolean isPrimary;
 
-    @Nested("users")
+    @Nested("user")
     public User getUser() {
         return user;
     }
 
-    @Nested("users")
+    @Nested("user")
     public void setUser(User user) {
         this.user = user;
     }
