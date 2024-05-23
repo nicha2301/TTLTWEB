@@ -32,10 +32,9 @@ public class SupplierService extends LogDAO<Supplier> implements ISupplierServic
 
     @Override
     public Supplier insertSupplier(Supplier supplier, String ip, String address) {
-        Supplier success = null;
         try {
             Level level;
-            success = SupplierDAO.getInstance().insertSupplier(supplier.getSupplierName(), supplier.getDetailAddress(), supplier.getPhone(), supplier.getEmail());
+            Supplier success = SupplierDAO.getInstance().insertSupplier(supplier.getSupplierName(), supplier.getDetailAddress(), supplier.getPhone(), supplier.getEmail());
             if(success != null) {
                 supplier.setAfterData("Add successfully with ID=" + success.getId());
                 level = LevelDAO.getInstance().getLevel(1).get(0);
