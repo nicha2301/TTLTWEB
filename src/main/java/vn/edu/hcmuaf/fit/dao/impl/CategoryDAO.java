@@ -37,13 +37,9 @@ public class CategoryDAO extends AbsDAO<ProductCategories> implements ICategoryD
             ProductCategories category = getCategoryById(cateId).get(0);
             return new AbstractMap.SimpleEntry<>(category, total);
         };
-        List<Map.Entry<ProductCategories, Integer>> query = query(sql, rowMapper);
-        Map<ProductCategories, Integer> res = new HashMap<>();
-        for (Map.Entry<ProductCategories, Integer> entry : query) {
-            res.put(entry.getKey(), entry.getValue());
-        }
-        return res;
+        return queryForMap(sql, rowMapper);
     }
+
 
     @Override
     public List<ProductCategories> getCategoryById(Integer id) {

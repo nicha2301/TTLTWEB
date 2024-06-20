@@ -13,15 +13,13 @@ public interface IProductDAO extends GenericDAO<Product> {
 
     Integer getTotalProducts();
 
-    List<Product> getProductById(Integer productId);
-
     List<Product> searchProductsLimited(String searchTerm, Integer start, Integer pageSize);
 
     Integer getTotalSearchResults(String searchTerm);
 
     Map<String, Integer> getListObject();
 
-    List<Product> getProductByCategory(String object);
+    List<Product> getProductByCategory(String categoryName);
 
     List<Product> getProductByType(String productType);
 
@@ -31,26 +29,20 @@ public interface IProductDAO extends GenericDAO<Product> {
 
     List<Product> getProductByGroup(String groupName);
 
-    Product updateImgUrl(Integer id, String imgUrl);
+    Product getProductByIdWithSupplierInfo(Integer productId);
 
-    List<Product> getProductByIdWithSupplierInfo(Integer productId);
-
-    Integer sumOfProduct();
-
-    List<Product> loadProductById(Integer id);
-
-    Product updateProduct(int id, String productName, int categoryId, double price, int quantity,
-                         String purpose, String contraindications, int stockQuantity, String ingredients, String dosage,
-                         String instructions, String warrantyPeriod, String storageCondition, String productType,
-                         int supplierId);
+    Product updateProduct(Integer id, String productName, Integer categoryId, Double percent,
+                          Integer price, Integer quantity, String purpose, String contraindications,
+                          String ingredients, String dosage, String instructions, String warrantyPeriod,
+                          String storageCondition, Integer typeId, Integer supplierId);
 
     Product deleteProductById(int productId);
 
-    Product addProduct(Product product);
+    public Product addProduct(String productName, Integer categoryId, Double percent,
+                              Integer price, Integer quantity, String purpose, String contraindications,
+                              String ingredients, String dosage, String instructions, String warrantyPeriod,
+                              String storageCondition, Integer typeId, Integer supplierId, Boolean active);
 
-    List<Product> getThreePoultryProducts();
-
-    List<Product> getThreeOtherProducts();
-
+    List<Product> getProductsLimit(Integer type_id, Integer limit);
 
 }

@@ -10,6 +10,14 @@ import vn.edu.hcmuaf.fit.service.ISupplierService;
 import java.util.List;
 
 public class SupplierService extends LogDAO<Supplier> implements ISupplierService {
+    private static ISupplierService instance;
+
+    public static ISupplierService getInstance() {
+        if (instance == null) {
+            instance = new SupplierService();
+        }
+        return instance;
+    }
 
     @Override
     public Supplier getSupplierById(Integer id) {

@@ -3,10 +3,10 @@ package vn.edu.hcmuaf.fit.dao.impl;
 import org.jdbi.v3.core.mapper.RowMapper;
 import vn.edu.hcmuaf.fit.dao.IProductDAO;
 import vn.edu.hcmuaf.fit.model.Product;
-import vn.edu.hcmuaf.fit.model.ProductCategories;
+import vn.edu.hcmuaf.fit.model.Supplier;
+import vn.edu.hcmuaf.fit.service.impl.SupplierService;
 
 import java.util.AbstractMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,12 +39,6 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
     }
 
     @Override
-    public List<Product> getProductById(Integer productId) {
-        String sql = "SELECT * FROM products WHERE id =?";
-        return query(sql, Product.class, productId);
-    }
-
-    @Override
     public List<Product> searchProductsLimited(String searchTerm, Integer start, Integer pageSize) {
         String sql = "SELECT * FROM products WHERE productName LIKE ? LIMIT ?, ?";
         return query(sql, Product.class, "%" + searchTerm + "%", start, pageSize);
@@ -58,91 +52,116 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
 
     @Override
     public Map<String, Integer> getListObject() {
-        String query = "SELECT pc.categoryName, COUNT(p.id) AS productCount\n" +
-                "FROM product_categories pc\n" +
-                "LEFT JOIN products p ON pc.id = p.category_id\n" +
-                "GROUP BY pc.id, pc.categoryName;\n";
-        RowMapper<Map.Entry<ProductCategories, Integer>> rowMapper = (rs, ctx) -> {
-            Integer cateId = rs.getInt("cateId");
+        String sql = "SELECT pc.categoryName AS cateName, COUNT(p.id) AS total " +
+                "FROM product_categories pc " +
+                "LEFT JOIN products p ON pc.id = p.category_id " +
+                "GROUP BY pc.id, pc.categoryName";
+        RowMapper<Map.Entry<String, Integer>> rowMapper = (rs, ctx) -> {
+            String cateName = rs.getString("cateName");
             Integer total = rs.getInt("total");
-            ProductCategories category = getCategoryById(cateId).get(0);
-            return new AbstractMap.SimpleEntry<>(category, total);
+            return new AbstractMap.SimpleEntry<>(cateName, total);
         };
-        List<Map.Entry<ProductCategories, Integer>> query = query(sql, rowMapper);
-        Map<ProductCategories, Integer> res = new HashMap<>();
-        for (Map.Entry<ProductCategories, Integer> entry : query) {
-            res.put(entry.getKey(), entry.getValue());
-        }
-        return res;
+        return queryForMap(sql, rowMapper);
     }
 
     @Override
-    public List<Product> getProductByCategory(String object) {
-        return List.of();
+    public List<Product> getProductByCategory(String categoryName) {
+        String sql = "SELECT p.* " +
+                "FROM products p " +
+                "JOIN product_categories pc ON p.category_id = pc.id " +
+                "WHERE pc.categoryName = ?";
+        return query(sql, Product.class, categoryName);
     }
 
     @Override
     public List<Product> getProductByType(String productType) {
-        return List.of();
+        String sql = "SELECT p.* " +
+                "FROM products p " +
+                "JOIN product_types pt ON p.type_id = pt.id " +
+                "WHERE pt.type_name = ?";
+        return query(sql, Product.class, productType);
     }
 
     @Override
     public Map<String, Integer> getGroupListObject() {
-        return Map.of();
+        String sql = "SELECT pg.groupName AS groupName, COUNT(pc.id) AS productCount " +
+                "FROM product_groups pg " +
+                "LEFT JOIN product_categories pc ON pg.id = pc.group_id " +
+                "GROUP BY pg.groupName";
+        RowMapper<Map.Entry<String, Integer>> rowMapper = (rs, ctx) -> {
+            String groupName = rs.getString("groupName");
+            Integer productCount = rs.getInt("productCount");
+            return new AbstractMap.SimpleEntry<>(groupName, productCount);
+        };
+        return queryForMap(sql, rowMapper);
     }
 
     @Override
     public Map<String, Integer> getListProductType() {
-        return Map.of();
+        String sql = "SELECT pt.type_name AS typeName, COUNT(p.id) AS total " +
+                "FROM product_types pt " +
+                "LEFT JOIN products p ON pt.id = p.type_id " +
+                "GROUP BY p.type_id, pt.type_name";
+        RowMapper<Map.Entry<String, Integer>> rowMapper = (rs, ctx) -> {
+            String typeName = rs.getString("typeName");
+            Integer total = rs.getInt("total");
+            return new AbstractMap.SimpleEntry<>(typeName, total);
+        };
+        return queryForMap(sql, rowMapper);
     }
 
     @Override
     public List<Product> getProductByGroup(String groupName) {
-        return List.of();
+        String sql = "SELECT p.* " +
+                "FROM products p " +
+                "JOIN product_categories pc ON p.category_id = pc.id " +
+                "JOIN product_groups pg ON pc.group_id = pg.id " +
+                "WHERE pg.groupName = ?";
+        return query(sql, Product.class, groupName);
     }
 
     @Override
-    public Product updateImgUrl(Integer id, String imgUrl) {
-        return null;
+    public Product getProductByIdWithSupplierInfo(Integer productId) {
+        try {
+            String sql = "SELECT * FROM products WHERE id = ?";
+            Product product = query(sql, Product.class, productId).get(0);
+            Supplier supplier = SupplierService.getInstance().getSupplierById(product.getSupplier().getId());
+            product.setSupplier(supplier);
+            return product;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
-    public List<Product> getProductByIdWithSupplierInfo(Integer productId) {
-        return List.of();
-    }
-
-    @Override
-    public Integer sumOfProduct() {
-        return 0;
-    }
-
-    @Override
-    public List<Product> loadProductById(Integer id) {
-        return List.of();
-    }
-
-    @Override
-    public Product updateProduct(int id, String productName, int categoryId, double price, int quantity, String purpose, String contraindications, int stockQuantity, String ingredients, String dosage, String instructions, String warrantyPeriod, String storageCondition, String productType, int supplierId) {
-        return null;
+    public Product updateProduct(Integer id, String productName, Integer categoryId, Double percent,
+                                 Integer price, Integer quantity, String purpose, String contraindications,
+                                 String ingredients, String dosage, String instructions, String warrantyPeriod,
+                                 String storageCondition, Integer typeId, Integer supplierId) {
+        String sql = "UPDATE `products` SET productName =?, category_id =?, sale_percent =?, price =?, quantity =?, purpose =?, contraindications =?, ingredients =?, dosage =?, instructions =?, warrantyPeriod =?, storageCondition =?, type_id =?, supplier_id =? WHERE id =?";
+        return modify(sql, Product.class, productName, categoryId, percent, price, quantity, purpose, contraindications, ingredients, dosage, instructions, warrantyPeriod, storageCondition, typeId, supplierId, id);
     }
 
     @Override
     public Product deleteProductById(int productId) {
-        return null;
+        String sql = "DELETE FROM products WHERE id = ?";
+        return modify(sql, Product.class, productId);
     }
 
     @Override
-    public Product addProduct(Product product) {
-        return null;
+    public Product addProduct(String productName, Integer categoryId, Double percent,
+                              Integer price, Integer quantity, String purpose, String contraindications,
+                              String ingredients, String dosage, String instructions, String warrantyPeriod,
+                              String storageCondition, Integer typeId, Integer supplierId, Boolean active) {
+        String sql = "INSERT INTO `products`(`productName`, `category_id`, `sale_percent`, `price`, `quantity`, `purpose`, `contraindications`, `ingredients`, `dosage`, `instructions`, `warrantyPeriod`, `storageCondition`, `type_id`, `supplier_id`, `active`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        return modify(sql, Product.class, productName, categoryId, percent, price, quantity, purpose, contraindications, ingredients, dosage, instructions, warrantyPeriod, storageCondition, typeId, supplierId, active?1:0);
     }
 
     @Override
-    public List<Product> getThreePoultryProducts() {
-        return List.of();
-    }
-
-    @Override
-    public List<Product> getThreeOtherProducts() {
-        return List.of();
+    public List<Product> getProductsLimit(Integer type_id, Integer limit) {
+        String sql = "SELECT p.* FROM product_types pt" +
+                "JOIN products p ON pt.id = p.type_id" +
+                "WHERE p.type_id =? LIMIT ?";
+        return query(sql, Product.class, type_id, limit);
     }
 }

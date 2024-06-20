@@ -63,13 +63,13 @@ public class CategoryService extends LogDAO<ProductCategories> implements ICateg
                 cate.setAfterData("New info of ID=" + success.getId() + " is " + success);
                 level = LevelDAO.getInstance().getLevel(1).get(0);
             } else {
-                cate.setAfterData("New info of ID=" + cate.getId() + " is " + cate);
+                cate.setAfterData("Update fail. Old info of ID=" + cate.getId() + " is " + cate);
                 level = LevelDAO.getInstance().getLevel(2).get(0);
             }
             super.insert(cate, level, ip, address);
             return success;
         } catch (Exception e) {
-            cate.setAfterData("New info of ID=" + cate.getId() + " is " + cate);
+            cate.setAfterData("Update fail. Old info of ID=" + cate.getId() + " is " + cate);
             super.insert(cate, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
             return null;
         }

@@ -6,7 +6,9 @@ import vn.edu.hcmuaf.fit.connection_pool.JDBIConnector;
 import vn.edu.hcmuaf.fit.dao.GenericDAO;
 import vn.edu.hcmuaf.fit.model.Table;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AbsDAO<T> implements GenericDAO<T> {
 
@@ -17,10 +19,9 @@ public class AbsDAO<T> implements GenericDAO<T> {
         );
     }
 
-    @Override
-    public <T> List<T> query(String sql, RowMapper<T> rowMapper, Object... parameters) {
+    private  <T> List<T> query(String sql, RowMapper<T> rowMapper, Object... parameters) {
         return JDBIConnector.get().withHandle(handle ->
-            handle.select(sql, parameters).map(rowMapper).list()
+                handle.select(sql, parameters).map(rowMapper).list()
         );
     }
 
@@ -38,6 +39,16 @@ public class AbsDAO<T> implements GenericDAO<T> {
                    .mapTo(Integer.class)
                    .one()
         );
+    }
+
+    @Override
+    public <K, V> Map<K, V> queryForMap(String sql, RowMapper<Map.Entry<K, V>> rowMapper, Object... parameters) {
+        List<Map.Entry<K, V>> entries = query(sql, rowMapper, parameters);
+        Map<K, V> res = new HashMap<>();
+        for (Map.Entry<K, V> entry : entries) {
+            res.put(entry.getKey(), entry.getValue());
+        }
+        return res;
     }
 
     private <T> T bindParams(Handle handle, String sql, Class<T> bean, Object... parameters) {
