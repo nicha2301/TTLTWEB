@@ -26,7 +26,7 @@ public class UserService extends LogDAO<User> implements IUserService {
     @Override
     public User signIn(User user, String ip, String address) {
         try {
-            List<User> users = UserDAO.getInstance().checkExistUser(user.getUsername(), null);
+            List<User> users = UserDAO.getInstance().checkExistUser(user.getUsername(), "");
             if (users.size()==1) {
                 if(BCrypt.checkpw(user.getPassword(), users.get(0).getPassword())) {
                     user.setAfterData("Login success with ID=" + users.get(0).getId());
@@ -75,21 +75,26 @@ public class UserService extends LogDAO<User> implements IUserService {
 //        }
 //    }
 
-    // check dung dinh dang email
     @Override
     public String signUp(User user, String rePassword, String ip, String address) {
         try {
             String error = "";
+            boolean check = false;
             User success = null;
-            List<User> users = UserDAO.getInstance().checkExistUser(user.getUsername(), null);
-            if(users.isEmpty()) {
+            List<User> users = UserDAO.getInstance().checkExistUser(user.getUsername(), "");
+            if(users.size()==0) {
                 if(Utils.isValidEmail(user.getEmail())) {
-                    users = UserDAO.getInstance().checkExistUser(null, user.getEmail());
+                    users = UserDAO.getInstance().checkExistUser("", user.getEmail());
                     if(users.isEmpty()) {
                         if(Utils.isStrongPassword(user.getPassword())) {
                             if(user.getPassword().equals(rePassword)) {
-                                success = UserDAO.getInstance().signUp(user.getUsername(), user.getEmail(), user.getPassword());
-                                if(success == null) error = "Register fail because my system can't insert your account into database!";
+                                success = UserDAO.getInstance().signUp(user.getUsername(), user.getEmail(), user.getPassword(), user.getRole().getId());
+                                if(success == null) {
+                                    error = "Register fail because my system can't insert your account into database!";
+                                } else {
+                                    error = success.getId() + "";
+                                    check = true;
+                                }
                             } else {
                                 error = "Passwords do not match!";
                             }
@@ -105,7 +110,7 @@ public class UserService extends LogDAO<User> implements IUserService {
             } else {
                 error = "Username is existed!";
             }
-            if(error.isEmpty()) user.setAfterData(success.getId() + ": Register success. Congratulation!");
+            if(check) user.setAfterData(success.getId() + ": Register success. Congratulation!");
             else user.setAfterData(user.getUsername() + ": " + error);
             super.insert(user, LevelDAO.getInstance().getLevel(1).get(0), ip, address);
             return error;
@@ -262,5 +267,11 @@ public class UserService extends LogDAO<User> implements IUserService {
             if(list.isEmpty()) return true;
             else return false;
         }
+    }
+
+    public static void main(String[] args) {
+        User user = new User();
+        user.setId(26);
+        System.out.println(UserService.getInstance().setVerified(user, "123456", "123456", "127.0.0.1", "main/UserService"));
     }
 }

@@ -1,12 +1,8 @@
 package vn.edu.hcmuaf.fit.controller.user_page.MailService;
 
-
 import java.util.Random;
 
 public class SendEmail {
-    public SendEmail() {
-    }
-
     public String getRandomVerifyCode() {
         Random rd = new Random();
         int number = rd.nextInt(999999);
@@ -23,4 +19,3 @@ public class SendEmail {
         return emailSender.sendEmail(email, "Resend password", "Your password here: " + pass);
     }
 }
-

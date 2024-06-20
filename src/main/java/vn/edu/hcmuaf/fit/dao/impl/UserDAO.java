@@ -2,7 +2,6 @@ package vn.edu.hcmuaf.fit.dao.impl;
 
 import org.mindrot.jbcrypt.BCrypt;
 import vn.edu.hcmuaf.fit.dao.IUserDAO;
-import vn.edu.hcmuaf.fit.model.Role;
 import vn.edu.hcmuaf.fit.model.User;
 
 import java.sql.Timestamp;
@@ -19,9 +18,9 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
     }
 
     @Override
-    public User signUp(String username, String email, String password) {
-        String sql = "INSERT INTO users(username, email, password, verified) VALUES (?, ?, ?, ?)";
-        return modify(sql, User.class, username, email, BCrypt.hashpw(password, BCrypt.gensalt()));
+    public User signUp(String username, String email, String password, Integer role) {
+        String sql = "INSERT INTO users(username, email, password, role_id) VALUES (?, ?, ?, ?)";
+        return modify(sql, User.class, username, email, BCrypt.hashpw(password, BCrypt.gensalt()), role);
     }
 
     @Override
@@ -38,7 +37,7 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
 
     @Override
     public List<User> checkExistUser(String username, String email) {
-        String sql = "SELECT * FROM users WHERE username = COALESCE(?, username) OR email = COALESCE(?, email)";
+        String sql = "SELECT * FROM users WHERE username = ? OR email = ?";
         return query(sql, User.class, username, email);
     }
 
@@ -88,5 +87,10 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
     public User deleteUserById(Integer userId) {
         String sql = "DELETE FROM users WHERE id =?";
         return modify(sql, User.class, userId);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(UserDAO.getInstance().checkExistUser("", "thuandangnam@gmail.com"));
+        System.out.println(UserDAO.getInstance().signUp("thuandeptrai999", "thuandangnam000@gmail.com", "Thuan23042003=", 1));
     }
 }

@@ -1,15 +1,13 @@
 package vn.edu.hcmuaf.fit.model;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.jdbi.v3.core.mapper.Nested;
 
 import java.io.Serializable;
 
 @Table(name = "images")
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class Image extends AbsModel implements Serializable {
+public class Image implements Serializable {
     private Integer id;
     @Nested("product")
     private Product product;

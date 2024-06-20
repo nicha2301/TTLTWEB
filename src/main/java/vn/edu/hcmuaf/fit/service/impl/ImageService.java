@@ -3,7 +3,6 @@ package vn.edu.hcmuaf.fit.service.impl;
 import vn.edu.hcmuaf.fit.dao.impl.ImageDAO;
 import vn.edu.hcmuaf.fit.dao.impl.LevelDAO;
 import vn.edu.hcmuaf.fit.dao.impl.LogDAO;
-import vn.edu.hcmuaf.fit.dao.impl.ProductDAO;
 import vn.edu.hcmuaf.fit.model.Image;
 import vn.edu.hcmuaf.fit.model.Level;
 import vn.edu.hcmuaf.fit.model.Product;

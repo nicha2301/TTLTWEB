@@ -19,7 +19,7 @@
 
     <div class="body">
         <div class="form-container">
-            <form class="signup-form" method="post" action="signup">
+            <form class="signup-form" method="POST" action="signup">
                 <h2>Đăng Ký</h2>
                 <% String error = (String) request.getAttribute("wrongInfor");%>
                 <% if (error != null) {%>
@@ -43,7 +43,7 @@
                     <input type="checkbox" id="agree-terms" name="agree-terms" required>
                     <label for="agree-terms">Tôi đồng ý với điều khoản dịch vụ và chính sách bảo mật</label>
                 </div>
-                <input type="hidden" name="role" value="1">
+                <input type="hidden" name="roleId" value="1">
 
                 <button>Đăng Ký</button>
                 <div class="login-link">Bạn đã có tài khoản? <a href="signIn.jsp">Đăng nhập</a></div>

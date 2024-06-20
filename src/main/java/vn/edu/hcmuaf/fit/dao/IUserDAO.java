@@ -1,6 +1,5 @@
 package vn.edu.hcmuaf.fit.dao;
 
-import vn.edu.hcmuaf.fit.model.Role;
 import vn.edu.hcmuaf.fit.model.User;
 
 import java.sql.Timestamp;
@@ -8,7 +7,7 @@ import java.util.List;
 
 public interface IUserDAO extends GenericDAO<User> {
 
-    User signUp(String username, String email, String password);
+    User signUp(String username, String email, String password, Integer role);
 
     List<User> checkExistUser(String username, String email);
 

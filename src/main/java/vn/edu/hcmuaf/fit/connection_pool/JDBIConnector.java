@@ -2,18 +2,11 @@ package vn.edu.hcmuaf.fit.connection_pool;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-
-import java.sql.SQLException;
-
 import org.jdbi.v3.core.Jdbi;
 
 public class JDBIConnector {
     private static JDBIConnector instance;
     private static Jdbi jdbi;
-
-    public JDBIConnector() {
-        super();
-    }
 
     private static HikariDataSource createDataSource() {
         HikariConfig config = new HikariConfig();

@@ -2,7 +2,7 @@ package vn.edu.hcmuaf.fit.dao.impl;
 
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.mapper.RowMapper;
-import vn.edu.hcmuaf.fit.connection_pool.JDBIConnector;
+import vn.edu.hcmuaf.fit.db.JDBIConnector;
 import vn.edu.hcmuaf.fit.dao.GenericDAO;
 import vn.edu.hcmuaf.fit.model.Table;
 
@@ -19,7 +19,7 @@ public class AbsDAO<T> implements GenericDAO<T> {
         );
     }
 
-    private  <T> List<T> query(String sql, RowMapper<T> rowMapper, Object... parameters) {
+    private <T> List<T> query(String sql, RowMapper<T> rowMapper, Object... parameters) {
         return JDBIConnector.get().withHandle(handle ->
                 handle.select(sql, parameters).map(rowMapper).list()
         );

@@ -1,5 +1,5 @@
 <%@ page import="vn.edu.hcmuaf.fit.model.User" %>
-<%@ page import="vn.edu.hcmuaf.fit.model.ShoppingCart" %>
+<%--<%@ page import="vn.edu.hcmuaf.fit.model.ShoppingCart" %>--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <% User user = (User) session.getAttribute("auth");%>
@@ -68,12 +68,12 @@
             </form>
             <div class="action">
                 <div class="cart" style="margin: 0 30px 0 30px;">
-                    <%
-                        ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
-                        if (cart != null) {
-                    %>
-                    <span class="count"><%=cart.getTotalQuantity()%></span>
-                    <%}%>
+<%--                    <%--%>
+<%--                        ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");--%>
+<%--                        if (cart != null) {--%>
+<%--                    %>--%>
+<%--                    <span class="count"><%=cart.getTotalQuantity()%></span>--%>
+<%--                    <%}%>--%>
                     <a href="cart">
                         <i class="fa-solid fa-cart-shopping material-icons"></i>
                     </a>

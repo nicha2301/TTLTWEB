@@ -1,7 +1,7 @@
 //package vn.edu.hcmuaf.fit.model;
 //
-//import vn.edu.hcmuaf.fit.dao.impl.DiscountDAO;
 //import vn.edu.hcmuaf.fit.dao.ProductDAO;
+//import vn.edu.hcmuaf.fit.dao.impl.DiscountDAO;
 //
 //import java.util.ArrayList;
 //import java.util.HashMap;

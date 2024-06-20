@@ -43,7 +43,7 @@
                     <input type="checkbox" id="agree-terms" name="agree-terms" required>
                     <label for="agree-terms">Tôi đồng ý với điều khoản dịch vụ và chính sách bảo mật</label>
                 </div>
-                <input type="hidden" name="role" value="2">
+                <input type="hidden" name="roleId" value="2">
                 <button>Đăng Ký</button>
                 <div class="login-link">Bạn đã có tài khoản? <a href="signIn.jsp">Đăng nhập</a></div>
             </form>
@@ -51,8 +51,5 @@
 
     </div>
 </div>
-
-
 </body>
-
 </html>
