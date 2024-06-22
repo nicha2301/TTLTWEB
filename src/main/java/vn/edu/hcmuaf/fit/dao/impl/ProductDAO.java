@@ -143,9 +143,9 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
     }
 
     @Override
-    public Product deleteProductById(int productId) {
+    public boolean deleteProductById(int productId) {
         String sql = "DELETE FROM products WHERE id = ?";
-        return insert(sql, Product.class, productId);
+        return update(sql, productId);
     }
 
     @Override

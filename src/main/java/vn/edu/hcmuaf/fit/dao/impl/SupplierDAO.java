@@ -40,14 +40,14 @@ public class SupplierDAO extends AbsDAO<Supplier> implements ISupplierDAO {
     }
 
     @Override
-    public Supplier updateSupplier(Integer id, String name, String email, String phone, String detailAddress) {
-        String sql = "UPDATE suppliers SET supplierName=?,  email=?, phone=?, detail_address=? WHERE id=?";
-        return insert(sql, Supplier.class, name, email, phone, detailAddress, id);
+    public boolean updateSupplier(Integer id, String name, String email, String phone, String detailAddress) {
+        String sql = "UPDATE suppliers SET supplierName=?, email=?, phone=?, detail_address=? WHERE id=?";
+        return update(sql, name, email, phone, detailAddress, id);
     }
 
     @Override
-    public Supplier deleteSupplier(Integer id) {
+    public boolean deleteSupplier(Integer id) {
         String sql = "DELETE FROM suppliers WHERE id=?";
-        return insert(sql, Supplier.class,id);
+        return update(sql, id);
     }
 }

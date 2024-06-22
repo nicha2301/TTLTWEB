@@ -58,16 +58,16 @@ public class SupplierService extends LogDAO<Supplier> implements ISupplierServic
     }
 
     @Override
-    public Supplier updateSupplier(Supplier supplier, String name, String email, String phone, String detailAddress, String ip, String address) {
+    public boolean updateSupplier(Supplier supplier, String name, String email, String phone, String detailAddress, String ip, String address) {
         try {
             Level level;
             supplier.setBeforeData("Old info of ID=" + supplier.getId() + " is " + supplier);
-            Supplier success = SupplierDAO.getInstance().updateSupplier(supplier.getId(), supplier.getSupplierName(), supplier.getEmail(), supplier.getPhone(), supplier.getDetailAddress());
-            if(success != null) {
-                supplier.setAfterData("New info of ID=" + success.getId() + " is " + success);
+            boolean success = SupplierDAO.getInstance().updateSupplier(supplier.getId(), supplier.getSupplierName(), supplier.getEmail(), supplier.getPhone(), supplier.getDetailAddress());
+            if(success) {
+                supplier.setAfterData("New info of ID=" + supplier.getId() + " is updated!");
                 level = LevelDAO.getInstance().getLevel(1).get(0);
             } else {
-                supplier.setAfterData("New info of ID=" + supplier.getId() + " is the old info");
+                supplier.setAfterData("New info of ID=" + supplier.getId() + " is not updated");
                 level = LevelDAO.getInstance().getLevel(2).get(0);
             }
             super.insert(supplier, level, ip, address);
@@ -75,7 +75,7 @@ public class SupplierService extends LogDAO<Supplier> implements ISupplierServic
         } catch (Exception e) {
             supplier.setAfterData("New info of ID=" + supplier.getId() + " is " + supplier);
             super.insert(supplier, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
-            return null;
+            return false;
         }
     }
 
@@ -83,19 +83,17 @@ public class SupplierService extends LogDAO<Supplier> implements ISupplierServic
     public boolean deleteSupplier(Supplier supplier, String ip, String address) {
         try {
             Level level;
-            boolean re = false;
             supplier.setBeforeData("Supplier info of ID=" + supplier.getId() + " is " + supplier + " before delete");
-            Supplier success = SupplierDAO.getInstance().deleteSupplier(supplier.getId());
-            if(success==null) {
+            boolean success = SupplierDAO.getInstance().deleteSupplier(supplier.getId());
+            if(success) {
                 level = LevelDAO.getInstance().getLevel(1).get(0);
                 supplier.setAfterData("Supplier with ID=" + supplier.getId() + " has been deleted");
-                re = true;
             } else {
                 level = LevelDAO.getInstance().getLevel(2).get(0);
                 supplier.setAfterData("Delete failed with ID=" + supplier.getId());
             }
             super.insert(supplier, level, ip, address);
-            return re;
+            return success;
         } catch (Exception e) {
             List<Supplier> list = SupplierDAO.getInstance().getSupplierById(supplier.getId());
             supplier.setAfterData(e.getMessage() + " with ID=" + supplier.getId());

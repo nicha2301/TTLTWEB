@@ -14,7 +14,7 @@ public interface ISupplierDAO extends GenericDAO<Supplier> {
 
     Supplier insertSupplier(String name, String detail_address, String phone, String email);
 
-    Supplier updateSupplier(Integer id, String name, String email, String phone, String detailAddress);
+    boolean updateSupplier(Integer id, String name, String email, String phone, String detailAddress);
 
-    Supplier deleteSupplier(Integer id);
+    boolean deleteSupplier(Integer id);
 }

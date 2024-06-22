@@ -122,19 +122,17 @@ public class ProductService extends LogDAO<Product> implements IProductService {
     public boolean deleteProductById(Product p, String ip, String address) {
         try {
             Level level;
-            boolean re = false;
             p.setBeforeData("Product info of ID=" + p.getId() + " is " + p + " before delete");
-            Product success = ProductDAO.getInstance().deleteProductById(p.getId());
-            if(success==null) {
+            boolean success = ProductDAO.getInstance().deleteProductById(p.getId());
+            if(success) {
                 level = LevelDAO.getInstance().getLevel(1).get(0);
                 p.setAfterData("Product ID=" + p.getId() + " has been deleted");
-                re = true;
             } else {
                 level = LevelDAO.getInstance().getLevel(2).get(0);
                 p.setAfterData("Delete failed with ID=" + p.getId());
             }
             super.insert(p, level, ip, address);
-            return re;
+            return success;
         } catch (Exception e) {
             Product product = ProductDAO.getInstance().getProductByIdWithSupplierInfo(p.getId());
             p.setAfterData(e.getMessage() + " with ID=" + p.getId());

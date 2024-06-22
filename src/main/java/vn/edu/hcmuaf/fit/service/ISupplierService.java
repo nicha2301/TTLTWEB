@@ -14,7 +14,7 @@ public interface ISupplierService {
 
     Supplier insertSupplier(Supplier supplier, String ip, String address);
 
-    Supplier updateSupplier(Supplier supplier, String name, String email, String phone, String detailAddress, String ip, String address);
+    boolean updateSupplier(Supplier supplier, String name, String email, String phone, String detailAddress, String ip, String address);
 
     boolean deleteSupplier(Supplier supplier, String ip, String address);
 
