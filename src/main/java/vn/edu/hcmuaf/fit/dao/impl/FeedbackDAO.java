@@ -18,7 +18,7 @@ public class FeedbackDAO extends AbsDAO<Feedback> implements IFeedbackDAO {
     @Override
     public Feedback addFeedback(String email, String name, String content) {
         String sql = "INSERT INTO `feedbacks`(`email`, `name`, `content`) VALUES(?,?,?)";
-        return modify(sql, Feedback.class, email, name, content);
+        return insert(sql, Feedback.class, email, name, content);
     }
 
     @Override

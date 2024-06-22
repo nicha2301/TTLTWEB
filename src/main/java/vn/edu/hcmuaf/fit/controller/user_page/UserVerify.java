@@ -19,7 +19,7 @@ public class UserVerify extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
-        request.getRequestDispatcher(request.getContextPath() + "./verify.jsp").forward(request, response);
+        request.getRequestDispatcher("/user/verify.jsp").forward(request, response);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class UserVerify extends HttpServlet {
         String code = request.getParameter("verifycode");
         HttpSession session = request.getSession(true);
         User user = new User();
-        user.setId((Integer) session.getAttribute("createdId"));
+        user.setId((Integer) getServletContext().getAttribute("createdId"));
         String authCode = (String) session.getAttribute("authCode");
         String error = UserService.getInstance().setVerified(user, code, authCode, ipAddress, "/user/verify");
         if(error.isEmpty()) {

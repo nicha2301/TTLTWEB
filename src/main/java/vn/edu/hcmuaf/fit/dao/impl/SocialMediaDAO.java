@@ -24,6 +24,6 @@ public class SocialMediaDAO extends AbsDAO<SocialMedia> implements ISocialMediaD
     @Override
     public SocialMedia update(String facebook, String instagram, String twitter, String pinterest, String youtube, String linkedin) {
         String sql = "UPDATE social_media SET facebook=?, instagram=?, twitter=?, pinterest=?, youtube=?, linkedin=? WHERE id=1";
-        return modify(sql, SocialMedia.class, facebook, instagram, twitter, pinterest, youtube, linkedin);
+        return insert(sql, SocialMedia.class, facebook, instagram, twitter, pinterest, youtube, linkedin);
     }
 }

@@ -22,8 +22,12 @@ public class AddressDAO extends AbsDAO<Address> implements IAddressDAO {
     }
 
     @Override
-    public Address updateAddress(String address, String phone, String hotline, String email, String timeOpen, String map) {
+    public boolean updateAddress(String address, String phone, String hotline, String email, String timeOpen, String map) {
         String sql = "UPDATE address SET address=?, phone=?, hotline=?, email=?, timeOpen=?, map=? WHERE id=1";
-        return modify(sql, Address.class, address, phone, hotline, email, timeOpen, map);
+        return update(sql, address, phone, hotline, email, timeOpen, map);
+    }
+
+    public static void main(String[] args) {
+
     }
 }

@@ -8,5 +8,5 @@ public interface IAddressService {
 
     List<Address> loadAddress();
 
-    Address updateAddress(Address pageAddress, String ip, String address);
+    boolean updateAddress(Address pageAddress, String ip, String address);
 }

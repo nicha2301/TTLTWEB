@@ -5,7 +5,6 @@ import vn.edu.hcmuaf.fit.dao.ICategoryDAO;
 import vn.edu.hcmuaf.fit.model.ProductCategories;
 
 import java.util.AbstractMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,19 +49,19 @@ public class CategoryDAO extends AbsDAO<ProductCategories> implements ICategoryD
     @Override
     public ProductCategories setActive(Integer id, Boolean active) {
         String sql = "UPDATE product_categories SET active =? WHERE id =?";
-        return modify(sql, ProductCategories.class, active?1:0, id);
+        return insert(sql, ProductCategories.class, active?1:0, id);
     }
 
     @Override
     public ProductCategories editCategory(Integer id, String cateName) {
         String sql = "UPDATE product_categories SET categoryName =? WHERE id =?";
-        return modify(sql, ProductCategories.class, cateName, id);
+        return insert(sql, ProductCategories.class, cateName, id);
     }
 
     @Override
     public ProductCategories addCategory(String cateName, Integer groupId) {
         String sql = "INSERT INTO `product_categories`(`categoryName`, `group_id`) VALUES(?,?)";
-        return modify(sql, ProductCategories.class, cateName, groupId);
+        return insert(sql, ProductCategories.class, cateName, groupId);
     }
 
 }

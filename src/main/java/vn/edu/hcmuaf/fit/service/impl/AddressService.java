@@ -17,13 +17,13 @@ public class AddressService extends LogDAO<Address> implements IAddressService {
     }
 
     @Override
-    public Address updateAddress(Address pageAddress, String ip, String address) {
+    public boolean updateAddress(Address pageAddress, String ip, String address) {
         try {
             Level level;
             pageAddress.setBeforeData("Old info of web address is " + pageAddress);
-            Address success = AddressDAO.getInstance().updateAddress(pageAddress.getAddress(), pageAddress.getPhone(), pageAddress.getHotline(), pageAddress.getEmail(), pageAddress.getTimeOpen(), pageAddress.getMap());
-            if(success != null) {
-                pageAddress.setAfterData("New info of address is " + success);
+            boolean success = AddressDAO.getInstance().updateAddress(pageAddress.getAddress(), pageAddress.getPhone(), pageAddress.getHotline(), pageAddress.getEmail(), pageAddress.getTimeOpen(), pageAddress.getMap());
+            if(success) {
+                pageAddress.setAfterData("New info of address is update");
                 level = LevelDAO.getInstance().getLevel(1).get(0);
             } else {
                 pageAddress.setAfterData("New info of address isn't updated!");
@@ -34,7 +34,7 @@ public class AddressService extends LogDAO<Address> implements IAddressService {
         } catch (Exception e) {
             pageAddress.setBeforeData("New info of web address is " + pageAddress);
             super.insert(pageAddress, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
-            return null;
+            return false;
         }
     }
 }

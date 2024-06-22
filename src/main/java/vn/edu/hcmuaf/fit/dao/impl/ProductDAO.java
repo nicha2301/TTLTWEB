@@ -139,13 +139,13 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
                                  String ingredients, String dosage, String instructions, String warrantyPeriod,
                                  String storageCondition, Integer typeId, Integer supplierId) {
         String sql = "UPDATE `products` SET productName =?, category_id =?, sale_percent =?, price =?, quantity =?, purpose =?, contraindications =?, ingredients =?, dosage =?, instructions =?, warrantyPeriod =?, storageCondition =?, type_id =?, supplier_id =? WHERE id =?";
-        return modify(sql, Product.class, productName, categoryId, percent, price, quantity, purpose, contraindications, ingredients, dosage, instructions, warrantyPeriod, storageCondition, typeId, supplierId, id);
+        return insert(sql, Product.class, productName, categoryId, percent, price, quantity, purpose, contraindications, ingredients, dosage, instructions, warrantyPeriod, storageCondition, typeId, supplierId, id);
     }
 
     @Override
     public Product deleteProductById(int productId) {
         String sql = "DELETE FROM products WHERE id = ?";
-        return modify(sql, Product.class, productId);
+        return insert(sql, Product.class, productId);
     }
 
     @Override
@@ -154,7 +154,7 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
                               String ingredients, String dosage, String instructions, String warrantyPeriod,
                               String storageCondition, Integer typeId, Integer supplierId, Boolean active) {
         String sql = "INSERT INTO `products`(`productName`, `category_id`, `sale_percent`, `price`, `quantity`, `purpose`, `contraindications`, `ingredients`, `dosage`, `instructions`, `warrantyPeriod`, `storageCondition`, `type_id`, `supplier_id`, `active`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        return modify(sql, Product.class, productName, categoryId, percent, price, quantity, purpose, contraindications, ingredients, dosage, instructions, warrantyPeriod, storageCondition, typeId, supplierId, active?1:0);
+        return insert(sql, Product.class, productName, categoryId, percent, price, quantity, purpose, contraindications, ingredients, dosage, instructions, warrantyPeriod, storageCondition, typeId, supplierId, active?1:0);
     }
 
     @Override

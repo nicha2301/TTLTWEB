@@ -2,6 +2,7 @@ package vn.edu.hcmuaf.fit.dao.impl;
 
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.mapper.RowMapper;
+import org.jdbi.v3.core.statement.Update;
 import vn.edu.hcmuaf.fit.db.JDBIConnector;
 import vn.edu.hcmuaf.fit.dao.GenericDAO;
 import vn.edu.hcmuaf.fit.model.Table;
@@ -24,12 +25,33 @@ public class AbsDAO<T> implements GenericDAO<T> {
                 handle.select(sql, parameters).map(rowMapper).list()
         );
     }
-
+    // insert
     @Override
-    public <T> T modify(String sql, Class<T> bean, Object... parameters) {
+    public <T> T insert(String sql, Class<T> bean, Object... parameters) {
         return JDBIConnector.get().withHandle(handle ->
             bindParams(handle, sql, bean, parameters)
         );
+    }
+
+    // update, delete
+    @Override
+    public boolean update(String sql, Object... parameters) {
+        return JDBIConnector.get().withHandle(handle ->
+            bindParams(handle, sql, parameters)
+        );
+    }
+
+    private boolean bindParams(Handle handle, String sql, Object... parameters) {
+        try {
+            Update update = handle.createUpdate(sql);
+            for (int i = 0; i < parameters.length; i++) {
+                update.bind(i, parameters[i]);
+            }
+            return update.execute()!=0?true:false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
@@ -57,7 +79,7 @@ public class AbsDAO<T> implements GenericDAO<T> {
     private <T> T bindParams(Handle handle, String sql, Class<T> bean, Object... parameters) {
 //        System.out.println(getTableName(bean));
         try {
-            var update = handle.createUpdate(sql);
+            Update update = handle.createUpdate(sql);
             for (int i = 0; i < parameters.length; i++) {
                 update.bind(i, parameters[i]);
             }

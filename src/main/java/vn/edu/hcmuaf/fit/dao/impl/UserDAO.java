@@ -25,7 +25,7 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
     @Override
     public User signUp(String username, String email, String password, Integer role) {
         String sql = "INSERT INTO users(username, email, password, role_id) VALUES (?, ?, ?, ?)";
-        return modify(sql, User.class, username, email, BCrypt.hashpw(password, BCrypt.gensalt()), role);
+        return insert(sql, User.class, username, email, BCrypt.hashpw(password, BCrypt.gensalt()), role);
     }
 
     /**
@@ -33,9 +33,9 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
      * Updates the verified status of a user in the database.
      */
     @Override
-    public User setVerified(Integer id) {
-        String sql = "UPDATE users SET verified = 1 WHERE id = ?";
-        return modify(sql, User.class, id);
+    public boolean setVerified(Integer id) {
+        String sql = "UPDATE users SET verified = 1 WHERE id = ? AND verified <> 1";
+        return update(sql, id);
     }
 
     /**
@@ -45,7 +45,7 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
     @Override
     public User updateUserInfo(String fullName, String birthday, String city, String district, String ward, String detailAddress, String phone, Integer id) {
         String sql = "UPDATE users SET fullName = ?, dateOfBirth = DATE(?), city = ?, district = ?, ward = ?, detail_address = ?, phone = ? WHERE id = ?";
-        return modify(sql, User.class, fullName, birthday, city, district, ward, detailAddress, phone, id);
+        return insert(sql, User.class, fullName, birthday, city, district, ward, detailAddress, phone, id);
     }
 
     /**
@@ -65,13 +65,13 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
     @Override
     public User updatePassword(String newPass, Integer id) {
         String sql = "UPDATE users SET password =? WHERE id =?";
-        return modify(sql, User.class, BCrypt.hashpw(newPass, BCrypt.gensalt()), id);
+        return insert(sql, User.class, BCrypt.hashpw(newPass, BCrypt.gensalt()), id);
     }
 
     @Override
     public User addAdmin(String username, String email, String password, String phone) {
         String sql = "INSERT INTO users(username, email, password, phone, verified, role_id) VALUES (?, ?, ?, ?, ?, ?)";
-        return modify(sql, User.class, username, email, BCrypt.hashpw(password, BCrypt.gensalt()), phone, 1, 2);
+        return insert(sql, User.class, username, email, BCrypt.hashpw(password, BCrypt.gensalt()), phone, 1, 2);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
     @Override
     public User updateUserInAdmin(Integer id, String email, String name, String birthday, String address, Timestamp dateCreated) {
         String sql = "UPDATE users SET email = ?, fullName = ?, dateOfBirth = ?, detail_address = ?, date_created = ? WHERE id = ?";
-        return modify(sql, User.class, email, name, birthday, address, dateCreated, id);
+        return insert(sql, User.class, email, name, birthday, address, dateCreated, id);
     }
 
     /**
@@ -113,7 +113,7 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
     @Override
     public User updateUserById(Integer id, String name, String phone, String email, String address) {
         String sql = "UPDATE users SET fullName = ?, phone = ?, email = ?, detail_address = ? WHERE id = ?";
-        return modify(sql, User.class, name, phone, email, address, id);
+        return insert(sql, User.class, name, phone, email, address, id);
     }
 
     /**
@@ -123,7 +123,7 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
     @Override
     public User deleteUserById(Integer userId) {
         String sql = "DELETE FROM users WHERE id =?";
-        return modify(sql, User.class, userId);
+        return insert(sql, User.class, userId);
     }
 
     public static void main(String[] args) {

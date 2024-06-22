@@ -10,7 +10,57 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="icon" href="https://tienthangvet.vn/wp-content/uploads/cropped-favicon-Tien-Thang-Vet-192x192.png"
           sizes="192x192"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <title>Đăng ký</title>
+    <script type="text/javascript">
+        var context = "${pageContext.request.contextPath}";
+        $(document).ready(function() {
+            $('#btnRegister').click(function (event) {
+                event.preventDefault();
+                var username = $('#username').val();
+                var email = $('#email-forgot').val();
+                var password = $('#password').val();
+                var rePassword = $('#rePassword').val();
+                var roleId = $('#roleId').val();
+                var agree_terms = $('#agree-terms').is(':checked');
+
+                $.ajax({
+                    type: 'POST',
+                    data: {
+                        username: username,
+                        email: email,
+                        password: password,
+                        rePassword: rePassword,
+                        roleId: roleId,
+                        agree_terms: agree_terms
+                    },
+                    url: 'signup',
+                    success: function (result) {
+                        try {
+                            // var data = JSON.parse(result);
+                            var json = {
+                                tets: "qq"
+                            }
+                            json.tets
+                            if (result.status !== "success") {
+                                $('#errorRegister').html(data.error);
+                                result.me
+                            } else {
+                                window.location.href = context + "/user/verify";
+                            }
+                        } catch (e) {
+                            $('#errorRegister').html("Error loading request, please try again!");
+                            console.log(e.toString());
+                        }
+                    },
+                    error: function() {
+                        $('#errorRegister').html("Connection errors. Please check your network and try again!");
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -19,13 +69,9 @@
 
     <div class="body">
         <div class="form-container">
-            <form class="signup-form" method="POST" action="signup">
+            <form id="form" class="signup-form">
                 <h2>Đăng Ký</h2>
-                <% String error = (String) request.getAttribute("wrongInfor");%>
-                <% if (error != null) {%>
-                <p style="color: red;margin-bottom: 10px"><%=error%>
-                </p>
-                <% } %>
+                <span style="color: red;margin-bottom: 10px" id="errorRegister"></span>
                 <div class="input-group">
                     <input type="text" id="username" name="username" placeholder="Tên người dùng" required>
                 </div>
@@ -34,28 +80,23 @@
                 </div>
                 <div id="email-error" style="color: red;"></div>
                 <div class="input-group">
-                    <input type="password" placeholder="Nhập mật khẩu mới" name="password" required>
+                    <input id="password" type="password" placeholder="Nhập mật khẩu mới" name="password" required>
                 </div>
                 <div class="input-group">
-                    <input type="password" placeholder="Nhập lại mật khẩu mới" name="repassword" required>
+                    <input id="rePassword" type="password" placeholder="Nhập lại mật khẩu mới" name="rePassword" required>
                 </div>
                 <div class="terms-checkbox">
                     <input type="checkbox" id="agree-terms" name="agree-terms" required>
                     <label for="agree-terms">Tôi đồng ý với điều khoản dịch vụ và chính sách bảo mật</label>
                 </div>
-                <input type="hidden" name="roleId" value="1">
-
-                <button>Đăng Ký</button>
+                <input id="roleId" type="hidden" name="roleId" value="1">
+                <button id="btnRegister" type="submit">Đăng Ký</button>
                 <div class="login-link">Bạn đã có tài khoản? <a href="signIn.jsp">Đăng nhập</a></div>
             </form>
         </div>
-
     </div>
     <jsp:include page="footer.jsp"/>
 </div>
-
-
 <script src="js/sign/scipts.js"></script>
 </body>
-
 </html>

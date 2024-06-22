@@ -37,18 +37,18 @@ public class DiscountDAO extends AbsDAO<Discount> implements IDiscountDAO {
     @Override
     public Discount addCoupon(String name, String des, Double percent, Integer quantity, Timestamp startDate, Timestamp dateEnd) {
         String sql = "INSERT INTO `discounts`(`discountName`, `description`, `sale_percent`, `quantity`, `startDate`, `expirationDate`) VALUES(?,?,?,?,?,?)";
-        return modify(sql, Discount.class, name, des, percent, quantity, startDate, dateEnd);
+        return insert(sql, Discount.class, name, des, percent, quantity, startDate, dateEnd);
     }
 
     @Override
     public Discount delCoupon(Integer id) {
         String sql = "DELETE FROM discounts WHERE id=?";
-        return modify(sql, Discount.class, id);
+        return insert(sql, Discount.class, id);
     }
 
     @Override
     public Discount editCoupon(Integer id, String name, String des, Double percent, Integer quantity, Timestamp startDate, Timestamp dateEnd) {
         String sql = "UPDATE `discounts` SET `discountName`=?, `description`=?, `sale_percent`=?, `quantity`=?, `startDate`=?, `expirationDate`=? WHERE id =?";
-        return modify(sql, Discount.class, name, des, percent, quantity, startDate, dateEnd, id);
+        return insert(sql, Discount.class, name, des, percent, quantity, startDate, dateEnd, id);
     }
 }

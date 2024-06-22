@@ -13,7 +13,7 @@ public class LogDAO<T extends AbsModel> extends AbsDAO<Log> implements ILogDAO<T
     public Log insert(T model, Level level, String ip, String address) {
         try {
             String sql = "INSERT INTO log(level_id, ip, address, pre_value, post_value) VALUES (?, ?, ?, ?, ?)";
-            return modify(sql, Log.class, level.getId(), ip, address, model.getBeforeData(), model.getAfterData());
+            return insert(sql, Log.class, level.getId(), ip, address, model.getBeforeData(), model.getAfterData());
         } catch (Exception e) {
             return null;
         }

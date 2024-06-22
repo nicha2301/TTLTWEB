@@ -8,5 +8,5 @@ public interface IAddressDAO extends GenericDAO<Address>{
 
     List<Address> loadAddress();
 
-    Address updateAddress(String address, String phone, String hotline, String email, String timeOpen, String map);
+    boolean updateAddress(String address, String phone, String hotline, String email, String timeOpen, String map);
 }

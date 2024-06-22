@@ -36,7 +36,7 @@ public class UserService extends LogDAO<User> implements IUserService {
     @Override
     public User signIn(User user, String ip, String address) {
         try {
-            List<User> users = UserDAO.getInstance().checkExistUser(user.getUsername(), "");
+            List<User> users = UserDAO.getInstance().checkExistUser("", user.getEmail());
             if (users.size()==1) {
                 if(BCrypt.checkpw(user.getPassword(), users.get(0).getPassword())) {
                     user.setAfterData("Login success with ID=" + users.get(0).getId());
@@ -156,8 +156,8 @@ public class UserService extends LogDAO<User> implements IUserService {
             String error = "";
             if(authCode != null) {
                 if (code.equals(authCode)) {
-                    User success = UserDAO.getInstance().setVerified(user.getId());
-                    if(success == null) error = "Set verified status failed for your account";
+                    boolean success = UserDAO.getInstance().setVerified(user.getId());
+                    if(!success) error = "Set verified status failed for your account";
                 } else {
                     error = "Verified code do not match!";
                 }

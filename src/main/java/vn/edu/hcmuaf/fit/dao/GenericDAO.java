@@ -9,7 +9,9 @@ public interface GenericDAO<T> {
 
     <T> List<T> query(String sql, Class<T> bean, Object... parameters);
 
-    <T> T modify(String sql, Class<T> bean, Object... parameters);
+    <T> T insert(String sql, Class<T> bean, Object... parameters);
+
+    boolean update(String sql, Object... parameters);
 
     Integer count(String sql, Object... parameters);
 

@@ -25,14 +25,12 @@ public class ImageDAO extends AbsDAO<Image> implements IImageDAO {
     @Override
     public Image addImage(Integer proId, String imgUrl) {
         String sql = "INSERT INTO images (product_id, imageUrl) VALUES(?, ?)";
-        return modify(sql, Image.class, proId, imgUrl);
+        return insert(sql, Image.class, proId, imgUrl);
     }
 
     @Override
     public boolean removeImage(Integer proId) {
         String sql = "DELETE FROM images WHERE product_id =?";
-        int exec = JDBIConnector.get().withHandle(handle ->
-                                handle.createUpdate(sql).bind(1, proId).execute());
-        return exec!=0?true:false;
+        return update(sql,proId);
     }
 }
