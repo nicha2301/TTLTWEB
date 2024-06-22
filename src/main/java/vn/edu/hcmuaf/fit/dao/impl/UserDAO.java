@@ -17,30 +17,51 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
         return instance;
     }
 
+    /**
+     * TESTED
+     * Signs up a new user in the database
+     *
+     */
     @Override
     public User signUp(String username, String email, String password, Integer role) {
         String sql = "INSERT INTO users(username, email, password, role_id) VALUES (?, ?, ?, ?)";
         return modify(sql, User.class, username, email, BCrypt.hashpw(password, BCrypt.gensalt()), role);
     }
 
+    /**
+     * TESTED
+     * Updates the verified status of a user in the database.
+     */
     @Override
     public User setVerified(Integer id) {
         String sql = "UPDATE users SET verified = 1 WHERE id = ?";
         return modify(sql, User.class, id);
     }
 
+    /**
+     * TESTED
+     * Updates the user's information in the database.
+     */
     @Override
     public User updateUserInfo(String fullName, String birthday, String city, String district, String ward, String detailAddress, String phone, Integer id) {
         String sql = "UPDATE users SET fullName = ?, dateOfBirth = DATE(?), city = ?, district = ?, ward = ?, detail_address = ?, phone = ? WHERE id = ?";
         return modify(sql, User.class, fullName, birthday, city, district, ward, detailAddress, phone, id);
     }
 
+    /**
+     * #TESTED
+     * Checks if a user with the given username or email already exists in the database.
+     */
     @Override
     public List<User> checkExistUser(String username, String email) {
         String sql = "SELECT * FROM users WHERE username = ? OR email = ?";
         return query(sql, User.class, username, email);
     }
 
+    /**
+     * TESTED
+     * Updates the user's password in the database.
+     */
     @Override
     public User updatePassword(String newPass, Integer id) {
         String sql = "UPDATE users SET password =? WHERE id =?";
@@ -59,12 +80,20 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
         return query(sql, User.class, roleId);
     }
 
+    /**
+     * TESTED
+     * Loads a user with the given id from the database.
+     */
     @Override
     public List<User> loadUsersWithId(Integer id) {
         String sql = "SELECT * FROM users WHERE id =?";
         return query(sql, User.class, id);
     }
 
+    /**
+     * TESTED
+     * Counts the total number of users in the database.
+     */
     @Override
     public Integer sumOfUsers() {
         String sql = "SELECT COUNT(*) FROM users";
@@ -77,12 +106,20 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
         return modify(sql, User.class, email, name, birthday, address, dateCreated, id);
     }
 
+    /**
+     * TESTED
+     * Updates the user's information in the database.
+     */
     @Override
     public User updateUserById(Integer id, String name, String phone, String email, String address) {
         String sql = "UPDATE users SET fullName = ?, phone = ?, email = ?, detail_address = ? WHERE id = ?";
         return modify(sql, User.class, name, phone, email, address, id);
     }
 
+    /**
+     * TESTED
+     * Deletes a user from the database by their id.
+     */
     @Override
     public User deleteUserById(Integer userId) {
         String sql = "DELETE FROM users WHERE id =?";

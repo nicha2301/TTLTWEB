@@ -51,7 +51,11 @@ public class AbsDAO<T> implements GenericDAO<T> {
         return res;
     }
 
+    /**
+     * Chỗ này ví dụ bean truyền vào là User, nhưng khi in ra thì là Log
+     */
     private <T> T bindParams(Handle handle, String sql, Class<T> bean, Object... parameters) {
+//        System.out.println(getTableName(bean));
         try {
             var update = handle.createUpdate(sql);
             for (int i = 0; i < parameters.length; i++) {
