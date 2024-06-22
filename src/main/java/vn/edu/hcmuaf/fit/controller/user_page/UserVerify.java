@@ -10,6 +10,7 @@ import vn.edu.hcmuaf.fit.model.User;
 import vn.edu.hcmuaf.fit.service.impl.UserService;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @WebServlet("/user/verify")
 public class UserVerify extends HttpServlet {
@@ -24,21 +25,35 @@ public class UserVerify extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String ipAddress = request.getHeader("X-FORWARDED-FOR");
-        if (ipAddress == null) {
-            ipAddress = request.getRemoteAddr();
-        }
-        String code = request.getParameter("verifycode");
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
         HttpSession session = request.getSession(true);
-        User user = new User();
-        user.setId((Integer) getServletContext().getAttribute("createdId"));
+        String code = request.getParameter("verifyCode");
         String authCode = (String) session.getAttribute("authCode");
-        String error = UserService.getInstance().setVerified(user, code, authCode, ipAddress, "/user/verify");
-        if(error.isEmpty()) {
-            response.sendRedirect("./signIn.jsp");
-        } else {
-            request.setAttribute("wrongAuthCode", error);
-            request.getRequestDispatcher("./verify.jsp").forward(request, response);
+        Integer id = (Integer) getServletContext().getAttribute("userId");
+        boolean ok = true;
+        if ((code == null) || (code.equals(""))) {
+            ok = false;
         }
+        if (!ok) {
+            out.write("{\"error\":\"Please fill in all information completely\"}");
+        } else {
+            User user = new User();
+            user.setId(id);
+
+            String ip = request.getHeader("X-FORWARDED-FOR");
+            if (ip == null) ip = request.getRemoteAddr();
+
+            String error = UserService.getInstance().setVerified(user, code, authCode, ip, "/user/verify");
+            if(error.isEmpty()) {
+                out.write("{ \"status\": \"success\"}");
+            } else {
+                out.write("{ \"error\" :\"" + error + "\"}");
+            }
+        }
+        out.close();
     }
 }

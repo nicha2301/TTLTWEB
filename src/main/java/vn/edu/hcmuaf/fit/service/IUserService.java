@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IUserService {
 
-//    User checkExistUser(User user, String ip, String address);
+    User chkUsrByNameOrEmail(String username, String email);
 
     User signIn(User user, String ip, String address);
 
@@ -33,4 +33,8 @@ public interface IUserService {
     User updateUserById(User user, String name, String phone, String email, String detail_address, String ip, String address);
 
     boolean deleteUserById(User user, String ip, String address);
+
+    boolean updateLoginFail(User user, int times, String ip, String address);
+
+    boolean resetLoginTimes(User user, String ip, String address);
 }

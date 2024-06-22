@@ -38,6 +38,19 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
         return update(sql, id);
     }
 
+    @Override
+    public boolean updateLoginFail(String email, Integer times) {
+        String sql = "UPDATE users SET login_times =?, verified =? WHERE email =?";
+        if (times < 5) return update(sql, email, times, 1);
+        else return update(sql, email, 5, 0);
+    }
+
+    @Override
+    public boolean resetLoginTimes(String email) {
+        String sql = "UPDATE users SET login_times = 0 WHERE email =?";
+        return update(sql, email);
+    }
+
     /**
      * TESTED
      * Updates the user's information in the database.

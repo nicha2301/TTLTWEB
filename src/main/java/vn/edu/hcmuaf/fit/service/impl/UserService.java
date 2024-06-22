@@ -23,6 +23,17 @@ public class UserService extends LogDAO<User> implements IUserService {
         return instance;
     }
 
+    @Override
+    public User chkUsrByNameOrEmail(String username, String email) {
+        try {
+            List<User> users = UserDAO.getInstance().checkExistUser(username, email);
+            if (users.size() != 1) users.clear();
+            return users.get(0);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     /**
      * TESTED
      * This method is used to check login with the username and password.
@@ -62,7 +73,7 @@ public class UserService extends LogDAO<User> implements IUserService {
 //    @Override
 //    public User signIn(User user, String ip, String address) {
 //        try {
-//            List<User> users = UserDAO.getInstance().checkExistUser(user.getUsername(), null);
+//            List<User> users = UserDAO.getInstance().chkUsrByNameOrEmail(user.getUsername(), null);
 //            int count = 0;
 //            User result = null;
 //            if(!users.isEmpty()) {
@@ -353,7 +364,65 @@ public class UserService extends LogDAO<User> implements IUserService {
         }
     }
 
-    public static void main(String[] args) {
+    @Override
+    public boolean updateLoginFail(User user, int times, String ip, String address) {
+        try {
+            Level level;
+            user.setBeforeData("Login times of email=" + user.getEmail() + " are " + (times - 1));
+            boolean success = UserDAO.getInstance().updateLoginFail(user.getEmail(), times);
+            if(success) {
+                user.setAfterData("Update success. Login times of email=" + user.getEmail() + " are " + times);
+                level = LevelDAO.getInstance().getLevel(1).get(0);
+            } else {
+                user.setAfterData("Update fail. Login times of email=" + user.getEmail() + " are not changed");
+                level = LevelDAO.getInstance().getLevel(2).get(0);
+            }
+            super.insert(user, level, ip, address);
+            return success;
+        } catch (Exception e) {
+            User u = UserService.getInstance().chkUsrByNameOrEmail("", user.getEmail());
+            boolean check = false;
+            if(u != null) {
+                if(u.getLoginTimes()==times) {
+                    user.setAfterData("Update success. Login times of email=" + user.getEmail() + " are " + times);
+                    check = true;
+                } else {
+                    user.setAfterData("Update fail. Login times of email=" + user.getEmail() + " are " + u.getLoginTimes());
+                }
+                super.insert(user, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
+            }
+            return check;
+        }
+    }
 
+    @Override
+    public boolean resetLoginTimes(User user, String ip, String address) {
+        try {
+            Level level;
+            user.setBeforeData("Login times of email=" + user.getEmail() + " are " + user.getLoginTimes());
+            boolean success = UserDAO.getInstance().resetLoginTimes(user.getEmail());
+            if(success) {
+                user.setAfterData("Update success. Login times of email=" + user.getEmail() + " are " + 0);
+                level = LevelDAO.getInstance().getLevel(1).get(0);
+            } else {
+                user.setAfterData("Update fail. Login times of email=" + user.getEmail() + " are " + user.getLoginTimes());
+                level = LevelDAO.getInstance().getLevel(2).get(0);
+            }
+            super.insert(user, level, ip, address);
+            return success;
+        } catch (Exception e) {
+            User u = UserService.getInstance().chkUsrByNameOrEmail("", user.getEmail());
+            boolean check = false;
+            if(u != null) {
+                if(u.getLoginTimes()==0) {
+                    user.setAfterData("Update success. Login times of email=" + user.getEmail() + " are " + 0);
+                    check = true;
+                } else {
+                    user.setAfterData("Update fail. Login times of email=" + user.getEmail() + " are " + u.getLoginTimes());
+                }
+                super.insert(user, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
+            }
+            return check;
+        }
     }
 }

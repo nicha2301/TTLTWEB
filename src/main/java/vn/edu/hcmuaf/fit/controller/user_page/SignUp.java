@@ -23,14 +23,14 @@ public class SignUp extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
-        request.getRequestDispatcher(request.getContextPath() + "/user/signUp.jsp").forward(request, response);
+        request.getRequestDispatcher("/user/signUp.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/plain; charset=UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
         PrintWriter out = response.getWriter();
 
         String username = request.getParameter("username");
@@ -55,14 +55,14 @@ public class SignUp extends HttpServlet {
         }
 
         if (!ok) {
-            out.println("{\"error\":\"Please fill in all information completely\"}");
+            out.write("{\"error\":\"Please fill in all information completely\"}");
         } else {
             if (agree_terms == null) {
-                out.println("{\"error\":\"Please click to agree to the terms of service and privacy policy\"}");
+                out.write("{\"error\":\"Please click to agree to the terms of service and privacy policy\"}");
             } else {
                 boolean agree = Boolean.parseBoolean(agree_terms);
                 if (!agree) {
-                    out.println("{\"error\":\"Please click to agree to the terms of service and privacy policy\"}");
+                    out.write("{\"error\":\"Please click to agree to the terms of service and privacy policy\"}");
                 } else {
                     User user = new User();
                     user.setUsername(username);
@@ -88,11 +88,9 @@ public class SignUp extends HttpServlet {
                             session.setMaxInactiveInterval(5*60);
                             getServletContext().setAttribute("userId", userId);
                         }
-                        response.setContentType("application/json");
-                        response.setCharacterEncoding("UTF-8");
-                        response.getWriter().write("{ \"status\": \"success\", \"message\": \"Success\" }");
+                        out.write("{ \"status\": \"success\"}");
                     } catch (NumberFormatException e) {
-                        out.println("{\"error\":\"" + error + "\"}");
+                        out.write("{ \"error\" :\"" + error + "\"}");
                     }
                 }
             }

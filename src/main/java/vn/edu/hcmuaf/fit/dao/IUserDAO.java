@@ -13,6 +13,8 @@ public interface IUserDAO extends GenericDAO<User> {
 
     boolean setVerified(Integer id);
 
+    boolean updateLoginFail(String email, Integer times);
+
     User updateUserInfo(String fullName, String birthday, String city, String district, String ward, String detailAddress, String phone, Integer id);
 
     User updatePassword(String newPass, Integer id);
@@ -31,4 +33,5 @@ public interface IUserDAO extends GenericDAO<User> {
 
     User deleteUserById(Integer userId);
 
+    boolean resetLoginTimes(String email);
 }

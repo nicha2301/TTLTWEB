@@ -38,20 +38,13 @@
                     url: 'signup',
                     success: function (result) {
                         try {
-                            // var data = JSON.parse(result);
-                            var json = {
-                                tets: "qq"
-                            }
-                            json.tets
                             if (result.status !== "success") {
-                                $('#errorRegister').html(data.error);
-                                result.me
+                                $('#errorRegister').html(result.error);
                             } else {
                                 window.location.href = context + "/user/verify";
                             }
                         } catch (e) {
                             $('#errorRegister').html("Error loading request, please try again!");
-                            console.log(e.toString());
                         }
                     },
                     error: function() {
@@ -91,7 +84,7 @@
                 </div>
                 <input id="roleId" type="hidden" name="roleId" value="1">
                 <button id="btnRegister" type="submit">Đăng Ký</button>
-                <div class="login-link">Bạn đã có tài khoản? <a href="signIn.jsp">Đăng nhập</a></div>
+                <div class="login-link">Bạn đã có tài khoản? <a href="${request.servletContext.contextPath}/user/signin">Đăng nhập</a></div>
             </form>
         </div>
     </div>
