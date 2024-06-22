@@ -41,8 +41,8 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
     @Override
     public boolean updateLoginFail(String email, Integer times) {
         String sql = "UPDATE users SET login_times =?, verified =? WHERE email =?";
-        if (times < 5) return update(sql, email, times, 1);
-        else return update(sql, email, 5, 0);
+        if (times < 5) return update(sql, times, 1, email);
+        else return update(sql, 5, 0, email);
     }
 
     @Override

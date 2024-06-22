@@ -67,19 +67,19 @@ public class SignIn extends HttpServlet {
                     boolean success = UserService.getInstance().updateLoginFail(userMail, times, ip, "/user/signin");
                     if(success) {
                         if(times < 5) out.println("{\"error\":\"Wrong password. You have "+ (5 - times) +" times to login!\"}");
-                        else out.write("{\"error\":\"Login failed. We have locked the email " + email + "!\"}");
+                        else out.write("{\"error\":\"Login failed. You have signed in incorrectly 5 times");
                     }
                 } else {
                     if(userMail == null) out.write("{\"error\":\"Wrong email, please check again!\"}");
-                    else if(!userMail.getVerified()) out.write("{\"error\":\"Account has not been activated to login!\"}");
-                    else out.write("{\"error\":\"Login failed. We have locked the email " + email + "!\"}");
+                    else if(userMail.getLoginTimes() >= 5) out.write("{\"error\":\"Login failed. We have locked the email " + email + "!\"}");
+                    else out.write("{\"error\":\"Account has not been activated to login!\"}");
+
                 }
             } else {
-                if (user.getRole().getId() == 1) {
+                if (user.getRole().getId() == 1 && user.getLoginTimes() < 5) {
                     boolean success = UserService.getInstance().resetLoginTimes(user, ip, "/user/signin");
                     if(success) {
-                        HttpSession session = request.getSession();
-                        session.invalidate();
+                        HttpSession session = request.getSession(true);
                         session.setAttribute("auth", user);
                         Cookie uc = new Cookie("userC", email);
                         Cookie pc = new Cookie("passC", password);
@@ -97,9 +97,7 @@ public class SignIn extends HttpServlet {
                         response.addCookie(pc);
                         out.write("{ \"status\": \"success\"}");
                     }
-                } else {
-                    out.write("{\"error\":\"You do not have access rights\"}");
-                }
+                } else out.write("{\"error\":\"You do not have access rights\"}");
             }
         }
         out.close();

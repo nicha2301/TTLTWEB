@@ -31,13 +31,13 @@
                     url: 'signin',
                     success: function (result) {
                         try {
-                            if (result.status !== "success") {
-                                $('#errorLogin').html(result.error);
-                                $('#restore').html("");
+                            var resp = grecaptcha.getResponse();
+                            if (resp.length === 0) {
+                                $('#errorLogin').html("Please verify recaptcha!");
                             } else {
-                                var resp = grecaptcha.getResponse();
-                                if (response.length === 0) {
-                                    $('#errorLogin').html("Please verify recaptcha!");
+                                if (result.status !== "success") {
+                                    $('#errorLogin').html(result.error);
+                                    $('#restore').html("");
                                 } else {
                                     window.location.href = context + "/user/home";
                                 }

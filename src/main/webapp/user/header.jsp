@@ -79,7 +79,7 @@
                     </a>
                 </div>
                 <%if (user == null) { %>
-                <a class="sign-in" href="signIn.jsp">Đăng nhập</a>
+                    <a class="sign-in" href="${request.servletContext.contextPath}/user/signin">Đăng nhập</a>
                 <%} else {%>
                 <div class="user-dropdown">
                     <i class="fas fa-user fa-2x" style="color: #66b840" id="user-icon"></i>
