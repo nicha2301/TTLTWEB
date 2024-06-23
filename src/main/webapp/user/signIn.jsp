@@ -33,11 +33,15 @@
                         try {
                             var resp = grecaptcha.getResponse();
                             if (resp.length === 0) {
-                                $('#errorLogin').html("Please verify recaptcha!");
+                                $('#success').html("");
+                                $('#errorLogin').html("");
+                                $('#errorCaptcha').html("Please verify recaptcha!");
                             } else {
                                 if (result.status !== "success") {
+                                    if (result.error)
                                     $('#errorLogin').html(result.error);
-                                    $('#restore').html("");
+                                    $('#success').html("");
+                                    $('#errorCaptcha').html("");
                                 } else {
                                     window.location.href = context + "/user/home";
                                 }
@@ -62,8 +66,9 @@
         <div class="form-container" style="height: 560px">
             <form id="form" class="sign-in-form" style="margin-top: 14%; transform: translateY(-20%)">
                 <h2>Đăng Nhập</h2>
-                <p class="text-success" id="restore">${empty sessionScope.success ? '' : sessionScope.success}</p>
+                <span style="color: green;margin-bottom: 10px" id="success">${empty sessionScope.success?'': sessionScope.success}</span>
                 <span style="color: red;margin-bottom: 10px" id="errorLogin"></span>
+                <span style="color: red;margin-bottom: 10px" id="errorCaptcha"></span>
                 <div class="input-group">
                     <input type="email" id="email" name="email" placeholder="Email" value="${empty email ? '' : email}" required>
                     <div id="email-error" style="color: red;"></div>
@@ -81,10 +86,10 @@
                 </div>
                 <button id="btnLogin" type="submit">Đăng Nhập</button>
                 <div class="forgot-password">
-                    <a href="forgotPass.jsp">Quên mật khẩu?</a>
+                    <a href="forgotPass.jsp">Quên mật khẩu?</a>   |   <a href="verify?action=activated">Chưa xác thực?</a>   |   <a href="verify?action=unlocked">Mở khoá đăng nhập?</a>
                 </div>
 
-                <div class="or"><span>Hoặc </span></div>
+                <div class="or"><span>Hoặc</span></div>
                 <div class="social-icons">
 
                     <a href="https://accounts.google.com/o/oauth2/auth?scope=profile%20email&redirect_uri=http://localhost:8080/FinalLapTrinhWeb_war_exploded/user/loginbygoogle&response_type=code&client_id=199448063192-cjher98pjlkob9tpeu7a37gd99n44rbu.apps.googleusercontent.com&prompt=select_account">

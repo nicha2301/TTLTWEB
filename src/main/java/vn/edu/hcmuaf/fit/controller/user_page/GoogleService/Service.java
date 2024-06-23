@@ -16,8 +16,7 @@
 //import org.apache.http.client.fluent.Request;
 //
 //public class Service {
-//    public Service() {
-//    }
+//
 //    public static String getToken(String code) throws ClientProtocolException, IOException {
 //        String response = Request.Post(DbProperties.GOOGLE_LINK_GET_TOKEN).bodyForm(Form.form().add("client_id", DbProperties.GOOGLE_CLIENT_ID).add("client_secret", DbProperties.GOOGLE_CLIENT_SECRET).add("redirect_uri", DbProperties.GOOGLE_REDIRECT_URI).add("code", code).add("grant_type", DbProperties.GOOGLE_GRANT_TYPE).build()).execute().returnContent().asString();
 //        JsonObject jobj = (JsonObject) (new Gson()).fromJson(response, JsonObject.class);

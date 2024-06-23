@@ -36,5 +36,5 @@ public interface IUserService {
 
     boolean updateLoginFail(User user, int times, String ip, String address);
 
-    boolean resetLoginTimes(User user, String ip, String address);
+    String resetLoginTimes(User user, String code, String authCode, String ip, String address);
 }

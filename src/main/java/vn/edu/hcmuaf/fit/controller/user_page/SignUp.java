@@ -81,12 +81,14 @@ public class SignUp extends HttpServlet {
 
                     String error = UserService.getInstance().signUp(user, repass, ip, "/user/signup");
                     try {
-                        Integer userId = Integer.parseInt(error);
+                        Integer.parseInt(error);
                         if (send.sendVerifyCode(email, code)) {
                             HttpSession session = request.getSession();
                             session.setAttribute("authCode", code);
+                            session.setAttribute("success", "The activation code has been sent to your email!");
                             session.setMaxInactiveInterval(5*60);
-                            getServletContext().setAttribute("userId", userId);
+                            getServletContext().setAttribute("email", email);
+                            getServletContext().setAttribute("action", "activated");
                         }
                         out.write("{ \"status\": \"success\"}");
                     } catch (NumberFormatException e) {

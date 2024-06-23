@@ -167,16 +167,39 @@ public class UserService extends LogDAO<User> implements IUserService {
             String error = "";
             if(authCode != null) {
                 if (code.equals(authCode)) {
-                    boolean success = UserDAO.getInstance().setVerified(user.getId());
-                    if(!success) error = "Set verified status failed for your account";
+                    boolean success = UserDAO.getInstance().setVerified(user.getEmail());
+                    if(!success) error = "Your account has been verified!";
                 } else {
                     error = "Verified code do not match!";
                 }
             } else {
-                error = "Verified code is timeout!";
+                error = "Verified code is invalid!";
             }
-            if(error.isEmpty()) user.setAfterData(user.getId() + ": Your account has verified successfully. Congratulation!");
-            else user.setAfterData(user.getId() + ": " + error);
+            if(error.isEmpty()) user.setAfterData(user.getEmail() + ": Your account has verified successfully. Congratulation!");
+            else user.setAfterData(user.getEmail() + ": " + error);
+            super.insert(user, LevelDAO.getInstance().getLevel(1).get(0), ip, address);
+            return error;
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    @Override
+    public String resetLoginTimes(User user, String code, String authCode, String ip, String address) {
+        try {
+            String error = "";
+            if(authCode != null) {
+                if (code.equals(authCode)) {
+                    boolean success = UserDAO.getInstance().resetLoginTimes(user.getEmail());
+                    if(!success) error = "Your account has been unlocked!";
+                } else {
+                    error = "Verified code do not match!";
+                }
+            } else {
+                error = "Verified code is invalid!";
+            }
+            if(error.isEmpty()) user.setAfterData(user.getEmail() + ": Your account has unlocked successfully. Congratulation!");
+            else user.setAfterData(user.getEmail() + ": " + error);
             super.insert(user, LevelDAO.getInstance().getLevel(1).get(0), ip, address);
             return error;
         } catch (Exception e) {
@@ -383,37 +406,6 @@ public class UserService extends LogDAO<User> implements IUserService {
             if(u != null) {
                 if(u.getLoginTimes()==times) {
                     user.setAfterData("Update success. Login times of email=" + user.getEmail() + " are " + times);
-                    check = true;
-                } else {
-                    user.setAfterData("Update fail. Login times of email=" + user.getEmail() + " are " + u.getLoginTimes());
-                }
-                super.insert(user, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
-            }
-            return check;
-        }
-    }
-
-    @Override
-    public boolean resetLoginTimes(User user, String ip, String address) {
-        try {
-            Level level;
-            user.setBeforeData("Login times of email=" + user.getEmail() + " are " + user.getLoginTimes());
-            boolean success = UserDAO.getInstance().resetLoginTimes(user.getEmail());
-            if(success) {
-                user.setAfterData("Update success. Login times of email=" + user.getEmail() + " are " + 0);
-                level = LevelDAO.getInstance().getLevel(1).get(0);
-            } else {
-                user.setAfterData("Update fail. Login times of email=" + user.getEmail() + " are " + user.getLoginTimes());
-                level = LevelDAO.getInstance().getLevel(2).get(0);
-            }
-            super.insert(user, level, ip, address);
-            return success;
-        } catch (Exception e) {
-            User u = UserService.getInstance().chkUsrByNameOrEmail("", user.getEmail());
-            boolean check = false;
-            if(u != null) {
-                if(u.getLoginTimes()==0) {
-                    user.setAfterData("Update success. Login times of email=" + user.getEmail() + " are " + 0);
                     check = true;
                 } else {
                     user.setAfterData("Update fail. Login times of email=" + user.getEmail() + " are " + u.getLoginTimes());

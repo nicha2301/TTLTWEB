@@ -11,7 +11,7 @@ public interface IUserDAO extends GenericDAO<User> {
 
     List<User> checkExistUser(String username, String email);
 
-    boolean setVerified(Integer id);
+    boolean setVerified(String email);
 
     boolean updateLoginFail(String email, Integer times);
 

@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="/WEB-INF/taglib.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,18 +19,26 @@
             $('#btnVerify').click(function (event) {
                 event.preventDefault();
                 var verifyCode = $('#verifyCode').val();
+                var verifyEmail = $('#verifyEmail').val();
+                var action = $('#action').val();
+
                 $.ajax({
                     type: 'POST',
                     data: {
                         verifyCode: verifyCode,
+                        verifyEmail: verifyEmail,
+                        action: action
                     },
                     url: 'verify',
                     success: function (result) {
                         try {
-                            if (result.status !== "success") {
+                            if (result.status !== "success" && result.status !== "sendComplete") {
                                 $('#errorVerify').html(result.error);
+                                $('#success').html("");
+                                $('#errorExist').html("");
                             } else {
-                                window.location.href = context + "/user/signin";
+                                if (result.status === "success") window.location.href = context + "/user/signin";
+                                else window.location.href = context + "/user/verify";
                             }
                         } catch (e) {
                             $('#errorVerify').html("Error loading request, please try again!");
@@ -50,11 +59,26 @@
         <div class="form-container">
             <form id="form" class="sign-in-form">
                 <h2>Xác thực</h2>
+                <span style="color: red;margin-bottom: 10px" id="errorExist">${empty errorExist? '': errorExist}</span>
+                <span style="color: green;margin-bottom: 10px" id="success">${empty sessionScope.success? '': sessionScope.success}</span>
                 <span style="color: red;margin-bottom: 10px" id="errorVerify"></span>
-                <div class="input-group">
-                    <input id="verifyCode" type="text" name="verifyCode" placeholder="Vui lòng nhập mã xác thực" required>
-                </div>
+                <c:choose>
+                    <c:when test="${empty applicationScope.email}">
+                        <div class="input-group">
+                            <input id="verifyEmail" type="text" name="verifyEmail" placeholder="Vui lòng nhập email" required>
+                            <input type="hidden" id="action" name="action" value="${param.action}">
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="input-group">
+                            <input id="verifyCode" type="text" name="verifyCode" placeholder="Vui lòng nhập mã xác thực" required>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
                 <button type="submit" id="btnVerify">Gửi</button>
+                <div class="forgot-password">
+                    <a href="verify?action=resend">Gửi lại mã?</a>
+                </div>
             </form>
         </div>
     </div>

@@ -21,7 +21,8 @@ public class SignOut extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
         session.invalidate();
-        getServletContext().removeAttribute("userId");
-        response.sendRedirect("user/signin");
+        getServletContext().removeAttribute("email");
+        getServletContext().removeAttribute("action");
+        response.sendRedirect("signin");
     }
 }

@@ -33,9 +33,9 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
      * Updates the verified status of a user in the database.
      */
     @Override
-    public boolean setVerified(Integer id) {
-        String sql = "UPDATE users SET verified = 1 WHERE id = ? AND verified <> 1";
-        return update(sql, id);
+    public boolean setVerified(String email) {
+        String sql = "UPDATE users SET verified = 1 WHERE email = ? AND verified <> 1";
+        return update(sql, email);
     }
 
     @Override
