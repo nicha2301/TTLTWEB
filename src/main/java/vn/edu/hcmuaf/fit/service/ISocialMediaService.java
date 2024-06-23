@@ -8,5 +8,5 @@ public interface ISocialMediaService {
 
     SocialMedia load();
 
-    SocialMedia update(String facebook, String instagram, String twitter, String pinterest, String youtube, String linkedin);
+    boolean update(String facebook, String instagram, String twitter, String pinterest, String youtube, String linkedin);
 }

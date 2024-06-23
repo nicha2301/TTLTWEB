@@ -16,6 +16,16 @@ public class ProductCategories extends AbsModel implements Serializable {
     private ProductGroups group;
     private Boolean active;
 
+    public ProductCategories() {
+    }
+
+    public ProductCategories(Integer id, String categoryName, ProductGroups group, Boolean active) {
+        this.id = id;
+        this.categoryName = categoryName;
+        this.group = group;
+        this.active = active;
+    }
+
     @Nested("group")
     public ProductGroups getGroup() {
         return group;

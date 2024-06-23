@@ -34,7 +34,7 @@ public interface IProductService {
 
     List<Product> getProductsLimit(ProductTypes type, Integer limit);
 
-    Product updateProduct(Product p, String ip, String address);
+    boolean updateProduct(Product p, String ip, String address);
 
     boolean deleteProductById(Product p, String ip, String address);
 

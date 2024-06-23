@@ -13,4 +13,12 @@ public class ProductGroups extends AbsModel implements Serializable {
     private String groupName;
     private Boolean active;
 
+    public ProductGroups() {
+    }
+
+    public ProductGroups(Integer id, String groupName, Boolean active) {
+        this.id = id;
+        this.groupName = groupName;
+        this.active = active;
+    }
 }

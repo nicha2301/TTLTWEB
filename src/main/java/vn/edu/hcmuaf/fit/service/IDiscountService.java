@@ -16,6 +16,6 @@ public interface IDiscountService {
 
     boolean delCoupon(Discount coupon, String ip, String address);
 
-    Discount editCoupon(Discount coupon, String ip, String address);
+    boolean editCoupon(Discount coupon, String ip, String address);
 
 }

@@ -31,7 +31,7 @@ public interface IProductDAO extends GenericDAO<Product> {
 
     Product getProductByIdWithSupplierInfo(Integer productId);
 
-    Product updateProduct(Integer id, String productName, Integer categoryId, Double percent,
+    boolean updateProduct(Integer id, String productName, Integer categoryId, Double percent,
                           Integer price, Integer quantity, String purpose, String contraindications,
                           String ingredients, String dosage, String instructions, String warrantyPeriod,
                           String storageCondition, Integer typeId, Integer supplierId);

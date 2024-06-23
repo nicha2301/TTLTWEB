@@ -15,7 +15,7 @@ public interface IDiscountDAO extends GenericDAO<Discount> {
 
     Discount addCoupon(String name, String des, Double percent, Integer quantity, Timestamp startDate, Timestamp dateEnd);
 
-    Discount delCoupon(Integer id);
+    boolean delCoupon(Integer id);
 
-    Discount editCoupon(Integer id, String name, String des, Double percent, Integer quantity, Timestamp startDate, Timestamp dateEnd);
+    boolean editCoupon(Integer id, String name, String des, Double percent, Integer quantity, Timestamp startDate, Timestamp dateEnd);
 }

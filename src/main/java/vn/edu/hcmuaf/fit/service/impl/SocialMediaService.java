@@ -11,7 +11,7 @@ public class SocialMediaService implements ISocialMediaService {
     }
 
     @Override
-    public SocialMedia update(String facebook, String instagram, String twitter, String pinterest, String youtube, String linkedin) {
+    public boolean update(String facebook, String instagram, String twitter, String pinterest, String youtube, String linkedin) {
         return SocialMediaDAO.getInstance().update(facebook, instagram, twitter, pinterest, youtube, linkedin);
     }
 }

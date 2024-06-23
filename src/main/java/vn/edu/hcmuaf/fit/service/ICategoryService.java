@@ -11,11 +11,11 @@ public interface ICategoryService {
 
     Map<ProductCategories, Integer> getQuantityCategories();
 
-    ProductCategories setCategoryStatus(ProductCategories cate, Boolean active, String ip, String address);
+    boolean setCategoryStatus(ProductCategories cate, Boolean active, String ip, String address);
 
     ProductCategories getCategoryById(Integer id);
 
-    ProductCategories editCategory(ProductCategories cate, String cateName, String ip, String address);
+    boolean editCategory(ProductCategories cate, String cateName, String ip, String address);
 
     ProductCategories addCategory(ProductCategories cate, String ip, String address);
 

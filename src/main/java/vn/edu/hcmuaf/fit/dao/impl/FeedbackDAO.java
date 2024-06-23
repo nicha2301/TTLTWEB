@@ -15,12 +15,20 @@ public class FeedbackDAO extends AbsDAO<Feedback> implements IFeedbackDAO {
         return instance;
     }
 
+    /**
+     * TESTED
+     * Adds a new feedback to the database.
+     */
     @Override
     public Feedback addFeedback(String email, String name, String content) {
         String sql = "INSERT INTO `feedbacks`(`email`, `name`, `content`) VALUES(?,?,?)";
         return insert(sql, Feedback.class, email, name, content);
     }
 
+    /**
+     * TESTED
+     * Retrieves all feedbacks from the database.
+     */
     @Override
     public List<Feedback> getAllFeedbacks() {
         String sql = "SELECT * FROM feedbacks";

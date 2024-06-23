@@ -7,6 +7,7 @@ import vn.edu.hcmuaf.fit.model.Discount;
 import vn.edu.hcmuaf.fit.model.Level;
 import vn.edu.hcmuaf.fit.service.IDiscountService;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public class DiscountService extends LogDAO<Discount> implements IDiscountService {
@@ -49,19 +50,17 @@ public class DiscountService extends LogDAO<Discount> implements IDiscountServic
     public boolean delCoupon(Discount coupon, String ip, String address) {
         try {
             Level level;
-            boolean re = false;
             coupon.setBeforeData("Coupon info of ID=" + coupon.getId() + " is " + coupon + " before delete");
-            Discount success = DiscountDAO.getInstance().delCoupon(coupon.getId());
-            if(success==null) {
+            boolean success = DiscountDAO.getInstance().delCoupon(coupon.getId());
+            if(success) {
                 level = LevelDAO.getInstance().getLevel(1).get(0);
                 coupon.setAfterData("Coupon with ID=" + coupon.getId() + " has been deleted");
-                re = true;
             } else {
                 level = LevelDAO.getInstance().getLevel(2).get(0);
                 coupon.setAfterData("Delete coupon failed with ID=" + coupon.getId());
             }
             super.insert(coupon, level, ip, address);
-            return re;
+            return success;
         } catch (Exception e) {
             List<Discount> list = DiscountDAO.getInstance().getCouponById(coupon.getId());
             coupon.setAfterData(e.getMessage() + " with ID=" + coupon.getId());
@@ -72,13 +71,13 @@ public class DiscountService extends LogDAO<Discount> implements IDiscountServic
     }
 
     @Override
-    public Discount editCoupon(Discount coupon, String ip, String address) {
+    public boolean editCoupon(Discount coupon, String ip, String address) {
         try {
             Level level;
             coupon.setBeforeData("Old info coupon ID=" + coupon.getId() + " is " + coupon);
-            Discount success = DiscountDAO.getInstance().editCoupon(coupon.getId(), coupon.getDiscountName(), coupon.getDescription(), coupon.getSalePercent(), coupon.getQuantity(), coupon.getStartDate(), coupon.getExpirationDate());
-            if(success != null) {
-                coupon.setAfterData("New info coupon ID=" + success.getId() + " is " + success);
+            boolean success = DiscountDAO.getInstance().editCoupon(coupon.getId(), coupon.getDiscountName(), coupon.getDescription(), coupon.getSalePercent(), coupon.getQuantity(), coupon.getStartDate(), coupon.getExpirationDate());
+            if(success) {
+                coupon.setAfterData("New info coupon ID=" + coupon.getId() + " is " + success);
                 level = LevelDAO.getInstance().getLevel(1).get(0);
             } else {
                 coupon.setAfterData("New info coupon ID=" + coupon.getId() + " is the old info");
@@ -89,7 +88,7 @@ public class DiscountService extends LogDAO<Discount> implements IDiscountServic
         } catch (Exception e) {
             coupon.setAfterData("New info coupon ID=" + coupon.getId() + " is " + coupon);
             super.insert(coupon, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
-            return null;
+            return false;
         }
     }
 }

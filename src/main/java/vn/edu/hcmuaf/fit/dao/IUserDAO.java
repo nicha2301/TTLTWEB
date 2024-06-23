@@ -15,9 +15,9 @@ public interface IUserDAO extends GenericDAO<User> {
 
     boolean updateLoginFail(String email, Integer times);
 
-    User updateUserInfo(String fullName, String birthday, String city, String district, String ward, String detailAddress, String phone, Integer id);
+    boolean updateUserInfo(String fullName, String birthday, String city, String district, String ward, String detailAddress, String phone, Integer id);
 
-    User updatePassword(String newPass, Integer id);
+    boolean updatePassword(String newPass, Integer id);
 
     User addAdmin(String username, String email, String password, String phone);
 
@@ -27,11 +27,11 @@ public interface IUserDAO extends GenericDAO<User> {
 
     Integer sumOfUsers();
 
-    User updateUserInAdmin(Integer id, String email, String name, String birthday, String address, Timestamp dateCreated);
+    boolean updateUserInAdmin(Integer id, String email, String name, String birthday, String address, Timestamp dateCreated);
 
-    User updateUserById(Integer id, String name, String phone, String email, String address);
+    boolean updateUserById(Integer id, String name, String phone, String email, String address);
 
-    User deleteUserById(Integer userId);
+    boolean deleteUserById(Integer userId);
 
     boolean resetLoginTimes(String email);
 }

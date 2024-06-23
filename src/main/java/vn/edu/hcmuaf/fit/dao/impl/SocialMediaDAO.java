@@ -15,15 +15,23 @@ public class SocialMediaDAO extends AbsDAO<SocialMedia> implements ISocialMediaD
         return instance;
     }
 
+    /**
+     * TESTED
+     * Loads all the social media data from the database.
+     */
     @Override
     public List<SocialMedia> load() {
         String sql = "SELECT * FROM social_media";
         return query(sql, SocialMedia.class);
     }
 
+    /**
+     * TESTED
+     * Updates the social media data in the database.=
+     */
     @Override
-    public SocialMedia update(String facebook, String instagram, String twitter, String pinterest, String youtube, String linkedin) {
+    public boolean update(String facebook, String instagram, String twitter, String pinterest, String youtube, String linkedin) {
         String sql = "UPDATE social_media SET facebook=?, instagram=?, twitter=?, pinterest=?, youtube=?, linkedin=? WHERE id=1";
-        return insert(sql, SocialMedia.class, facebook, instagram, twitter, pinterest, youtube, linkedin);
+        return update(sql, facebook, instagram, twitter, pinterest, youtube, linkedin);
     }
 }

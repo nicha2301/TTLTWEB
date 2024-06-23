@@ -14,6 +14,11 @@ public class GroupDAO extends AbsDAO<ProductGroups> implements IGroupDAO {
         }
         return instance;
     }
+
+    /**
+     * TESTED
+     * Retrieves all the product groups from the database.
+     */
     @Override
     public List<ProductGroups> getGroupCategory() {
         String sql = "SELECT * FROM product_groups";

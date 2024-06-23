@@ -191,17 +191,17 @@ public class UserService extends LogDAO<User> implements IUserService {
      * @return The updated User object with the new information, or null if the update fails.
      */
     @Override
-    public User updateUserInfo(User user, String fullName, String birthday, String city, String district, String ward, String detail_address, String phone, String ip, String address) {
+    public boolean updateUserInfo(User user, String fullName, String birthday, String city, String district, String ward, String detail_address, String phone, String ip, String address) {
         try {
             user.setBeforeData("Old user info of ID=" + user.getId() + " is " + user);
-            User success = UserDAO.getInstance().updateUserInfo(fullName, birthday, city, district, ward, detail_address, phone, user.getId());
-            user.setAfterData("Update successfully! New user info of ID=" + success.getId() + " is " + success);
+            boolean success = UserDAO.getInstance().updateUserInfo(fullName, birthday, city, district, ward, detail_address, phone, user.getId());
+            user.setAfterData("Update successfully! New user info of ID=" + user.getId() + " is updated!");
             super.insert(user, LevelDAO.getInstance().getLevel(1).get(0), ip, address);
             return success;
         } catch (Exception e) {
             user.setAfterData("Update failed! New user info of ID=" + user.getId() + " don't change!");
             super.insert(user, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
-            return null;
+            return false;
         }
     }
 
@@ -230,17 +230,17 @@ public class UserService extends LogDAO<User> implements IUserService {
      * @return The updated User object with the new password, or the original User object if the update fails.
      */
     @Override
-    public User updatePassword(User user, String newPass, String ip, String address) {
+    public boolean updatePassword(User user, String newPass, String ip, String address) {
         try {
             user.setBeforeData("Old password of ID=" + user.getId() + " is " + user.getPassword());
-            User success = UserDAO.getInstance().updatePassword(newPass, user.getId());
-            user.setAfterData("Update password successfully! New password of ID=" + success.getId() + " is " + success.getPassword());
+            boolean success = UserDAO.getInstance().updatePassword(newPass, user.getId());
+            user.setAfterData("Update password successfully! New password of ID=" + user.getId() + " is " + user.getPassword());
             super.insert(user, LevelDAO.getInstance().getLevel(1).get(0), ip, address);
             return success;
         } catch (Exception e) {
             user.setAfterData("Update failed! New password of ID=" + user.getId() + " is " + user.getId() + "'s old password!");
             super.insert(user, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
-            return user;
+            return false;
         }
     }
 
@@ -287,17 +287,17 @@ public class UserService extends LogDAO<User> implements IUserService {
     }
 
     @Override
-    public User updateUserInAdmin(User user, String email, String name, String birthday, String detail_address, Timestamp dateCreated, String ip, String address) {
+    public boolean updateUserInAdmin(User user, String email, String name, String birthday, String detail_address, Timestamp dateCreated, String ip, String address) {
         try {
             user.setBeforeData("Old user info of ID=" + user.getId() + " is " + user);
-            User success = UserDAO.getInstance().updateUserInAdmin(user.getId(), email, name, birthday, detail_address, dateCreated);
-            user.setAfterData("Update successfully! New user info of ID=" + success.getId() + " is " + success);
+            boolean success = UserDAO.getInstance().updateUserInAdmin(user.getId(), email, name, birthday, detail_address, dateCreated);
+            user.setAfterData("Update successfully! New user info of ID=" + user.getId() + " is updated");
             super.insert(user, LevelDAO.getInstance().getLevel(1).get(0), ip, address);
             return success;
         } catch (Exception e) {
             user.setAfterData("Update failed! New user info of ID=" + user.getId() + " don't change!");
             super.insert(user, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
-            return null;
+            return false;
         }
     }
 
@@ -315,17 +315,17 @@ public class UserService extends LogDAO<User> implements IUserService {
      * @return The updated User object with the new information, or null if the update fails.
      */
     @Override
-    public User updateUserById(User user, String name, String phone, String email, String detail_address, String ip, String address) {
+    public boolean updateUserById(User user, String name, String phone, String email, String detail_address, String ip, String address) {
         try {
             user.setBeforeData("Old user info of ID=" + user.getId() + " is " + user);
-            User success = UserDAO.getInstance().updateUserById(user.getId(), name, phone, email, detail_address);
-            user.setAfterData("Update successfully! New user info of ID=" + success.getId() + " is " + success);
+            boolean success = UserDAO.getInstance().updateUserById(user.getId(), name, phone, email, detail_address);
+            user.setAfterData("Update successfully! New user info of ID=" + user.getId() + " is updated");
             super.insert(user, LevelDAO.getInstance().getLevel(1).get(0), ip, address);
             return success;
         } catch (Exception e) {
             user.setAfterData("Update failed! New user info of ID=" + user.getId() + " don't change!");
             super.insert(user, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
-            return null;
+            return false;
         }
     }
 
@@ -342,19 +342,17 @@ public class UserService extends LogDAO<User> implements IUserService {
     public boolean deleteUserById(User user, String ip, String address) {
         try {
             Level level;
-            boolean re = false;
             user.setBeforeData("User info of ID=" + user.getId() + " is " + user + " before delete");
-            User success = UserDAO.getInstance().deleteUserById(user.getId());
-            if(success==null) {
+            boolean success = UserDAO.getInstance().deleteUserById(user.getId());
+            if(success) {
                 level = LevelDAO.getInstance().getLevel(1).get(0);
                 user.setAfterData("User with ID=" + user.getId() + " has been deleted");
-                re = true;
             } else {
                 level = LevelDAO.getInstance().getLevel(2).get(0);
                 user.setAfterData("Delete failed with ID=" + user.getId());
             }
             super.insert(user, level, ip, address);
-            return re;
+            return success;
         } catch (Exception e) {
             List<User> list = UserDAO.getInstance().loadUsersWithId(user.getId());
             user.setAfterData(e.getMessage() + " with ID=" + user.getId());

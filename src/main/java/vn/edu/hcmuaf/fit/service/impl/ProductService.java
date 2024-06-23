@@ -3,9 +3,7 @@ package vn.edu.hcmuaf.fit.service.impl;
 import vn.edu.hcmuaf.fit.dao.impl.LevelDAO;
 import vn.edu.hcmuaf.fit.dao.impl.LogDAO;
 import vn.edu.hcmuaf.fit.dao.impl.ProductDAO;
-import vn.edu.hcmuaf.fit.model.Level;
-import vn.edu.hcmuaf.fit.model.Product;
-import vn.edu.hcmuaf.fit.model.ProductTypes;
+import vn.edu.hcmuaf.fit.model.*;
 import vn.edu.hcmuaf.fit.service.IProductService;
 
 import java.util.List;
@@ -95,15 +93,15 @@ public class ProductService extends LogDAO<Product> implements IProductService {
     }
 
     @Override
-    public Product updateProduct(Product p, String ip, String address) {
+    public boolean updateProduct(Product p, String ip, String address) {
         try {
             Level level;
             p.setBeforeData("Old info of ID=" + p.getId() + " is " + p);
-            Product success = ProductDAO.getInstance().updateProduct(p.getId(), p.getProductName(), p.getCategories().getId(), p.getSalePercent(), p.getPrice(), p.getQuantity(),
+            boolean success = ProductDAO.getInstance().updateProduct(p.getId(), p.getProductName(), p.getCategories().getId(), p.getSalePercent(), p.getPrice(), p.getQuantity(),
                                                                         p.getPurpose(), p.getContraindications(), p.getIngredients(), p.getDosage(), p.getInstructions(), p.getWarrantyPeriod(), p.getStorageCondition(),
                                                                     p.getType().getId(), p.getSupplier().getId());
-            if(success != null) {
-                p.setAfterData("Update success with ID=" + success.getId() + " is " + success);
+            if(success) {
+                p.setAfterData("Update success with ID=" + p.getId());
                 level = LevelDAO.getInstance().getLevel(1).get(0);
             } else {
                 p.setAfterData("Update fail with ID=" + p.getId());
@@ -114,7 +112,7 @@ public class ProductService extends LogDAO<Product> implements IProductService {
         } catch (Exception e) {
             p.setAfterData("Update fail with ID=" + p.getId() + " is " + p);
             super.insert(p, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
-            return null;
+            return false;
         }
     }
 

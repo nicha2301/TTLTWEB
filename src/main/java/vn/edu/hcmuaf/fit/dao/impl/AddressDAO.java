@@ -15,12 +15,20 @@ public class AddressDAO extends AbsDAO<Address> implements IAddressDAO {
         return instance;
     }
 
+    /**
+     * TESTED
+     * Loads all addresses from the database.
+     */
     @Override
     public List<Address> loadAddress() {
         String sql = "SELECT * FROM address";
         return query(sql, Address.class);
     }
 
+    /**
+     * TESTED
+     * Updates an address in the database.
+     */
     @Override
     public boolean updateAddress(String address, String phone, String hotline, String email, String timeOpen, String map) {
         String sql = "UPDATE address SET address=?, phone=?, hotline=?, email=?, timeOpen=?, map=? WHERE id=1";

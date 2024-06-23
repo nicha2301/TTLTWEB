@@ -10,4 +10,11 @@ public class ProductTypes implements Serializable {
     private Integer id;
     private String typeName;
 
+    public ProductTypes() {
+    }
+
+    public ProductTypes(Integer id, String typeName) {
+        this.id = id;
+        this.typeName = typeName;
+    }
 }

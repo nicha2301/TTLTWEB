@@ -56,9 +56,9 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
      * Updates the user's information in the database.
      */
     @Override
-    public User updateUserInfo(String fullName, String birthday, String city, String district, String ward, String detailAddress, String phone, Integer id) {
+    public boolean updateUserInfo(String fullName, String birthday, String city, String district, String ward, String detailAddress, String phone, Integer id) {
         String sql = "UPDATE users SET fullName = ?, dateOfBirth = DATE(?), city = ?, district = ?, ward = ?, detail_address = ?, phone = ? WHERE id = ?";
-        return insert(sql, User.class, fullName, birthday, city, district, ward, detailAddress, phone, id);
+        return update(sql, fullName, birthday, city, district, ward, detailAddress, phone, id);
     }
 
     /**
@@ -76,17 +76,25 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
      * Updates the user's password in the database.
      */
     @Override
-    public User updatePassword(String newPass, Integer id) {
+    public boolean updatePassword(String newPass, Integer id) {
         String sql = "UPDATE users SET password =? WHERE id =?";
-        return insert(sql, User.class, BCrypt.hashpw(newPass, BCrypt.gensalt()), id);
+        return update(sql, BCrypt.hashpw(newPass, BCrypt.gensalt()), id);
     }
 
+    /**
+     * TESTED
+     * Adds a new admin user to the database.
+     */
     @Override
     public User addAdmin(String username, String email, String password, String phone) {
         String sql = "INSERT INTO users(username, email, password, phone, verified, role_id) VALUES (?, ?, ?, ?, ?, ?)";
         return insert(sql, User.class, username, email, BCrypt.hashpw(password, BCrypt.gensalt()), phone, 1, 2);
     }
 
+    /**
+     * TESTED
+     * Loads a list of users with the specified role id from the database.
+     */
     @Override
     public List<User> loadUsersWithRole(Integer roleId) {
         String sql = "SELECT * FROM users WHERE role_id =?";
@@ -113,10 +121,14 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
         return count(sql);
     }
 
+    /**
+     * TESTED
+     * Updates a user's information in the database for admin panel.
+     */
     @Override
-    public User updateUserInAdmin(Integer id, String email, String name, String birthday, String address, Timestamp dateCreated) {
+    public boolean updateUserInAdmin(Integer id, String email, String name, String birthday, String address, Timestamp dateCreated) {
         String sql = "UPDATE users SET email = ?, fullName = ?, dateOfBirth = ?, detail_address = ?, date_created = ? WHERE id = ?";
-        return insert(sql, User.class, email, name, birthday, address, dateCreated, id);
+        return update(sql, email, name, birthday, address, dateCreated, id);
     }
 
     /**
@@ -124,9 +136,9 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
      * Updates the user's information in the database.
      */
     @Override
-    public User updateUserById(Integer id, String name, String phone, String email, String address) {
+    public boolean updateUserById(Integer id, String name, String phone, String email, String address) {
         String sql = "UPDATE users SET fullName = ?, phone = ?, email = ?, detail_address = ? WHERE id = ?";
-        return insert(sql, User.class, name, phone, email, address, id);
+        return update(sql, name, phone, email, address, id);
     }
 
     /**
@@ -134,13 +146,13 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
      * Deletes a user from the database by their id.
      */
     @Override
-    public User deleteUserById(Integer userId) {
+    public boolean deleteUserById(Integer userId) {
         String sql = "DELETE FROM users WHERE id =?";
-        return insert(sql, User.class, userId);
+        return update(sql, userId);
     }
 
     public static void main(String[] args) {
-        System.out.println(UserDAO.getInstance().checkExistUser("", "thuandangnam@gmail.com"));
-        System.out.println(UserDAO.getInstance().signUp("thuandeptrai999", "thuandangnam000@gmail.com", "Thuan23042003=", 1));
+//        System.out.println(UserDAO.getInstance().checkExistUser("", "thuandangnam@gmail.com"));
+//        System.out.println(UserDAO.getInstance().signUp("thuandeptrai999", "thuandangnam000@gmail.com", "Thuan23042003=", 1));
     }
 }
