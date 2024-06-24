@@ -66,8 +66,8 @@
         <div class="form-container" style="height: 560px">
             <form id="form" class="sign-in-form" style="margin-top: 14%; transform: translateY(-20%)">
                 <h2>Đăng Nhập</h2>
-                <span style="color: green;margin-bottom: 10px" id="success">${empty sessionScope.success?'': sessionScope.success}</span>
-                <span style="color: red;margin-bottom: 10px" id="errorLogin"></span>
+                <span style="color: #66b840;margin-bottom: 10px" id="success">${empty sessionScope.success?'': sessionScope.success}</span>
+                <span style="color: red;margin-bottom: 10px" id="errorLogin">${empty loginGG? '': loginGG}</span>
                 <span style="color: red;margin-bottom: 10px" id="errorCaptcha"></span>
                 <div class="input-group">
                     <input type="email" id="email" name="email" placeholder="Email" value="${empty email ? '' : email}" required>
@@ -86,18 +86,21 @@
                 </div>
                 <button id="btnLogin" type="submit">Đăng Nhập</button>
                 <div class="forgot-password">
-                    <a href="forgotPass.jsp">Quên mật khẩu?</a>   |   <a href="verify?action=activated">Chưa xác thực?</a>   |   <a href="verify?action=unlocked">Mở khoá đăng nhập?</a>
+                    <a href="verify?action=reset" style="color: #66b840">Quên mật khẩu?</a>   |   <a href="verify?action=activated" style="color: #66b840">Chưa xác thực?</a>   |   <a href="verify?action=unlocked" style="color: #66b840">Mở khoá đăng nhập?</a>
                 </div>
-
                 <div class="or"><span>Hoặc</span></div>
-                <div class="social-icons">
 
-                    <a href="https://accounts.google.com/o/oauth2/auth?scope=profile%20email&redirect_uri=http://localhost:8080/FinalLapTrinhWeb_war_exploded/user/loginbygoogle&response_type=code&client_id=199448063192-cjher98pjlkob9tpeu7a37gd99n44rbu.apps.googleusercontent.com&prompt=select_account">
-                        <img src="assets/img/formIcon/google.jpg" alt="Google">
+                <div class="social-icons">
+                    <a href="#">
+                        <img src="assets/img/formIcon/2023_Facebook_icon.svg" alt="Facebook">
+                    </a>
+                    <a href="https://accounts.google.com/o/oauth2/auth?scope=profile%20email&redirect_uri=http://localhost:8080/user/loginByGoogle&response_type=code&client_id=612393162835-dp8fc3bvhdt9g8139uv41umfu0bbgefv.apps.googleusercontent.com&prompt=select_account">
+                        <img src="assets/img/formIcon/Google__G__logo.svg.png" alt="Google">
                     </a>
                 </div>
+
                 <div class="register-link">
-                    Bạn chưa có tài khoản? <a href="signUp.jsp">Đăng ký</a>
+                    Bạn chưa có tài khoản? <a href="signup">Đăng ký</a>
                 </div>
             </form>
 

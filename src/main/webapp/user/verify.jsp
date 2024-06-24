@@ -58,9 +58,19 @@
     <div class="body">
         <div class="form-container">
             <form id="form" class="sign-in-form">
-                <h2>Xác thực</h2>
+                <c:choose>
+                    <c:when test="${applicationScope.action eq 'activated'}">
+                        <h2>Chưa Xác Thực?</h2>
+                    </c:when>
+                    <c:when test="${applicationScope.action eq 'reset'}">
+                        <h2>Quên mật khẩu?</h2>
+                    </c:when>
+                    <c:otherwise>
+                        <h2>Mở Khoá Đăng Nhập?</h2>
+                    </c:otherwise>
+                </c:choose>
                 <span style="color: red;margin-bottom: 10px" id="errorExist">${empty errorExist? '': errorExist}</span>
-                <span style="color: green;margin-bottom: 10px" id="success">${empty sessionScope.success? '': sessionScope.success}</span>
+                <span style="color: #66b840;margin-bottom: 10px" id="success">${empty sessionScope.success? '': sessionScope.success}</span>
                 <span style="color: red;margin-bottom: 10px" id="errorVerify"></span>
                 <c:choose>
                     <c:when test="${empty applicationScope.email}">
@@ -77,7 +87,14 @@
                 </c:choose>
                 <button type="submit" id="btnVerify">Gửi</button>
                 <div class="forgot-password">
-                    <a href="verify?action=resend">Gửi lại mã?</a>
+                    <c:choose>
+                        <c:when test="${empty applicationScope.email}">
+                            <a style="color: #66b840" href="signin">Đăng nhập</a><span> Hoặc </span><a style="color: #66b840" href="signup">Đăng ký</a>
+                        </c:when>
+                        <c:otherwise>
+                            <a style="color: #66b840" href="verify?action=resend">Gửi lại mã?</a>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </form>
         </div>

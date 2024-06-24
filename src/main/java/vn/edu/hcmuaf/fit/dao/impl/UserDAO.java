@@ -28,6 +28,12 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
         return insert(sql, User.class, username, email, BCrypt.hashpw(password, BCrypt.gensalt()), role);
     }
 
+    @Override
+    public User loginByGoogle(String username, String email, String fullName, String avatar) {
+        String sql = "INSERT INTO users(username, email, fullName, avatar, verified) VALUES (?, ?, ?, ?, ?)";
+        return insert(sql, User.class, username, email, fullName, avatar, 1);
+    }
+
     /**
      * TESTED
      * Updates the verified status of a user in the database.

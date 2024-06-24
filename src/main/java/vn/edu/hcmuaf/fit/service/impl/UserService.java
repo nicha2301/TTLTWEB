@@ -149,6 +149,39 @@ public class UserService extends LogDAO<User> implements IUserService {
         }
     }
 
+    @Override
+    public User loginByGoogle(User user, String ip, String address) {
+        try {
+            Level level;
+            User check = UserService.getInstance().chkUsrByNameOrEmail("", user.getEmail());
+            System.out.println(user.getEmail());
+            if (check != null) {
+                if (check.getPassword() == null || check.getPassword().equals("")) {
+                    user.setAfterData(check.getEmail() + ": Login success. User has already in database!");
+                    level = LevelDAO.getInstance().getLevel(1).get(0);
+                } else {
+                    user.setAfterData("Login failed. The user is using normal login!");
+                    level = LevelDAO.getInstance().getLevel(2).get(0);
+                    check = null;
+                }
+                super.insert(user, level, ip, address);
+                return check;
+            }
+            User success = UserDAO.getInstance().loginByGoogle(user.getUsername(), user.getEmail(), user.getFullName(), user.getAvatar());
+            if(success != null) {
+                user.setAfterData(success.getId() + ": Login by Google success. Congratulation!");
+                level = LevelDAO.getInstance().getLevel(1).get(0);
+            } else {
+                user.setAfterData("Login failed. The new user is not in database!");
+                level = LevelDAO.getInstance().getLevel(2).get(0);
+            }
+            super.insert(user, level, ip, address);
+            return success;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     /**
      * TESTED
      * Sets the verified status of a user.

@@ -6,8 +6,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.mindrot.jbcrypt.BCrypt;
 import vn.edu.hcmuaf.fit.controller.user_page.MailService.SendEmail;
 import vn.edu.hcmuaf.fit.model.User;
+import vn.edu.hcmuaf.fit.model.Utils;
 import vn.edu.hcmuaf.fit.service.impl.UserService;
 
 import java.io.IOException;
@@ -44,7 +46,7 @@ public class UserVerify extends HttpServlet {
                     session.invalidate();
                     request.setAttribute("errorExist", "Your account is not existed!");
                 }
-            } else if(action.equals("activated") || action.equals("unlocked")) {
+            } else if(action.equals("activated") || action.equals("unlocked") || action.equals("reset")) {
                 getServletContext().removeAttribute("email");
                 getServletContext().setAttribute("action", action);
                 session.invalidate();
@@ -78,33 +80,44 @@ public class UserVerify extends HttpServlet {
         } else {
             String existEmail = (verifyEmail == null || verifyEmail.equals(""))? email: verifyEmail;
             String existAction = (actionParam == null || actionParam.equals(""))? actionApp: actionParam;
-            System.out.println(existAction);
 
             User user = new User();
             user.setEmail(existEmail);
 
-            if ((code == null) || (code.equals(""))) {
-                SendEmail send = new SendEmail();
-                String codeSendMail = send.getRandomVerifyCode();
+            String ip = request.getHeader("X-FORWARDED-FOR");
+            if (ip == null) ip = request.getRemoteAddr();
 
+            if ((code == null) || (code.equals(""))) {
                 User u = UserService.getInstance().chkUsrByNameOrEmail("", existEmail);
                 if (u != null) {
-                    if (send.sendVerifyCode(existEmail, codeSendMail)) {
-                        session.setAttribute("authCode", codeSendMail);
-                        session.setAttribute("success", "The activation code has been sent to your email!");
-                        session.setMaxInactiveInterval(5*60);
-                        getServletContext().setAttribute("email", existEmail);
+                    SendEmail send = new SendEmail();
+                    if (!existAction.equals("reset")) {
+                        String codeSendMail = send.getRandomVerifyCode();
+                        if (send.sendVerifyCode(existEmail, codeSendMail)) {
+                            session.setAttribute("authCode", codeSendMail);
+                            session.setAttribute("success", "The activation code has been sent to your email!");
+                            session.setMaxInactiveInterval(5*60);
+                            getServletContext().setAttribute("email", existEmail);
+                        }
+                        out.write("{ \"status\": \"sendComplete\"}");
+                    } else {
+                        String newPassword = Utils.generateRandomPassword();
+                        boolean success = UserService.getInstance().updatePassword(u, newPassword, ip, "/user/verify");
+                        if (success) {
+                            if(send.sendPassword(existEmail, newPassword)) {
+                                session.setAttribute("authCode", newPassword);
+                                session.setAttribute("success", "The new password has been sent to your email!");
+                                getServletContext().setAttribute("email", existEmail);
+                            }
+                        }
+                        out.write("{ \"status\": \"success\"}");
                     }
-                    out.write("{ \"status\": \"sendComplete\"}");
                 } else {
                     out.write("{ \"error\" : \"Email is not existed!\"}");
                 }
                 out.close();
                 return;
             }
-
-            String ip = request.getHeader("X-FORWARDED-FOR");
-            if (ip == null) ip = request.getRemoteAddr();
 
             if(existAction != null && !existEmail.isEmpty()) {
                 if (existAction.equals("activated")) {
@@ -131,6 +144,8 @@ public class UserVerify extends HttpServlet {
                         session.removeAttribute("authCode");
                         out.write("{ \"status\": \"success\"}");
                     }
+                } else if(existAction.equals("reset")) {
+
                 }
             }
         }

@@ -68,5 +68,38 @@ public class Utils {
             return false;
         }
     }
-}
 
+    // Phương thức tạo mật khẩu ngẫu nhiên
+    public static String generateRandomPassword() {
+        String upperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
+        String numbers = "0123456789";
+        String specialCharacters = "!@#$%^&*()_+-=[]{};':\"\\|,.<>/?";
+        String combinedChars = upperCaseLetters + lowerCaseLetters + numbers + specialCharacters;
+
+        Random random = new Random();
+        StringBuilder password = new StringBuilder();
+
+        // Đảm bảo mật khẩu chứa ít nhất một chữ hoa, một chữ thường, một số và một ký tự đặc biệt
+        password.append(upperCaseLetters.charAt(random.nextInt(upperCaseLetters.length())));
+        password.append(lowerCaseLetters.charAt(random.nextInt(lowerCaseLetters.length())));
+        password.append(numbers.charAt(random.nextInt(numbers.length())));
+        password.append(specialCharacters.charAt(random.nextInt(specialCharacters.length())));
+
+        // Điền số ký tự còn lại để đạt độ dài mong muốn, ở đây tôi chọn 12 ký tự cho mật khẩu
+        while (password.length() < 12) {
+            password.append(combinedChars.charAt(random.nextInt(combinedChars.length())));
+        }
+
+        // Trộn các ký tự để tăng độ an toàn
+        char[] pwdArray = password.toString().toCharArray();
+        for (int i = pwdArray.length - 1; i > 0; i--) {
+            int j = random.nextInt(i + 1);
+            char temp = pwdArray[i];
+            pwdArray[i] = pwdArray[j];
+            pwdArray[j] = temp;
+        }
+
+        return new String(pwdArray);
+    }
+}

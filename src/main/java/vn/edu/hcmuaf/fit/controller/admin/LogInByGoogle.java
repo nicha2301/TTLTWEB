@@ -16,8 +16,8 @@
 //
 //@WebServlet("/admin/loginbygoogle"
 //)
-//public class LogInByGoogle extends HttpServlet {
-//    public LogInByGoogle() {
+//public class LoginByGoogle extends HttpServlet {
+//    public LoginByGoogle() {
 //    }
 //
 //    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

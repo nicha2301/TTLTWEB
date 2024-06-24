@@ -62,15 +62,22 @@ public class SignIn extends HttpServlet {
             User user = UserService.getInstance().signIn(u, ip, "/user/signin");
             User userMail = UserService.getInstance().chkUsrByNameOrEmail("", email);
             if (user == null) {
-                if(userMail != null && userMail.getVerified() && userMail.getLoginTimes() < 5) {
-                    int times = userMail.getLoginTimes()+1;
-                    UserService.getInstance().updateLoginFail(userMail, times, ip, "/user/signin");
-                    if(times < 5) out.println("{\"error\":\"Wrong password. You have "+ (5 - times) +" times to login!\"}");
-                    else out.write("{\"error\":\"Login failed. We have locked the email " + email + "!\"}");
+                if (userMail != null) {
+                    if (userMail.getPassword() == null || userMail.getPassword().equals("")) {
+                        out.write("{\"error\":\"Email has been used to login Google!\"}");
+                    } else {
+                        if(userMail.getVerified() && userMail.getLoginTimes() < 5) {
+                            int times = userMail.getLoginTimes()+1;
+                            UserService.getInstance().updateLoginFail(userMail, times, ip, "/user/signin");
+                            if(times < 5) out.println("{\"error\":\"Wrong password. You have "+ (5 - times) +" times to login!\"}");
+                            else out.write("{\"error\":\"Login failed. We have locked the email " + email + "!\"}");
+                        } else {
+                            if(userMail.getLoginTimes() >= 5) out.write("{\"error\":\"Login failed. We have locked the email " + email + "!\"}");
+                            else out.write("{\"error\":\"Account has not been activated to login!\"}");
+                        }
+                    }
                 } else {
-                    if(userMail == null) out.write("{\"error\":\"Wrong email, please check again!\"}");
-                    else if(userMail.getLoginTimes() >= 5) out.write("{\"error\":\"Login failed. We have locked the email " + email + "!\"}");
-                    else out.write("{\"error\":\"Account has not been activated to login!\"}");
+                    out.write("{\"error\":\"Wrong email, please try again!\"}");
                 }
             } else {
                 if (user.getRole().getId() == 1 && user.getLoginTimes() < 5) {

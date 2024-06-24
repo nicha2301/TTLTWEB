@@ -9,6 +9,8 @@ public interface IUserDAO extends GenericDAO<User> {
 
     User signUp(String username, String email, String password, Integer role);
 
+    User loginByGoogle(String username, String email, String fullName, String avatar);
+
     List<User> checkExistUser(String username, String email);
 
     boolean setVerified(String email);
