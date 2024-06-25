@@ -1,7 +1,7 @@
 //package vn.edu.hcmuaf.fit.controller.admin;
 //
 //
-//import vn.edu.hcmuaf.fit.controller.user_page.MailService.SendEmail;
+//import vn.edu.hcmuaf.fit.controller.user_page.APIService.SendEmail;
 //import vn.edu.hcmuaf.fit.dao.impl.UserDAO;
 //import jakarta.servlet.ServletException;
 //import jakarta.servlet.annotation.WebServlet;

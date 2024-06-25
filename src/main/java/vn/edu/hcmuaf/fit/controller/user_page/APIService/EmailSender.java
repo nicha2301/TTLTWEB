@@ -1,5 +1,4 @@
-package vn.edu.hcmuaf.fit.controller.user_page.MailService;
-
+package vn.edu.hcmuaf.fit.controller.user_page.APIService;
 
 import vn.edu.hcmuaf.fit.connection_pool.DbProperties;
 
@@ -14,12 +13,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class EmailSender {
-    public EmailSender() {
-    }
 
     public boolean sendEmail(String toEmail, String subject, String messageText) {
         boolean status = false;
-
         try {
             Properties prop = new Properties();
             prop.setProperty("mail.smtp.host", DbProperties.SMTP_HOST);
@@ -42,7 +38,6 @@ public class EmailSender {
         } catch (Exception var8) {
             var8.printStackTrace();
         }
-
         return status;
     }
 }

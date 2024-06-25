@@ -57,6 +57,7 @@ public class Token {
             }
             user.setLoginBy(2);
         } else if (apis.equals(TWITTER)) {
+            user.setUsername(json.has("username") ? json.get("username").getAsString() : null);
             user.setLoginBy(3);
         }
         return user;
@@ -79,8 +80,8 @@ public class Token {
             apis = FACEBOOK;
         } else if (type.equals(TWITTER)) {
             request = TWITTER_LINK_GET_TOKEN;
-            id = TWITTER_CONSUMER_KEY;
-            secret = TWITTER_CONSUMER_SECRET;
+            id = TWITTER_CLIENT_ID;
+            secret = TWITTER_CLIENT_SECRET;
             uri = TWITTER_REDIRECT_URI;
             link = TWITTER_LINK_GET_USER_INFO;
             apis = TWITTER;

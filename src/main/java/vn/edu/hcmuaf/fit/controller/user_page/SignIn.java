@@ -123,6 +123,7 @@ public class SignIn extends HttpServlet {
                 accessToken = Token.getToken(code, APIService.FACEBOOK);
                 break;
             case "Twitter":
+                System.out.println(apis);
                 accessToken = Token.getToken(code, APIService.TWITTER);
                 break;
         }

@@ -30,8 +30,8 @@ public class DbProperties {
     public static String FACEBOOK_REDIRECT_URI;
     public static String FACEBOOK_LINK_GET_TOKEN;
     public static String FACEBOOK_LINK_GET_USER_INFO;
-    public static String TWITTER_CONSUMER_KEY;
-    public static String TWITTER_CONSUMER_SECRET;
+    public static String TWITTER_CLIENT_ID;
+    public static String TWITTER_CLIENT_SECRET;
     public static String TWITTER_REDIRECT_URI;
     public static String TWITTER_LINK_GET_TOKEN;
     public static String TWITTER_LINK_GET_USER_INFO;
@@ -75,8 +75,8 @@ public class DbProperties {
         FACEBOOK_REDIRECT_URI = prop.getProperty("FACEBOOK_REDIRECT_URI");
         FACEBOOK_LINK_GET_TOKEN = prop.getProperty("FACEBOOK_LINK_GET_TOKEN");
         FACEBOOK_LINK_GET_USER_INFO = prop.getProperty("FACEBOOK_LINK_GET_USER_INFO");
-        TWITTER_CONSUMER_KEY = prop.getProperty("TWITTER_CONSUMER_KEY");
-        TWITTER_CONSUMER_SECRET = prop.getProperty("TWITTER_CONSUMER_SECRET");
+        TWITTER_CLIENT_ID = prop.getProperty("TWITTER_CLIENT_ID");
+        TWITTER_CLIENT_SECRET = prop.getProperty("TWITTER_CLIENT_SECRET");
         TWITTER_REDIRECT_URI = prop.getProperty("TWITTER_REDIRECT_URI");
         TWITTER_LINK_GET_TOKEN = prop.getProperty("TWITTER_LINK_GET_TOKEN");
         TWITTER_LINK_GET_USER_INFO = prop.getProperty("TWITTER_LINK_GET_USER_INFO");

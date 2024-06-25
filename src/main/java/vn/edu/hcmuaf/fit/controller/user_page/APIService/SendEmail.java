@@ -1,4 +1,4 @@
-package vn.edu.hcmuaf.fit.controller.user_page.MailService;
+package vn.edu.hcmuaf.fit.controller.user_page.APIService;
 
 import java.util.Random;
 
