@@ -13,12 +13,12 @@ import vn.edu.hcmuaf.fit.service.impl.UserService;
 
 import java.io.IOException;
 
-@WebServlet("/user/login")
-public class LoginByGoogle extends HttpServlet {
+@WebServlet("/user/loginByFacebook")
+public class LoginByFacebook extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        this.doPost(request, response);
+        this.doPost(request, response);
     }
 
     @Override
@@ -26,20 +26,21 @@ public class LoginByGoogle extends HttpServlet {
         String code = request.getParameter("code");
         String app = request.getParameter("apis");
         System.out.println("vo day roi: " + app);
-        String accessToken = Service.getToken(code, LoginType.GOOGLE);
+        String accessToken = Service.getToken(code, LoginType.FACEBOOK);
+        System.out.println(accessToken);
         System.out.println("vo day roi khong 2: " + app);
-        System.out.println(request.getParameter("app"));
 
         try {
             String ip = request.getHeader("X-FORWARDED-FOR");
             if (ip == null) ip = request.getRemoteAddr();
 
-            User userToken = Service.getUserInfo(accessToken, LoginType.GOOGLE);
-            User user = UserService.getInstance().loginByGoogle(userToken, ip, "/user/loginByGoogle");
+            User userToken = Service.getUserInfo(accessToken, LoginType.FACEBOOK);
+            System.out.println(userToken);
+   //         User user = UserService.getInstance().loginByGoogle(userToken, ip, "/user/loginByGoogle");
 
-            if (user != null) {
+            if (userToken != null) {
                 HttpSession session = request.getSession();
-                session.setAttribute("auth", user);
+                session.setAttribute("auth", userToken);
                 request.getRequestDispatcher("/user/index.jsp").forward(request, response);
             } else {
                 request.setAttribute("loginGG", "Email đã được sử dụng để đăng nhập thường");

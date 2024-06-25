@@ -25,6 +25,11 @@ public class DbProperties {
     public static String GOOGLE_LINK_GET_TOKEN;
     public static String GOOGLE_LINK_GET_USER_INFO;
     public static String GOOGLE_GRANT_TYPE;
+    public static String FACEBOOK_CLIENT_ID;
+    public static String FACEBOOK_CLIENT_SECRET;
+    public static String FACEBOOK_REDIRECT_URI;
+    public static String FACEBOOK_LINK_GET_TOKEN;
+    public static String FACEBOOK_LINK_GET_USER_INFO;
 
     public DbProperties() {
         super();
@@ -59,5 +64,10 @@ public class DbProperties {
         GOOGLE_LINK_GET_TOKEN = prop.getProperty("GOOGLE_LINK_GET_TOKEN");
         GOOGLE_LINK_GET_USER_INFO = prop.getProperty("GOOGLE_LINK_GET_USER_INFO");
         GOOGLE_GRANT_TYPE = prop.getProperty("GOOGLE_GRANT_TYPE");
+        FACEBOOK_CLIENT_ID = prop.getProperty("FACEBOOK_CLIENT_ID");
+        FACEBOOK_CLIENT_SECRET = prop.getProperty("FACEBOOK_CLIENT_SECRET");
+        FACEBOOK_REDIRECT_URI = prop.getProperty("FACEBOOK_REDIRECT_URI");
+        FACEBOOK_LINK_GET_TOKEN = prop.getProperty("FACEBOOK_LINK_GET_TOKEN");
+        FACEBOOK_LINK_GET_USER_INFO = prop.getProperty("FACEBOOK_LINK_GET_USER_INFO");
     }
 }

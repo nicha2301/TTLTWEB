@@ -91,11 +91,14 @@
                 <div class="or"><span>Hoặc</span></div>
 
                 <div class="social-icons">
-                    <a href="#">
-                        <img src="assets/img/formIcon/2023_Facebook_icon.svg" alt="Facebook">
+                    <a href="https://www.facebook.com/v19.0/dialog/oauth?fields=id,name,email,last_name&client_id=834857594884300&redirect_uri=http://localhost:8080/user/loginByFacebook">
+                    <img src="assets/img/formIcon/facebook-color-icon-2048x2048-bfly1vxr.png" alt="Facebook">
                     </a>
-                    <a href="https://accounts.google.com/o/oauth2/auth?scope=profile%20email&redirect_uri=http://localhost:8080/user/loginByGoogle&response_type=code&client_id=612393162835-dp8fc3bvhdt9g8139uv41umfu0bbgefv.apps.googleusercontent.com&prompt=select_account">
-                        <img src="assets/img/formIcon/Google__G__logo.svg.png" alt="Google">
+                    <a href="https://accounts.google.com/o/oauth2/auth?scope=profile%20email&redirect_uri=http://localhost:8080/user/signin?apis=Google&response_type=code&client_id=612393162835-dp8fc3bvhdt9g8139uv41umfu0bbgefv.apps.googleusercontent.com&prompt=select_account">
+                        <img src="assets/img/formIcon/gg.png" alt="Google">
+                    </a>
+                    <a href="#">
+                        <img src="assets/img/formIcon/twitter-2672572_1280.png" alt="Twitter">
                     </a>
                 </div>
 
