@@ -1,7 +1,7 @@
 //package vn.edu.hcmuaf.fit.controller.admin;
 //
 //
-//import vn.edu.hcmuaf.fit.controller.user_page.GoogleService.Service;
+//import vn.edu.hcmuaf.fit.controller.user_page.GoogleService.Token;
 //import vn.edu.hcmuaf.fit.dao.impl.UserDAO;
 //import vn.edu.hcmuaf.fit.model.User;
 //import jakarta.servlet.ServletException;
@@ -26,12 +26,12 @@
 //
 //    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //        String code = request.getParameter("code");
-//        String accessToken = Service.getToken(code);
+//        String accessToken = Token.getToken(code);
 //        User user = null;
 //        Boolean userExist = false;
 //
 //        try {
-//            user = Service.getUserInfo(accessToken);
+//            user = Token.getUserInfo(accessToken);
 //            userExist = UserDAO.getInstance().CheckExistUser(user.getEmail());
 //        } catch (SQLException var9) {
 //            throw new RuntimeException(var9);

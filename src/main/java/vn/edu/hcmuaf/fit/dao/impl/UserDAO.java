@@ -29,9 +29,15 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
     }
 
     @Override
-    public User loginByGoogle(String username, String email, String fullName, String avatar) {
-        String sql = "INSERT INTO users(username, email, fullName, avatar, verified) VALUES (?, ?, ?, ?, ?)";
-        return insert(sql, User.class, username, email, fullName, avatar, 1);
+    public User loginByAPIS(String username, String email, String fullName, String avatar, Integer loginBy) {
+        String sql = "INSERT INTO users(username, email, fullName, avatar, verified, login_by) VALUES (?, ?, ?, ?, ?, ?)";
+        return insert(sql, User.class, username, email, fullName, avatar, 1, loginBy);
+    }
+
+    @Override
+    public List<User> checkUsersWithOtherLogin(String email, Integer loginBy) {
+        String sql = "SELECT * FROM users WHERE email =? AND login_by = ?";
+        return query(sql, User.class, email, loginBy);
     }
 
     /**
@@ -40,20 +46,20 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
      */
     @Override
     public boolean setVerified(String email) {
-        String sql = "UPDATE users SET verified = 1 WHERE email = ? AND verified <> 1";
+        String sql = "UPDATE users SET verified = 1 WHERE email = ? AND verified <> 1 AND login_by = 0";
         return update(sql, email);
     }
 
     @Override
     public boolean updateLoginFail(String email, Integer times) {
-        String sql = "UPDATE users SET login_times =?, verified =? WHERE email =?";
+        String sql = "UPDATE users SET login_times =?, verified =? WHERE email =? AND login_by = 0";
         if (times < 5) return update(sql, times, 1, email);
         else return update(sql, 5, 0, email);
     }
 
     @Override
     public boolean resetLoginTimes(String email) {
-        String sql = "UPDATE users SET login_times = 0 WHERE email =?";
+        String sql = "UPDATE users SET login_times = 0 WHERE email =? AND login_by = 0";
         return update(sql, email);
     }
 
@@ -73,7 +79,7 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
      */
     @Override
     public List<User> checkExistUser(String username, String email) {
-        String sql = "SELECT * FROM users WHERE username = ? OR email = ?";
+        String sql = "SELECT * FROM users WHERE (username = ? OR email = ?) AND login_by = 0";
         return query(sql, User.class, username, email);
     }
 

@@ -1,6 +1,6 @@
 //package vn.edu.hcmuaf.fit.controller.user_page;
 //
-//import vn.edu.hcmuaf.fit.controller.user_page.ImageService.Service;
+//import vn.edu.hcmuaf.fit.controller.user_page.ImageService.Token;
 //import vn.edu.hcmuaf.fit.dao.ProductDAO;
 //import vn.edu.hcmuaf.fit.model.Product;
 //import jakarta.servlet.*;
@@ -34,7 +34,7 @@
 //
 //                // Hình ảnh sản phẩm
 //                String folderUrl = getServletContext().getRealPath("data\\sp_") + idParameter;
-//                List<String> imgUrl = Service.getImgUrlById(folderUrl);
+//                List<String> imgUrl = Token.getImgUrlById(folderUrl);
 //                // Hình ảnh của nhà cung cấp
 //                String supplierImgUrl = ""; // Khởi tạo một biến chuỗi để lưu trữ URL của nhà cung cấp
 //

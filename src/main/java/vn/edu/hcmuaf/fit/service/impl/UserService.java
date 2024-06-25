@@ -48,6 +48,7 @@ public class UserService extends LogDAO<User> implements IUserService {
     public User signIn(User user, String ip, String address) {
         try {
             List<User> users = UserDAO.getInstance().checkExistUser("", user.getEmail());
+            System.out.println(users);
             if (users.size()==1) {
                 if(BCrypt.checkpw(user.getPassword(), users.get(0).getPassword())) {
                     user.setAfterData("Login success with ID=" + users.get(0).getId());
@@ -150,25 +151,14 @@ public class UserService extends LogDAO<User> implements IUserService {
     }
 
     @Override
-    public User loginByGoogle(User user, String ip, String address) {
+    public User loginByAPIS(User user, String ip, String address) {
         try {
             Level level;
-            User check = UserService.getInstance().chkUsrByNameOrEmail("", user.getEmail());
-            System.out.println(user.getEmail());
-            if (check != null) {
-                if (check.getPassword() == null || check.getPassword().equals("")) {
-                    user.setAfterData(check.getEmail() + ": Login success. User has already in database!");
-                    level = LevelDAO.getInstance().getLevel(1).get(0);
-                } else {
-                    user.setAfterData("Login failed. The user is using normal login!");
-                    level = LevelDAO.getInstance().getLevel(2).get(0);
-                    check = null;
-                }
-                super.insert(user, level, ip, address);
-                return check;
-            }
-            User success = UserDAO.getInstance().loginByGoogle(user.getUsername(), user.getEmail(), user.getFullName(), user.getAvatar());
-            if(success != null) {
+            User success = null;
+            List<User> users = UserDAO.getInstance().checkUsersWithOtherLogin(user.getEmail(), user.getLoginBy());
+            if (users.size() == 1) success = users.get(0);
+            else if (users.isEmpty()) success = UserDAO.getInstance().loginByAPIS(user.getUsername(), user.getEmail(), user.getFullName(), user.getAvatar(), user.getLoginBy());
+            if (success != null) {
                 user.setAfterData(success.getId() + ": Login by Google success. Congratulation!");
                 level = LevelDAO.getInstance().getLevel(1).get(0);
             } else {

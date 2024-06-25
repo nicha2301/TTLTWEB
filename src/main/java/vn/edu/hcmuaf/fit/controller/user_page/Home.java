@@ -31,7 +31,7 @@ public class Home extends HttpServlet {
 //            String imageUrl = basePath + productId;
 //
 //            // Lấy đường dẫn của hình ảnh đầu tiên
-//            String firstImagePath = Service.getFirstImagePath(imageUrl);
+//            String firstImagePath = Token.getFirstImagePath(imageUrl);
 //
 //            // Lưu đường dẫn vào csdl
 //            productDAO.updateImgUrl(productId, firstImagePath);

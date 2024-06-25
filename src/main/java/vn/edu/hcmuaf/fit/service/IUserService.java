@@ -38,5 +38,5 @@ public interface IUserService {
 
     String resetLoginTimes(User user, String code, String authCode, String ip, String address);
 
-    User loginByGoogle(User user, String ip, String address);
+    User loginByAPIS(User user, String ip, String address);
 }

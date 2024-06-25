@@ -25,6 +25,7 @@ public class User extends AbsModel implements Serializable {
     private String phone;
     private String avatar;
     private Boolean verified;
+    private Integer loginBy;
     private Integer loginTimes;
     @Nested("role")
     private Role role;

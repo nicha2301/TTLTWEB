@@ -56,6 +56,16 @@
                 });
             });
         });
+        document.addEventListener('DOMContentLoaded', function () {
+            var baseUri = "http://localhost:8080/user/signin";
+            var params = "?apis=Facebook";
+            var encodedUri = encodeURIComponent(baseUri + params);
+
+            var facebookUrl = "https://www.facebook.com/v19.0/dialog/oauth?fields=id,name,first_name,email,picture&client_id=834857594884300&redirect_uri=" + encodedUri;
+
+            var linkElement = document.getElementById('facebook-login-link');
+            linkElement.href = facebookUrl;
+        });
     </script>
 </head>
 
@@ -67,7 +77,7 @@
             <form id="form" class="sign-in-form" style="margin-top: 14%; transform: translateY(-20%)">
                 <h2>Đăng Nhập</h2>
                 <span style="color: #66b840;margin-bottom: 10px" id="success">${empty sessionScope.success?'': sessionScope.success}</span>
-                <span style="color: red;margin-bottom: 10px" id="errorLogin">${empty loginGG? '': loginGG}</span>
+                <span style="color: red;margin-bottom: 10px" id="errorLogin">${empty loginFail? '': loginFail}</span>
                 <span style="color: red;margin-bottom: 10px" id="errorCaptcha"></span>
                 <div class="input-group">
                     <input type="email" id="email" name="email" placeholder="Email" value="${empty email ? '' : email}" required>
@@ -91,8 +101,8 @@
                 <div class="or"><span>Hoặc</span></div>
 
                 <div class="social-icons">
-                    <a href="https://www.facebook.com/v19.0/dialog/oauth?fields=id,name,email,last_name&client_id=834857594884300&redirect_uri=http://localhost:8080/user/loginByFacebook">
-                    <img src="assets/img/formIcon/facebook-color-icon-2048x2048-bfly1vxr.png" alt="Facebook">
+                    <a id="facebook-login-link" href="#">
+                        <img src="assets/img/formIcon/facebook-color-icon-2048x2048-bfly1vxr.png" alt="Facebook">
                     </a>
                     <a href="https://accounts.google.com/o/oauth2/auth?scope=profile%20email&redirect_uri=http://localhost:8080/user/signin?apis=Google&response_type=code&client_id=612393162835-dp8fc3bvhdt9g8139uv41umfu0bbgefv.apps.googleusercontent.com&prompt=select_account">
                         <img src="assets/img/formIcon/gg.png" alt="Google">
