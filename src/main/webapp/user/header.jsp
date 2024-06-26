@@ -1,5 +1,5 @@
-<%@ page import="com.example.finallaptrinhweb.model.User" %>
-<%@ page import="com.example.finallaptrinhweb.model.Cart" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.User" %>
+<%--<%@ page import="vn.edu.hcmuaf.fit.model.ShoppingCart" %>--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <% User user = (User) session.getAttribute("auth");%>
@@ -68,18 +68,18 @@
             </form>
             <div class="action">
                 <div class="cart" style="margin: 0 30px 0 30px;">
-                    <%
-                        Cart cart = (Cart) session.getAttribute("cart");
-                        if (cart != null) {
-                    %>
-                    <span class="count"><%=cart.getTotalQuantity()%></span>
-                    <%}%>
+<%--                    <%--%>
+<%--                        ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");--%>
+<%--                        if (cart != null) {--%>
+<%--                    %>--%>
+<%--                    <span class="count"><%=cart.getTotalQuantity()%></span>--%>
+<%--                    <%}%>--%>
                     <a href="cart">
                         <i class="fa-solid fa-cart-shopping material-icons"></i>
                     </a>
                 </div>
                 <%if (user == null) { %>
-                <a class="sign-in" href="signIn.jsp">Đăng nhập</a>
+                    <a class="sign-in" href="${request.servletContext.contextPath}/user/signin">Đăng nhập</a>
                 <%} else {%>
                 <div class="user-dropdown">
                     <i class="fas fa-user fa-2x" style="color: #66b840" id="user-icon"></i>

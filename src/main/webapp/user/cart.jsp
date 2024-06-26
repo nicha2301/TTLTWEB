@@ -1,8 +1,8 @@
-<%@ page import="com.example.finallaptrinhweb.model.Cart" %>
-<%@ page import="com.example.finallaptrinhweb.model.CartItem" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.ShoppingCart" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.CartItem" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.example.finallaptrinhweb.model.Util" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -42,7 +42,7 @@
     <!-- Shoping Cart Section Begin -->
     <section class="shoping-cart spad">
         <%
-            Cart cart = (Cart) session.getAttribute("cart");
+            ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
             if (cart == null || cart.isEmpty()) {
         %>
         <h1 style="text-align: center">Vui lòng mua sắm</h1>
@@ -73,7 +73,7 @@
                                     </h5>
                                 </td>
                                 <td class="shoping__cart__price">
-                                    <%= Util.formatCurrency(item.getProduct().getPrice()) %> VND
+                                    <%= Utils.formatCurrency(item.getProduct().getPrice()) %> VND
                                 </td>
                                 <td class="shoping__cart__quantity">
                                     <div class="quantity"
@@ -92,7 +92,7 @@
                                     </div>
                                 </td>
                                 <td class="shoping__cart__total">
-                                    <%= Util.formatCurrency(item.getTotalPrice()) %> VND
+                                    <%= Utils.formatCurrency(item.getTotalPrice()) %> VND
                                 </td>
                                 <td class="shoping__cart__item__close">
                                     <a style="font-size: 18px;background-color: white"

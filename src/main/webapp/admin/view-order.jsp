@@ -1,4 +1,4 @@
-<%@ page import="com.example.finallaptrinhweb.model.Util" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -96,20 +96,20 @@
                                 <div class="form-group row">
                                     <label class="col-md-3">Tổng tiền</label>
                                     <div class="col-md-9">
-                                        <%=Util.formatCurrency((double)request.getAttribute("t_p"))%>VNĐ
+                                        <%=Utils.formatCurrency((double)request.getAttribute("t_p"))%>VNĐ
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3">Tiền vận chuyển</label>
                                     <div class="col-md-9">
-                                        <%=Util.formatCurrency((double)request.getAttribute("ship"))%>VNĐ
+                                        <%=Utils.formatCurrency((double)request.getAttribute("ship"))%>VNĐ
 
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3">Tổng tiền phải trả</label>
                                     <div class="col-md-9">
-                                        <%=Util.formatCurrency((double)request.getAttribute("total"))%>VNĐ
+                                        <%=Utils.formatCurrency((double)request.getAttribute("total"))%>VNĐ
 
                                     </div>
                                 </div>

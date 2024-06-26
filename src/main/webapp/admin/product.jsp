@@ -1,6 +1,6 @@
-<%@ page import="com.example.finallaptrinhweb.model.Util" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
 <%@ page import="java.util.Date" %>
-<%@ page import="com.example.finallaptrinhweb.model.Product" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.Product" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -92,7 +92,7 @@
                                             </c:choose>
                                             </td>
                                             <td>${p.productName}</td>
-                                            <td><%= Util.formatCurrency((double) pageContext.getAttribute("price"))%>VND
+                                            <td><%= Utils.formatCurrency((double) pageContext.getAttribute("price"))%>VND
                                             </td>
                                             <td>${p.quantity}</td>
                                             <td>${p.supplierId}</td>

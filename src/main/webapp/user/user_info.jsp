@@ -1,10 +1,10 @@
-<%@ page import="com.example.finallaptrinhweb.model.User" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.User" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.finallaptrinhweb.dao.UserDAO" %>
+<%@ page import="vn.edu.hcmuaf.fit.dao.UserDAO" %>
 <% User user = (User) session.getAttribute("auth");%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import="com.example.finallaptrinhweb.model.Util" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
 <!DOCTYPE html>
 <html lang="en">
 
