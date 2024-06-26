@@ -36,11 +36,6 @@ public class DbProperties {
     public static String TWITTER_LINK_GET_TOKEN;
     public static String TWITTER_LINK_GET_USER_INFO;
 
-
-    public DbProperties() {
-        super();
-    }
-
     static {
         try {
             File f = new File("/db.properties");

@@ -48,7 +48,6 @@ public class UserService extends LogDAO<User> implements IUserService {
     public User signIn(User user, String ip, String address) {
         try {
             List<User> users = UserDAO.getInstance().checkExistUser("", user.getEmail());
-            System.out.println(users);
             if (users.size()==1) {
                 if(BCrypt.checkpw(user.getPassword(), users.get(0).getPassword())) {
                     user.setAfterData("Login success with ID=" + users.get(0).getId());
