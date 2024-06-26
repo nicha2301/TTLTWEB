@@ -11,7 +11,7 @@ public interface IUserDAO extends GenericDAO<User> {
 
     User loginByAPIS(String username, String email, String fullName, String avatar, Integer loginBy);
 
-    List<User> checkUsersWithOtherLogin(String email, Integer loginBy);
+    List<User> checkUsersWithOtherLogin(String username,String email, Integer loginBy);
 
     List<User> checkExistUser(String username, String email);
 

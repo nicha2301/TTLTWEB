@@ -67,11 +67,11 @@
             linkElement.href = facebookUrl;
         });
         document.addEventListener('DOMContentLoaded', function () {
-            var XUri = "http://localhost:8080/user/signin";
+            var XUri = "http://localhost:8080/user/login";
             var param = "?apis=Twitter";
             var encoded = encodeURIComponent(XUri + param);
 
-            var XUrl = "https://twitter.com/i/oauth2/authorize?response_type=code&client_id=ejk3azBSZE1pMkNzZi0xOGdfTmo6MTpjaQ&redirect_uri=" + encoded + "&scope=tweet.read%20users.read%20offline.access&state=state&code_challenge=challenge&code_challenge_method=plain";
+            var XUrl = "https://twitter.com/i/oauth2/authorize?response_type=code&client_id=czl4bHg4b21CZkEwRDJWUHo1VXc6MTpjaQ&redirect_uri=" + encoded + "&scope=tweet.read%20users.read%20follows.read%20offline.access&state=state&code_challenge=challenge&code_challenge_method=plain";
 
             var linkEle = document.getElementById('x-login-link');
             linkEle.href = XUrl;
@@ -117,7 +117,7 @@
                     <a href="https://accounts.google.com/o/oauth2/auth?scope=profile%20email&redirect_uri=http://localhost:8080/user/signin?apis=Google&response_type=code&client_id=612393162835-dp8fc3bvhdt9g8139uv41umfu0bbgefv.apps.googleusercontent.com&prompt=select_account">
                         <img src="assets/img/formIcon/gg.png" alt="Google">
                     </a>
-                    <a href="loginByTwitter">
+                    <a id="x-login-link" href="#">
                         <img src="assets/img/formIcon/twitter-2672572_1280.png" alt="Twitter">
                     </a>
                 </div>
