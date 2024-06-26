@@ -12,17 +12,17 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import static vn.edu.hcmuaf.fit.connection_pool.DbProperties.*;
-import static vn.edu.hcmuaf.fit.controller.user_page.APIService.APIService.*;
+import static vn.edu.hcmuaf.fit.controller.user_page.APIService.OAuth2Service.*;
 
-public class Token {
+public class OAuth2Callback {
     private static String request;
     private static String id;
     private static String secret;
     private static String uri;
     private static String link;
-    private static Enum<APIService> apis;
+    private static Enum<OAuth2Service> apis;
 
-    public static String getToken(final String code, Enum<APIService> type) throws ClientProtocolException, IOException {
+    public static String getToken(final String code, Enum<OAuth2Service> type) throws ClientProtocolException, IOException {
         boolean valid = setProperties(type);
         if (valid) {
             String response = Request.Post(request).bodyForm(Form.form()
@@ -56,14 +56,11 @@ public class Token {
                 user.setAvatar(obj.has("url") ? obj.get("url").getAsString() : null);
             }
             user.setLoginBy(2);
-        } else if (apis.equals(TWITTER)) {
-            user.setUsername(json.has("username") ? json.get("username").getAsString() : null);
-            user.setLoginBy(3);
         }
         return user;
     }
 
-    private static boolean setProperties(Enum<APIService> type) {
+    private static boolean setProperties(Enum<OAuth2Service> type) {
         if (type.equals(GOOGLE)) {
             request = GOOGLE_LINK_GET_TOKEN;
             id = GOOGLE_CLIENT_ID;
@@ -78,13 +75,6 @@ public class Token {
             uri = FACEBOOK_REDIRECT_URI;
             link = FACEBOOK_LINK_GET_USER_INFO;
             apis = FACEBOOK;
-        } else if (type.equals(TWITTER)) {
-            request = TWITTER_LINK_GET_TOKEN;
-            id = TWITTER_CLIENT_ID;
-            secret = TWITTER_CLIENT_SECRET;
-            uri = TWITTER_REDIRECT_URI;
-            link = TWITTER_LINK_GET_USER_INFO;
-            apis = TWITTER;
         } else return false;
         return true;
     }
