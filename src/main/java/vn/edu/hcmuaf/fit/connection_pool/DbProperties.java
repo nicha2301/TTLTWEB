@@ -35,6 +35,11 @@ public class DbProperties {
     public static String TWITTER_REDIRECT_URI;
     public static String TWITTER_LINK_GET_TOKEN;
     public static String TWITTER_LINK_GET_USER_INFO;
+    public static String DISCORD_CLIENT_ID;
+    public static String DISCORD_CLIENT_SECRET;
+    public static String DISCORD_REDIRECT_URI;
+    public static String DISCORD_LINK_GET_TOKEN;
+    public static String DISCORD_LINK_GET_USER_INFO;
 
     static {
         try {
@@ -75,5 +80,10 @@ public class DbProperties {
         TWITTER_REDIRECT_URI = prop.getProperty("TWITTER_REDIRECT_URI");
         TWITTER_LINK_GET_TOKEN = prop.getProperty("TWITTER_LINK_GET_TOKEN");
         TWITTER_LINK_GET_USER_INFO = prop.getProperty("TWITTER_LINK_GET_USER_INFO");
+        DISCORD_CLIENT_ID = prop.getProperty("DISCORD_CLIENT_ID");
+        DISCORD_CLIENT_SECRET = prop.getProperty("DISCORD_CLIENT_SECRET");
+        DISCORD_REDIRECT_URI = prop.getProperty("DISCORD_REDIRECT_URI");
+        DISCORD_LINK_GET_TOKEN = prop.getProperty("DISCORD_LINK_GET_TOKEN");
+        DISCORD_LINK_GET_USER_INFO = prop.getProperty("DISCORD_LINK_GET_USER_INFO");
     }
 }

@@ -1,16 +1,10 @@
 package vn.edu.hcmuaf.fit.controller.user_page;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.http.client.fluent.Form;
-import org.apache.http.client.fluent.Request;
-import vn.edu.hcmuaf.fit.connection_pool.DbProperties;
-import vn.edu.hcmuaf.fit.controller.user_page.APIService.OAuth2Service;
 import vn.edu.hcmuaf.fit.controller.user_page.APIService.OAuth2Callback;
+import vn.edu.hcmuaf.fit.controller.user_page.APIService.OAuth2Service;
 import vn.edu.hcmuaf.fit.model.User;
 import vn.edu.hcmuaf.fit.service.impl.UserService;
 
@@ -122,39 +116,19 @@ public class SignIn extends HttpServlet {
             return;
         }
         try {
-            User userToken = new User();
+            User userToken = null;
             switch (apis) {
                 case "Google":
-                    userToken = OAuth2Callback.getUserInfo(OAuth2Callback.getToken(code, OAuth2Service.GOOGLE));
+                    userToken = OAuth2Callback.getUserInfo(OAuth2Callback.getToken(code, OAuth2Service.GOOGLE), false);
                     break;
                 case "Facebook":
-                    userToken = OAuth2Callback.getUserInfo(OAuth2Callback.getToken(code, OAuth2Service.FACEBOOK));
+                    userToken = OAuth2Callback.getUserInfo(OAuth2Callback.getToken(code, OAuth2Service.FACEBOOK), false);
                     break;
                 case "Twitter":
-                    String clientCredentials = DbProperties.TWITTER_CLIENT_ID + ":" + DbProperties.TWITTER_CLIENT_SECRET;
-                    String base64Credentials = new String(Base64.encodeBase64(clientCredentials.getBytes()));
-                    String responseBody = Request.Post(DbProperties.TWITTER_LINK_GET_TOKEN)
-                            .addHeader("Authorization", "Basic " + base64Credentials)
-                            .bodyForm(Form.form()
-                                    .add("grant_type", "authorization_code")
-                                    .add("code", code)
-                                    .add("redirect_uri", DbProperties.TWITTER_REDIRECT_URI.replace("&state=state", ""))
-                                    .add("code_verifier", "challenge")
-                                    .build())
-                            .execute().returnContent().asString();
-                    JsonObject jsonObject = JsonParser.parseString(responseBody).getAsJsonObject();
-                    String accessToken = jsonObject.get("access_token").getAsString();
-                    String userInfoResponse = Request.Get(DbProperties.TWITTER_LINK_GET_USER_INFO)
-                            .addHeader("Authorization", "Bearer " + accessToken)
-                            .execute().returnContent().asString();
-                    JsonObject jObj = JsonParser.parseString(userInfoResponse).getAsJsonObject();
-                    JsonObject json = jObj.getAsJsonObject("data");
-                    String username = json.has("username") ? json.get("username").getAsString() : null;
-                    userToken.setUsername(username);
-                    userToken.setEmail(username + "@users.noreply.twitter.com");
-                    userToken.setFullName(json.has("name") ? json.get("name").getAsString() : null);
-                    userToken.setAvatar(json.has("profile_image_url") ? json.get("profile_image_url").getAsString() : null);
-                    userToken.setLoginBy(3);
+                    userToken = OAuth2Callback.getUserInfo(OAuth2Callback.getToken(code, OAuth2Service.TWITTER), true);
+                    break;
+                case "Discord":
+                    userToken = OAuth2Callback.getUserInfo(OAuth2Callback.getToken(code, OAuth2Service.DISCORD), true);
                     break;
             }
             this.loginByAPIS(request, response, userToken, ip, apis);
