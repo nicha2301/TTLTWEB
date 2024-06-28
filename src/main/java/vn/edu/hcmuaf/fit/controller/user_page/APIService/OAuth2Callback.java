@@ -27,7 +27,7 @@ public class OAuth2Callback {
         boolean valid = setProperties(type);
         String response;
         JsonObject json;
-        if (valid && !apis.equals(TWITTER)) {
+        if (valid && !apis.equals(TWITTER) && !apis.equals(GITHUB)) {
             response = Request.Post(request).bodyForm(Form.form()
                             .add("client_id", id)
                             .add("client_secret", secret)
@@ -39,7 +39,7 @@ public class OAuth2Callback {
 
             json = new Gson().fromJson(response, JsonObject.class);
             return json.get("access_token").toString().replaceAll("\"", "");
-        } else {
+        } else if (apis.equals(TWITTER)) {
             String clientCredentials = id + ":" + secret;
             String base64Credentials = new String(Base64.encodeBase64(clientCredentials.getBytes()));
             response = Request.Post(request)
@@ -49,6 +49,18 @@ public class OAuth2Callback {
                             .add("code", code)
                             .add("redirect_uri", uri.replace("&state=state", ""))
                             .add("code_verifier", "challenge")
+                            .build())
+                    .execute().returnContent().asString();
+
+            json = JsonParser.parseString(response).getAsJsonObject();
+            return json.get("access_token").getAsString();
+        } else {
+            response = Request.Post(request)
+                    .addHeader("Accept", "application/json")
+                    .bodyForm(Form.form()
+                            .add("client_id", id)
+                            .add("client_secret", secret)
+                            .add("code", code)
                             .build())
                     .execute().returnContent().asString();
 
@@ -98,7 +110,12 @@ public class OAuth2Callback {
             user.setAvatar(json.has("avatar") ? json.get("avatar").getAsString() : null);
             user.setLoginBy(4);
         } else if (apis.equals(GITHUB)) {
-
+            String userName = json.has("login") ? json.get("login").getAsString() : null;
+            user.setUsername(userName);
+            user.setEmail(userName + "@users.noreply.github.com");
+            user.setFullName(json.has("name") ? json.get("name").getAsString() : null);
+            user.setAvatar(json.has("avatar_url") ? json.get("avatar_url").getAsString() : null);
+            user.setLoginBy(5);
         }
         return user;
     }
@@ -132,6 +149,12 @@ public class OAuth2Callback {
             uri = TWITTER_REDIRECT_URI;
             link = TWITTER_LINK_GET_USER_INFO;
             apis = TWITTER;
+        } else if (type.equals(GITHUB)) {
+            request = GITHUB_LINK_GET_TOKEN;
+            id = GITHUB_CLIENT_ID;
+            secret = GITHUB_CLIENT_SECRET;
+            link = GITHUB_LINK_GET_USER_INFO;
+            apis = GITHUB;
         }
         else return false;
         return true;

@@ -40,6 +40,10 @@ public class DbProperties {
     public static String DISCORD_REDIRECT_URI;
     public static String DISCORD_LINK_GET_TOKEN;
     public static String DISCORD_LINK_GET_USER_INFO;
+    public static String GITHUB_CLIENT_ID;
+    public static String GITHUB_CLIENT_SECRET;
+    public static String GITHUB_LINK_GET_TOKEN;
+    public static String GITHUB_LINK_GET_USER_INFO;
 
     static {
         try {
@@ -85,5 +89,9 @@ public class DbProperties {
         DISCORD_REDIRECT_URI = prop.getProperty("DISCORD_REDIRECT_URI");
         DISCORD_LINK_GET_TOKEN = prop.getProperty("DISCORD_LINK_GET_TOKEN");
         DISCORD_LINK_GET_USER_INFO = prop.getProperty("DISCORD_LINK_GET_USER_INFO");
+        GITHUB_CLIENT_ID = prop.getProperty("GITHUB_CLIENT_ID");
+        GITHUB_CLIENT_SECRET = prop.getProperty("GITHUB_CLIENT_SECRET");
+        GITHUB_LINK_GET_TOKEN = prop.getProperty("GITHUB_LINK_GET_TOKEN");
+        GITHUB_LINK_GET_USER_INFO = prop.getProperty("GITHUB_LINK_GET_USER_INFO");
     }
 }

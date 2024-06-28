@@ -130,6 +130,9 @@ public class SignIn extends HttpServlet {
                 case "Discord":
                     userToken = OAuth2Callback.getUserInfo(OAuth2Callback.getToken(code, OAuth2Service.DISCORD), true);
                     break;
+                case "Github":
+                    userToken = OAuth2Callback.getUserInfo(OAuth2Callback.getToken(code, OAuth2Service.GITHUB), true);
+                    break;
             }
             this.loginByAPIS(request, response, userToken, ip, apis);
         } catch (SQLException e) {
