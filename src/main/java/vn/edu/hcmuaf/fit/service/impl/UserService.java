@@ -48,7 +48,6 @@ public class UserService extends LogDAO<User> implements IUserService {
     public User signIn(User user, String ip, String address) {
         try {
             List<User> users = UserDAO.getInstance().checkExistUser("", user.getEmail());
-            System.out.println(users);
             if (users.size()==1) {
                 if(BCrypt.checkpw(user.getPassword(), users.get(0).getPassword())) {
                     user.setAfterData("Login success with ID=" + users.get(0).getId());
@@ -155,20 +154,17 @@ public class UserService extends LogDAO<User> implements IUserService {
         try {
             Level level;
             User success = null;
-            List<User> users = UserDAO.getInstance().checkUsersWithOtherLogin(user.getUsername(), user.getEmail(), user.getLoginBy());
-            System.out.println(user);
+            List<User> users = UserDAO.getInstance().chkUsrWithOtherLogin(user.getUsername(), user.getEmail(), user.getLoginBy());
             if (users.size() == 1) success = users.get(0);
-
             else if (users.isEmpty()) success = UserDAO.getInstance().loginByAPIS(user.getUsername(), user.getEmail(), user.getFullName(), user.getAvatar(), user.getLoginBy());
             if (success != null) {
-                user.setAfterData(success.getId() + ": Login by Google success. Congratulation!");
+                user.setAfterData(success.getId() + ": Login by " + success.getLoginBy() + " success. Congratulation!");
                 level = LevelDAO.getInstance().getLevel(1).get(0);
             } else {
                 user.setAfterData("Login failed. The new user is not in database!");
                 level = LevelDAO.getInstance().getLevel(2).get(0);
             }
             super.insert(user, level, ip, address);
-//            System.out.println(success);
             return success;
         } catch (Exception e) {
             return null;

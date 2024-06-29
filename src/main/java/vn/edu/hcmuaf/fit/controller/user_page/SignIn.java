@@ -3,13 +3,14 @@ package vn.edu.hcmuaf.fit.controller.user_page;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import vn.edu.hcmuaf.fit.controller.user_page.APIService.APIService;
-import vn.edu.hcmuaf.fit.controller.user_page.APIService.Token;
+import vn.edu.hcmuaf.fit.controller.user_page.APIService.OAuth2Callback;
+import vn.edu.hcmuaf.fit.controller.user_page.APIService.OAuth2Service;
 import vn.edu.hcmuaf.fit.model.User;
 import vn.edu.hcmuaf.fit.service.impl.UserService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 @WebServlet("/user/signin")
 public class SignIn extends HttpServlet {
@@ -114,37 +115,40 @@ public class SignIn extends HttpServlet {
             out.close();
             return;
         }
-        String accessToken = null;
-        switch (apis) {
-            case "Google":
-                accessToken = Token.getToken(code, APIService.GOOGLE);
-                break;
-            case "Facebook":
-                accessToken = Token.getToken(code, APIService.FACEBOOK);
-                break;
-            case "Twitter":
-                System.out.println(apis);
-                accessToken = Token.getToken(code, APIService.TWITTER);
-                break;
-        }
-        this.loginByAPIS(request, response, accessToken, ip, apis);
-    }
-
-    private void loginByAPIS(HttpServletRequest request, HttpServletResponse response, String accessToken, String ip, String apis) {
         try {
-            User userToken = Token.getUserInfo(accessToken);
-            User user = UserService.getInstance().loginByAPIS(userToken, ip, "/user/loginByAPIS");
-
-            if (user != null) {
-                HttpSession session = request.getSession();
-                session.setAttribute("auth", user);
-                response.sendRedirect("./home");
-                return;
+            User userToken = null;
+            switch (apis) {
+                case "Google":
+                    userToken = OAuth2Callback.getUserInfo(OAuth2Callback.getToken(code, OAuth2Service.GOOGLE), false);
+                    break;
+                case "Facebook":
+                    userToken = OAuth2Callback.getUserInfo(OAuth2Callback.getToken(code, OAuth2Service.FACEBOOK), false);
+                    break;
+                case "Twitter":
+                    userToken = OAuth2Callback.getUserInfo(OAuth2Callback.getToken(code, OAuth2Service.TWITTER), true);
+                    break;
+                case "Discord":
+                    userToken = OAuth2Callback.getUserInfo(OAuth2Callback.getToken(code, OAuth2Service.DISCORD), true);
+                    break;
+                case "Github":
+                    userToken = OAuth2Callback.getUserInfo(OAuth2Callback.getToken(code, OAuth2Service.GITHUB), true);
+                    break;
             }
-            request.setAttribute("loginFail", "Login fail with " + apis);
-            request.getRequestDispatcher("/user/signIn.jsp").forward(request, response);
-        } catch (Exception e) {
+            this.loginByAPIS(request, response, userToken, ip, apis);
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void loginByAPIS(HttpServletRequest request, HttpServletResponse response, User userToken, String ip, String apis) throws ServletException, IOException {
+        User user = UserService.getInstance().loginByAPIS(userToken, ip, "/user/loginByAPIS");
+        if (user != null) {
+            HttpSession session = request.getSession();
+            session.setAttribute("auth", user);
+            response.sendRedirect("./home");
+            return;
+        }
+        request.setAttribute("loginFail", "Login fail with " + apis);
+        request.getRequestDispatcher("/user/signIn.jsp").forward(request, response);
     }
 }

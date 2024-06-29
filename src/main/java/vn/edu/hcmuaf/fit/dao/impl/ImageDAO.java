@@ -1,6 +1,5 @@
 package vn.edu.hcmuaf.fit.dao.impl;
 
-import vn.edu.hcmuaf.fit.db.JDBIConnector;
 import vn.edu.hcmuaf.fit.dao.IImageDAO;
 import vn.edu.hcmuaf.fit.model.Image;
 

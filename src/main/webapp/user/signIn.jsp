@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8"/>
     <link rel="stylesheet" href="css/sign/form.css"/>
@@ -56,29 +55,21 @@
                 });
             });
         });
+        var baseUri = "http://localhost:8080/user/signin?apis=";
         document.addEventListener('DOMContentLoaded', function () {
-            var baseUri = "http://localhost:8080/user/signin";
-            var params = "?apis=Facebook";
-            var encodedUri = encodeURIComponent(baseUri + params);
-
+            var encodedUri = encodeURIComponent(baseUri + "Facebook");
             var facebookUrl = "https://www.facebook.com/v19.0/dialog/oauth?fields=id,name,first_name,email,picture&client_id=834857594884300&redirect_uri=" + encodedUri;
-
             var linkElement = document.getElementById('facebook-login-link');
             linkElement.href = facebookUrl;
         });
         document.addEventListener('DOMContentLoaded', function () {
-            var XUri = "http://localhost:8080/user/login";
-            var param = "?apis=Twitter";
-            var encoded = encodeURIComponent(XUri + param);
-
-            var XUrl = "https://twitter.com/i/oauth2/authorize?response_type=code&client_id=czl4bHg4b21CZkEwRDJWUHo1VXc6MTpjaQ&redirect_uri=" + encoded + "&scope=tweet.read%20users.read%20follows.read%20offline.access&state=state&code_challenge=challenge&code_challenge_method=plain";
-
-            var linkEle = document.getElementById('x-login-link');
-            linkEle.href = XUrl;
+            var encodedUri = encodeURIComponent(baseUri + "Twitter");
+            var twitterUrl = "https://twitter.com/i/oauth2/authorize?response_type=code&client_id=ejk3azBSZE1pMkNzZi0xOGdfTmo6MTpjaQ&redirect_uri=" + encodedUri + "&scope=tweet.read%20users.read%20follows.read%20offline.access&state=state&code_challenge=challenge&code_challenge_method=plain";
+            var linkElement = document.getElementById('x-login-link');
+            linkElement.href = twitterUrl;
         });
     </script>
 </head>
-
 <body>
 <div class="website-wrapper">
     <jsp:include page="header.jsp"/>
@@ -117,8 +108,14 @@
                     <a href="https://accounts.google.com/o/oauth2/auth?scope=profile%20email&redirect_uri=http://localhost:8080/user/signin?apis=Google&response_type=code&client_id=612393162835-dp8fc3bvhdt9g8139uv41umfu0bbgefv.apps.googleusercontent.com&prompt=select_account">
                         <img src="assets/img/formIcon/gg.png" alt="Google">
                     </a>
+                    <a href="https://discord.com/oauth2/authorize?client_id=1255854814747689012&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fuser%2Fsignin%3Fapis%3DDiscord&scope=email+identify+connections+guilds+gdm.join+guilds.join">
+                        <img src="assets/img/formIcon/images.png" alt="Discord">
+                    </a>
                     <a id="x-login-link" href="#">
-                        <img src="assets/img/formIcon/twitter-2672572_1280.png" alt="Twitter">
+                        <img src="assets/img/formIcon/1707222563twitter-logo-png.png" alt="Twitter">
+                    </a>
+                    <a href="https://github.com/login/oauth/authorize?client_id=Ov23liEQTsu7hXzeN2mH">
+                        <img src="assets/img/formIcon/25231.png" alt="Github">
                     </a>
                 </div>
 

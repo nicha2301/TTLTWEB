@@ -35,20 +35,9 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
     }
 
     @Override
-    public List<User> checkUsersWithOtherLogin(String username, String email, Integer loginBy) {
+    public List<User> chkUsrWithOtherLogin(String username, String email, Integer loginBy) {
         String sql = "SELECT * FROM users WHERE (username = ? OR email = ?) AND login_by = ?";
         return query(sql, User.class, username, email, loginBy);
-    }
-
-    public static void main(String[] args) {
-        User user = new User();
-        user.setUsername("asd");
-        user.setEmail("asd@gmail.com");
-        user.setFullName("Nguyen van a");
-        user.setAvatar("");
-        user.setLoginBy(0);
-
-        System.out.println(UserDAO.getInstance().checkUsersWithOtherLogin(user.getUsername(), user.getEmail(), user.getLoginBy()));
     }
 
     /**

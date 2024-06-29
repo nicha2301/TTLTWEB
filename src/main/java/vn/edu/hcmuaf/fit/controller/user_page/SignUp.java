@@ -17,7 +17,6 @@ import java.io.PrintWriter;
 @WebServlet("/user/signup")
 public class SignUp extends HttpServlet {
 
-    // request.getContextPath() + "/user/signUp.jsp": sửa lại chỗ "/user/signUp.jsp" thành "/signUp.jsp" khi run mặc định trên user/home
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
