@@ -10,6 +10,12 @@ import java.util.List;
 import java.util.Map;
 
 public class ProductService extends LogDAO<Product> implements IProductService {
+    private static IProductService instance;
+
+    public static IProductService getInstance() {
+        if (instance == null) instance = new ProductService();
+        return instance;
+    }
 
     @Override
     public List<Product> getAllProducts() {

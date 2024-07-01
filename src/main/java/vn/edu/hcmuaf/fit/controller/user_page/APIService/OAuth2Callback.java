@@ -12,7 +12,7 @@ import vn.edu.hcmuaf.fit.model.User;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static vn.edu.hcmuaf.fit.connection_pool.DbProperties.*;
+import static vn.edu.hcmuaf.fit.db.DbProperties.*;
 import static vn.edu.hcmuaf.fit.controller.user_page.APIService.OAuth2Service.*;
 
 public class OAuth2Callback {
@@ -79,6 +79,7 @@ public class OAuth2Callback {
             response = Request.Get(link + accessToken).execute().returnContent().asString();
         }
         JsonObject json = JsonParser.parseString(response).getAsJsonObject();
+        System.out.println(json.toString());
         User user = new User();
         if (apis.equals(TWITTER)) {
             json = json.getAsJsonObject("data");

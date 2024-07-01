@@ -3,7 +3,7 @@ package vn.edu.hcmuaf.fit.dao.impl;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.Update;
-import vn.edu.hcmuaf.fit.connection_pool.JDBIConnector;
+import vn.edu.hcmuaf.fit.db.JDBIConnector;
 import vn.edu.hcmuaf.fit.dao.GenericDAO;
 import vn.edu.hcmuaf.fit.model.Table;
 
