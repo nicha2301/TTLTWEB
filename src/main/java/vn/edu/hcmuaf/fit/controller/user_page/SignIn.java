@@ -33,7 +33,7 @@ public class SignIn extends HttpServlet {
                     }
                 }
             }
-            request.getRequestDispatcher("/user/signIn.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/user/signIn.jsp").forward(request, response);
             return;
         }
         this.doPost(request, response);
@@ -149,6 +149,6 @@ public class SignIn extends HttpServlet {
             return;
         }
         request.setAttribute("loginFail", "Login fail with " + apis);
-        request.getRequestDispatcher("/user/signIn.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/user/signIn.jsp").forward(request, response);
     }
 }

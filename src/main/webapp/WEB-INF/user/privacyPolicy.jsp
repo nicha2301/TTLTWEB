@@ -5,11 +5,11 @@
 
 <head>
     <meta charset="UTF-8"/>
-    <link rel="stylesheet" href="css/sign/form.css"/>
-    <script src="js/sign/scipts.js"></script>
-    <link rel="stylesheet" href="css/header&footer.css"/>
-    <link rel="stylesheet" href="css/HomePage/styles.css">
-    <link rel="stylesheet" href="css/policy/privacy.css">
+    <link rel="stylesheet" href="/assets/user/css/sign/form.css"/>
+    <script src="/assets/user/js/sign/scipts.js"></script>
+    <link rel="stylesheet" href="/assets/user/css/header&footer.css"/>
+    <link rel="stylesheet" href="/assets/user/css/HomePage/styles.css">
+    <link rel="stylesheet" href="/assets/user/css/policy/privacy.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
           integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
@@ -19,7 +19,7 @@
 
 <body>
 <div class="website-wrapper">
-    <jsp:include page="include/header.jsp"/>
+    <%@include file="/WEB-INF/user/include/header.jsp" %>
 
     <div class="privacy-policy">
         <h2>CHÍNH SÁCH BẢO MẬT</h2>
@@ -48,10 +48,7 @@
     </div>
 
 
-    <jsp:include page="include/footer.jsp"/>
+    <%@include file="/WEB-INF/user/include/footer.jsp" %>
 </div>
-
-
 </body>
-
 </html>

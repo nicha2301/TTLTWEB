@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@include file="/WEB-INF/common/taglib.jsp" %>
 <%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,15 +14,15 @@
 <head>
     <meta charset="UTF-8" />
 
-    <link rel="stylesheet" href="css/thuvien/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="css/thuvien/font-awesome.min.css" type="text/css">
-    <link rel="stylesheet" href="css/thuvien/elegant-icons.css" type="text/css">
-    <link rel="stylesheet" href="css/thuvien/nice-select.css" type="text/css">
-    <link rel="stylesheet" href="css/thuvien/jquery-ui.min.css" type="text/css">
-    <link rel="stylesheet" href="css/thuvien/owl.carousel.min.css" type="text/css">
-    <link rel="stylesheet" href="css/thuvien/slicknav.min.css" type="text/css">
-    <link rel="stylesheet" href="css/cart/order_detail.css" type="text/css" />
-    <link rel="stylesheet" href="css/header&footer.css" />
+    <link rel="stylesheet" href="/assets/user/css/thuvien/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="/assets/user/css/thuvien/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/user/css/thuvien/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="/assets/user/css/thuvien/nice-select.css" type="text/css">
+    <link rel="stylesheet" href="/assets/user/css/thuvien/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/user/css/thuvien/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/user/css/thuvien/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/user/css/cart/order_detail.css" type="text/css" />
+    <link rel="stylesheet" href="/assets/user/css/header&footer.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
           integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -33,7 +33,7 @@
 
 <body>
 <div class="website-wrapper">
-    <jsp:include page="include/header.jsp"/>
+    <%@include file="/WEB-INF/user/include/header.jsp" %>
     <div class="page-title" style="
             background-image: url(https://tienthangvet.vn/wp-content/uploads/title-tag-tien-thang-vet-tsd1.jpg);
           ">
@@ -203,12 +203,11 @@
                 </div>
             </div>
         </div>
-
-    <jsp:include page="include/footer.jsp"/>
+    <%@include file="/WEB-INF/user/include/footer.jsp" %>
 </div>
-<script src="js/thuvien/jquery-3.3.1.min.js"></script>
-<script src="js/thuvien/bootstrap.min.js"></script>
-<script src="js/thuvien/main.js"></script>
+<script src="/assets/user/js/thuvien/jquery-3.3.1.min.js"></script>
+<script src="/assets/user/js/thuvien/bootstrap.min.js"></script>
+<script src="/assets/user/js/thuvien/main.js"></script>
 <script>
     function confirmCancelOrder() {
         // Sử dụng hộp thoại xác nhận

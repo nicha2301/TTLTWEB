@@ -105,15 +105,15 @@ Version      : 1.0
 	src: local('Material Icons'), local('MaterialIcons-Regular'), url(../fonts/MaterialIcons-Regular.woff2) format('woff2'), url(../fonts/MaterialIcons-Regular.woff) format('woff'), url(../fonts/MaterialIcons-Regular.ttf) format('truetype');
 }
 @font-face{
-	src: url(../fonts/Roboto-Light.ttf);
+	src: url(../../../WEB-INF/admin/assets/fonts/Roboto-Light.ttf);
 	font-family: roboto-light;
   }
   @font-face{
-	src: url(../fonts/Roboto-Bold.ttf);
+	src: url(../../../WEB-INF/admin/assets/fonts/Roboto-Bold.ttf);
 	font-family: roboto-bold;
   }
   @font-face{
-	src: url(../fonts/Roboto-Regular.ttf);
+	src: url(../../../WEB-INF/admin/assets/fonts/Roboto-Regular.ttf);
 	font-family: roboto-regular;
   }
   *{

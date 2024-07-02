@@ -1,25 +1,24 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@include file="/WEB-INF/common/taglib.jsp" %>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="css/contact/contact.css">
-    <link rel="stylesheet" href="css/HomePage/styles.css">
+    <link rel="stylesheet" href="/assets/user/css/contact/contact.css">
+    <link rel="stylesheet" href="/assets/user/css/HomePage/styles.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
           integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="icon" href="https://tienthangvet.vn/wp-content/uploads/cropped-favicon-Tien-Thang-Vet-192x192.png" sizes="192x192" />
-    <link rel="stylesheet" href="css/header&footer.css" />
+    <link rel="stylesheet" href="/assets/user/css/header&footer.css" />
     <title>Liên hệ</title>
 </head>
 
 <body>
 <div class="website-wrapper">
-    <jsp:include page="include/header.jsp"/>
+    <%@include file="/WEB-INF/user/include/header.jsp" %>
     <!-- Map Begin -->
     <div class="body">
         <div class="col-lg-12">
@@ -163,7 +162,7 @@
         </div>
 
     </div>
-    <jsp:include page="include/footer.jsp"/>
+    <%@include file="/WEB-INF/user/include/footer.jsp" %>
 
 
     <script>

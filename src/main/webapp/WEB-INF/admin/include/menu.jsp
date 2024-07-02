@@ -1,14 +1,10 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-
-
+<%@include file="/WEB-INF/common/taglib.jsp" %>
 <!-- Header -->
 <div class="header">
     <div class="header-left">
         <a href="dashboard" class="logo logo-small">
-            <img src="../assets/img/logo-icon.png" alt="Logo" width="30" height="30">
+            <img src="/assets/admin/img/logo-icon.png" alt="Logo" width="30" height="30">
         </a>
     </div>
     <a href="javascript:void(0);" id="toggle_btn">
@@ -43,7 +39,7 @@
 <div class="sidebar" id="sidebar">
     <div class="sidebar-logo">
         <a href="dashboard">
-            <img src="../assets/img/logo-icon.png" class="img-fluid" alt="">
+            <img src="/assets/admin/img/logo-icon.png" class="img-fluid" alt="">
         </a>
     </div>
     <div class="sidebar-inner slimscroll">
@@ -97,4 +93,3 @@
     </div>
 </div>
 <!-- /Sidebar -->
-

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <head>
-    <link rel="stylesheet" href="../css/header&footer.css">
+    <link rel="stylesheet" href="/assets/user/css/header&footer.css">
 </head>
 <footer class="footer-container">
     <div class="container">

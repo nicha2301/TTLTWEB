@@ -6,14 +6,14 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@include file="/WEB-INF/common/taglib.jsp" %>
 <%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <link rel="stylesheet" href="css/products/detailproduct.css"/>
+    <link rel="stylesheet" href="/assets/user/css/products/detailproduct.css"/>
 
     <link rel="icon" href="https://tienthangvet.vn/wp-content/uploads/cropped-favicon-Tien-Thang-Vet-192x192.png"
           sizes="192x192"/>
@@ -25,7 +25,7 @@
 
 <body>
 <div class="website-wrapper">
-    <jsp:include page="include/header.jsp"/>
+    <%@include file="/WEB-INF/user/include/header.jsp" %>
 
     <div class="body">
         <div class="wrapper-content">
@@ -281,10 +281,8 @@
             </div>
         </div>
     </div>
-    <jsp:include page="include/footer.jsp"/>
+    <%@include file="/WEB-INF/user/include/footer.jsp" %>
 </div>
-
-<script src="js/detailProduct/scripts.js"></script>
+<script src="/assets/user/js/detailProduct/scripts.js"></script>
 </body>
-
 </html>

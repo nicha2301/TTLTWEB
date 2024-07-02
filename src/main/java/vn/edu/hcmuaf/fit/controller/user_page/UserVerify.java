@@ -51,7 +51,7 @@ public class UserVerify extends HttpServlet {
                 session.invalidate();
             }
         }
-        request.getRequestDispatcher("/user/verify.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/user/verify.jsp").forward(request, response);
     }
 
     @Override

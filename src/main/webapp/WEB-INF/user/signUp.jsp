@@ -1,10 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8"/>
-    <link rel="stylesheet" href="css/sign/form.css"/>
+    <link rel="stylesheet" href="/assets/user/css/sign/form.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
           integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
@@ -58,7 +57,7 @@
 
 <body>
 <div class="website-wrapper">
-    <jsp:include page="include/header.jsp"/>
+    <%@include file="/WEB-INF/user/include/header.jsp" %>
 
     <div class="body">
         <div class="form-container">
@@ -88,8 +87,8 @@
             </form>
         </div>
     </div>
-    <jsp:include page="include/footer.jsp"/>
+    <%@include file="/WEB-INF/user/include/footer.jsp" %>
 </div>
-<script src="js/sign/scipts.js"></script>
+<script src="/assets/user/js/sign/scipts.js"></script>
 </body>
 </html>

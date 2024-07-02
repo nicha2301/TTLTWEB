@@ -49,7 +49,7 @@ public class Service {
     }
 
     public static void main(String[] args) {
-        System.out.println(getImgUrlById("data\\sp_1"));
+        System.out.println(getImgUrlById("data\\sp_100"));
     }
 
     public static String getFirstImagePath(String folderPath) {

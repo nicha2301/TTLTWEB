@@ -1,6 +1,6 @@
 <%@ page import="vn.edu.hcmuaf.fit.model.ShoppingCart" %>
 <%@ page import="vn.edu.hcmuaf.fit.model.CartItem" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@include file="/WEB-INF/common/taglib.jsp" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
 
@@ -10,13 +10,13 @@
 <head>
     <meta charset="UTF-8"/>
 
-    <link rel="stylesheet" href="css/thuvien/font-awesome.min.css" type="text/css">
-    <link rel="stylesheet" href="css/thuvien/elegant-icons.css" type="text/css">
-    <link rel="stylesheet" href="css/thuvien/nice-select.css" type="text/css">
-    <link rel="stylesheet" href="css/thuvien/jquery-ui.min.css" type="text/css">
-    <link rel="stylesheet" href="css/thuvien/owl.carousel.min.css" type="text/css">
-    <link rel="stylesheet" href="css/thuvien/slicknav.min.css" type="text/css">
-    <link rel="stylesheet" href="css/cart/cart.css">
+    <link rel="stylesheet" href="/assets/user/css/thuvien/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/user/css/thuvien/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="/assets/user/css/thuvien/nice-select.css" type="text/css">
+    <link rel="stylesheet" href="/assets/user/css/thuvien/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/user/css/thuvien/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/user/css/thuvien/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="/assets/user/css/cart/cart.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
           integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
@@ -28,7 +28,7 @@
 
 <body>
 <div class="website-wrapper">
-    <jsp:include page="include/header.jsp"/>
+    <%@include file="/WEB-INF/user/include/header.jsp" %>
     <div class="page-title" style="
             background-image: url(https://tienthangvet.vn/wp-content/uploads/title-tag-tien-thang-vet-tsd1.jpg);
           ">
@@ -133,7 +133,7 @@
 
                             <c:choose>
                                 <c:when test="${empty sessionScope.auth}">
-                                    <a href="signIn.jsp" class="primary-btn">Vui lòng đăng nhập để thực hiện thanh toán</a>
+                                    <a href="signin" class="primary-btn">Vui lòng đăng nhập để thực hiện thanh toán</a>
                                 </c:when>
                                 <c:otherwise>
                                     <a href="checkout" class="primary-btn">TIẾN HÀNH THANH TOÁN</a>
@@ -149,7 +149,7 @@
     </section>
 
 
-    <jsp:include page="include/footer.jsp"/>
+    <%@include file="/WEB-INF/user/include/footer.jsp" %>
 </div>
 <script>
     window.addEventListener('scroll', () => {

@@ -1,42 +1,39 @@
 <%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@include file="/WEB-INF/common/taglib.jsp" %>
 <!DOCTYPE html>
 <html lang="vi-VN">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
     <title>${title}</title>
-    <link href="assets/img/icon/icon-logo.png" rel="shortcut icon">
+    <link href="/assets/admin/img/icon/icon-logo.png" rel="shortcut icon">
 
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/admin/plugins/bootstrap/css/bootstrap.min.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
-    <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/admin/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/assets/admin/plugins/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/assets/admin/css/font-awesome.min.css">
 
     <!-- Datatables CSS -->
-    <link rel="stylesheet" href="assets/plugins/datatables/datatables.min.css">
+    <link rel="stylesheet" href="/assets/admin/plugins/datatables/datatables.min.css">
 
     <!-- Datepicker CSS -->
-    <link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="/assets/admin/css/bootstrap-datetimepicker.min.css">
 
     <!-- Animate CSS -->
-    <link rel="stylesheet" href="assets/css/animate.min.css">
+    <link rel="stylesheet" href="/assets/admin/css/animate.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="assets/css/admin.css">
-    <script src="assets/js/tinymce/tinymce.min.js"></script>
-    <script src="assets/js/tinymce.js"></script>
-
+    <link rel="stylesheet" href="/assets/admin/css/admin.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.2.0/tinymce.min.js" integrity="sha512-E2dqytT185qVoAL0sfqr39BLHEBQtmZze59ChMjYi4vRUW6BzIBLZAqErdQAAAJX8bkFq2kQgQL9Lbpm8Uuw0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 <div class="main-wrapper">
-    <jsp:include page="include/menu.jsp"></jsp:include>
+    <%@include file="/WEB-INF/admin/include/menu.jsp" %>
 
     <div class="page-wrapper">
         <div class="content container-fluid">
@@ -214,29 +211,25 @@
         </div>
     </div>
 </div>
-
-
 <!-- jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<!-- <script src="assets/js/jquery-3.5.0.min.js"></script> -->
+<%--<script src="/assets/admin/js/jquery-3.5.0.min.js"></script>--%>
 
 <!-- Bootstrap Core JS -->
-<script src="assets/js/popper.min.js"></script>
-<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assets/admin/js/popper.min.js"></script>
+<script src="/assets/admin/plugins/bootstrap/js/bootstrap.min.js"></script>
 
 <!-- Datepicker Core JS -->
-<script src="assets/js/moment.min.js"></script>
-<script src="assets/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/assets/admin/js/moment.min.js"></script>
+<script src="/assets/admin/js/bootstrap-datetimepicker.min.js"></script>
 
 <!-- Slimscroll JS -->
-<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js" integrity="sha512-cJMgI2OtiquRH4L9u+WQW+mz828vmdp9ljOcm/vKTQ7+ydQUktrPVewlykMgozPP+NUBbHdeifE6iJ6UVjNw5Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <!-- Datatables JS -->
-<script src="assets/plugins/datatables/datatables.min.js"></script>
+<script src="/assets/admin/plugins/datatables/datatables.min.js"></script>
 
 <!-- Custom JS -->
-<script src="assets/js/admin.js"></script>
-
+<script src="/assets/admin/js/admin.js"></script>
 </body>
-
 </html>
