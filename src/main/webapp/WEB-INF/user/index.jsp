@@ -26,16 +26,16 @@
         <div class="wrapper-slider">
             <div class="slider banner owl-carousel owl-theme">
                 <div class="item">
-                    <img src="./assets/img/home/slider1.png" alt=""/>
+                    <img src="/assets/user/img/home/slider1.png" alt=""/>
                 </div>
                 <div class="item">
-                    <img src="./assets/img/home/slider2.png" alt=""/>
+                    <img src="/assets/user/img/home/slider2.png" alt=""/>
                 </div>
                 <div class="item">
-                    <img src="./assets/img/home/slider3.png" alt=""/>
+                    <img src="/assets/user/img/home/slider3.png" alt=""/>
                 </div>
                 <div class="item">
-                    <img src="./assets/img/home/slider4.png" alt=""/>
+                    <img src="/assets/user/img/home/slider4.png" alt=""/>
                 </div>
             </div>
             <div class="slider-nav">
@@ -209,44 +209,49 @@
                         </div>
                         <a href="${pageContext.request.contextPath}/user/product?id=1" class="button">Xem ngay</a>
                     </div>
-
-                    <c:forEach var="p" items="${products}">
-                        <div class="item">
-                            <div>
-                                <div class="product-element-top">
-                                    <a href="${pageContext.request.contextPath}/user/product?id=${p.id}">
-                                        <img src="${pageContext.request.contextPath}/${p.imageUrl}" alt="">
-                                    </a>
+                    <c:choose>
+                        <c:when test="${not empty products}">
+                            <c:forEach var="entry" items="${products}">
+                                <c:set var="p" value="${entry.key}" />
+                                <c:set var="firstImage" value="${entry.value[1]}" />
+                                <div class="item">
+                                    <div>
+                                        <div class="product-element-top">
+                                            <a href="${pageContext.request.contextPath}/user/product?id=${p.id}">
+                                                <img src="${pageContext.request.contextPath}${firstImage}" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="product-element-bottom">
+                                            <a href="${pageContext.request.contextPath}/user/product?id=${p.id}">
+                                                ${p.productName}
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="wd-buttons wd-pos-r-t">
+                                        <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
+                                            <a href="addtocart?id=${p.id}" class="button product_type_simple add-to-cart-loop">
+                                                <span><i class="fa-solid fa-cart-shopping"></i></span>
+                                            </a>
+                                        </div>
+                                        <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
+                                            <a href="#" class="open-quick-view quick-view-button">
+                                                <span>
+                                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                                </span>
+                                            </a>
+                                        </div>
+                                        <div class="wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon">
+                                            <a class="wd-tltp wd-tooltip-inited" href="" data-added-text="Browse Wishlist">
+                                                <span class="wd-tooltip-label">
+                                                    <i class="fa-regular fa-heart"></i>
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="product-element-bottom">
-                                    <a href="${pageContext.request.contextPath}/user/product?id=${p.id}">
-                                            ${p.productName}
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="wd-buttons wd-pos-r-t">
-                                <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon"><a
-                                        href="addtocart?id=${p.id}"
-                                        class="button product_type_simple add-to-cart-loop">
-                                        <span>
-                                            <i class="fa-solid fa-cart-shopping"></i>
-                                        </span></a></div>
-                                <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
-                                    <a href="" class="open-quick-view quick-view-button">
-                                        <span>
-                                            <i class="fa-solid fa-magnifying-glass"></i>
-                                        </span></a>
-                                </div>
-                                <div class="wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon">
-                                    <a class="wd-tltp wd-tooltip-inited" href="" data-added-text="Browse Wishlist">
-                                        <span class="wd-tooltip-label">
-                                            <i class="fa-regular fa-heart"></i>
-                                        </span></a>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
-
+                            </c:forEach>
+                        </c:when>
+                    </c:choose>
                 </div>
             </div>
         </div>
@@ -260,56 +265,66 @@
                 <div class="container">
                     <div class="display-item">
                         <div class="slider">
-                            <c:forEach var="img_banner" items="${pro}">
-                                <div>
-                                    <img src="${pageContext.request.contextPath}/${img_banner.imageUrl}" alt="">
-                                </div>
-                            </c:forEach>
+                            <c:choose>
+                                <c:when test="${not empty pro}">
+                                    <c:forEach var="banner" items="${pro}">
+                                        <c:set var="img_banner" value="${banner.value[0]}" />
+                                        <div>
+                                            <img src="${pageContext.request.contextPath}${img_banner}" alt="">
+                                        </div>
+                                    </c:forEach>
+                                </c:when>
+                            </c:choose>
                         </div>
                     </div>
-                    <c:forEach var="p" items="${pro}">
-                        <div class="item">
-                            <div>
-                                <div class="product-element-top">
-                                    <a href="${pageContext.request.contextPath}/user/product?id=${p.id}">
-                                        <img src="${pageContext.request.contextPath}/${p.imageUrl}" alt="">
-                                    </a>
+                    <c:choose>
+                        <c:when test="${not empty pro}">
+                            <c:forEach var="item" items="${pro}">
+                                <c:set var="prod" value="${item.key}" />
+                                <c:set var="first" value="${item.value[0]}" />
+                                <div class="item">
+                                    <div>
+                                        <div class="product-element-top">
+                                            <a href="${pageContext.request.contextPath}/user/product?id=${prod.id}">
+                                                <img src="${pageContext.request.contextPath}${first}" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="product-element-bottom">
+                                            <a href="${pageContext.request.contextPath}/user/product?id=${prod.id}">
+                                                ${prod.productName}
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="wd-buttons wd-pos-r-t">
+                                        <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
+                                            <a href="addtocart?id=${prod.id}" class="button product_type_simple add-to-cart-loop">
+                                            <span>
+                                                <i class="fa-solid fa-cart-shopping"></i>
+                                            </span>
+                                            </a>
+                                        </div>
+                                        <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
+                                            <a href="#" class="open-quick-view quick-view-button">
+                                                <span>
+                                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                                </span>
+                                            </a>
+                                        </div>
+                                        <div class="wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon">
+                                            <a class="wd-tltp wd-tooltip-inited" href="" data-added-text="Browse Wishlist">
+                                                <span class="wd-tooltip-label">
+                                                    <i class="fa-regular fa-heart"></i>
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="product-element-bottom">
-                                    <a href="${pageContext.request.contextPath}/user/product?id=${p.id}">
-                                            ${p.productName}
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="wd-buttons wd-pos-r-t">
-                                <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
-                                    <a href="addtocart?id=${p.id}" class="button product_type_simple add-to-cart-loop">
-                                <span>
-                                    <i class="fa-solid fa-cart-shopping"></i>
-                                </span>
-                                    </a>
-                                </div>
-                                <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
-                                    <a href="" class="open-quick-view quick-view-button">
-                                <span>
-                                    <i class="fa-solid fa-magnifying-glass"></i>
-                                </span>
-                                    </a>
-                                </div>
-                                <div class="wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon">
-                                    <a class="wd-tltp wd-tooltip-inited" href="" data-added-text="Browse Wishlist">
-                                <span class="wd-tooltip-label">
-                                    <i class="fa-regular fa-heart"></i>
-                                </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
+                            </c:forEach>
+                        </c:when>
+                    </c:choose>
                 </div>
             </div>
         </div>
-
         <div class="wrapper-content">
             <div class="wrapper-heading">
                 <div class="heading">
@@ -320,56 +335,66 @@
                 <div class="container">
                     <div class="display-item">
                         <div class="slider">
-                            <c:forEach var="img_banner" items="${pr}">
-                                <div>
-                                    <img src="${pageContext.request.contextPath}/${img_banner.imageUrl}" alt="">
-                                </div>
-                            </c:forEach>
+                            <c:choose>
+                                <c:when test="${not empty pr}">
+                                    <c:forEach var="other" items="${pr}">
+                                        <c:set var="img_other" value="${other.value[0]}" />
+                                        <div>
+                                            <img src="${pageContext.request.contextPath}${img_other}" alt="">
+                                        </div>
+                                    </c:forEach>
+                                </c:when>
+                            </c:choose>
                         </div>
                     </div>
-                    <c:forEach var="p" items="${pr}">
-                        <div class="item">
-                            <div>
-                                <div class="product-element-top">
-                                    <a href="${pageContext.request.contextPath}/user/product?id=${p.id}">
-                                        <img src="${pageContext.request.contextPath}/${p.imageUrl}" alt="">
-                                    </a>
+                    <c:choose>
+                        <c:when test="${not empty pr}">
+                            <c:forEach var="pr_other" items="${pr}">
+                                <c:set var="otherProd" value="${pr_other.key}" />
+                                <c:set var="otherImage" value="${pr_other.value[0]}" />
+                                <div class="item">
+                                    <div>
+                                        <div class="product-element-top">
+                                            <a href="${pageContext.request.contextPath}/user/product?id=${otherProd.id}">
+                                                <img src="${pageContext.request.contextPath}${otherImage}" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="product-element-bottom">
+                                            <a href="${pageContext.request.contextPath}/user/product?id=${otherProd.id}">
+                                                ${otherProd.productName}
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="wd-buttons wd-pos-r-t">
+                                        <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
+                                            <a href="addtocart?id=${otherProd.id}" class="button product_type_simple add-to-cart-loop">
+                                                <span>
+                                                    <i class="fa-solid fa-cart-shopping"></i>
+                                                </span>
+                                            </a>
+                                        </div>
+                                        <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
+                                             <a href="" class="open-quick-view quick-view-button">
+                                                <span>
+                                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                            </span>
+                                        </a>
+                                        </div>
+                                        <div class="wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon">
+                                            <a class="wd-tltp wd-tooltip-inited" href="" data-added-text="Browse Wishlist">
+                                                <span class="wd-tooltip-label">
+                                                    <i class="fa-regular fa-heart"></i>
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="product-element-bottom">
-                                    <a href="${pageContext.request.contextPath}/user/product?id=${p.id}">
-                                            ${p.productName}
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="wd-buttons wd-pos-r-t">
-                                <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
-                                    <a href="addtocart?id=${p.id}" class="button product_type_simple add-to-cart-loop">
-                                <span>
-                                    <i class="fa-solid fa-cart-shopping"></i>
-                                </span>
-                                    </a>
-                                </div>
-                                <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
-                                    <a href="" class="open-quick-view quick-view-button">
-                                <span>
-                                    <i class="fa-solid fa-magnifying-glass"></i>
-                                </span>
-                                    </a>
-                                </div>
-                                <div class="wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon">
-                                    <a class="wd-tltp wd-tooltip-inited" href="" data-added-text="Browse Wishlist">
-                                <span class="wd-tooltip-label">
-                                    <i class="fa-regular fa-heart"></i>
-                                </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
+                            </c:forEach>
+                        </c:when>
+                    </c:choose>
                 </div>
             </div>
         </div>
-
     </section>
 
     <section id="section5">

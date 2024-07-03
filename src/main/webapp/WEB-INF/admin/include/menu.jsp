@@ -20,7 +20,7 @@
         <li class="nav-item dropdown">
             <a href="javascript:void(0)" class="dropdown-toggle user-link  nav-link" data-toggle="dropdown">
 						<span class="user-img">
-							<img class="rounded-circle" src="../assets/img/user.jpg" width="40"
+							<img class="rounded-circle" src="/assets/admin/img/user.jpg" width="40"
                                  alt="Admin">
 						</span>
             </a>

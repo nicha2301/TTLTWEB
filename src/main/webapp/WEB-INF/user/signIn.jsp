@@ -103,19 +103,19 @@
 
                 <div class="social-icons">
                     <a id="facebook-login-link" href="#">
-                        <img src="assets/img/formIcon/facebook-color-icon-2048x2048-bfly1vxr.png" alt="Facebook">
+                        <img src="/assets/user/img/formIcon/facebook-color-icon-2048x2048-bfly1vxr.png" alt="Facebook">
                     </a>
                     <a href="https://accounts.google.com/o/oauth2/auth?scope=profile%20email&redirect_uri=http://localhost:8080/user/signin?apis=Google&response_type=code&client_id=612393162835-dp8fc3bvhdt9g8139uv41umfu0bbgefv.apps.googleusercontent.com&prompt=select_account">
-                        <img src="assets/img/formIcon/gg.png" alt="Google">
+                        <img src="/assets/user/img/formIcon/gg.png" alt="Google">
                     </a>
                     <a href="https://discord.com/oauth2/authorize?client_id=1255854814747689012&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fuser%2Fsignin%3Fapis%3DDiscord&scope=email+identify+connections+guilds+gdm.join+guilds.join">
-                        <img src="assets/img/formIcon/images.png" alt="Discord">
+                        <img src="/assets/user/img/formIcon/images.png" alt="Discord">
                     </a>
                     <a id="x-login-link" href="#">
-                        <img src="assets/img/formIcon/1707222563twitter-logo-png.png" alt="Twitter">
+                        <img src="/assets/user/img/formIcon/1707222563twitter-logo-png.png" alt="Twitter">
                     </a>
                     <a href="https://github.com/login/oauth/authorize?client_id=Ov23liEQTsu7hXzeN2mH">
-                        <img src="assets/img/formIcon/25231.png" alt="Github">
+                        <img src="/assets/user/img/formIcon/25231.png" alt="Github">
                     </a>
                 </div>
 

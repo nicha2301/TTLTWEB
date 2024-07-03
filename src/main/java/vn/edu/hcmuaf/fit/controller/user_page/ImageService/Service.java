@@ -48,9 +48,9 @@ public class Service {
         return files;
     }
 
-    public static void main(String[] args) {
-        System.out.println(getImgUrlById("data\\sp_100"));
-    }
+//    public static void main(String[] args) {
+//        System.out.println(getImgUrlById("data\\sp_100"));
+//    }
 
     public static String getFirstImagePath(String folderPath) {
         File folder = new File(folderPath);

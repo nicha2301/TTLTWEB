@@ -46,7 +46,7 @@ public class CategoryDAO extends AbsDAO<ProductCategories> implements ICategoryD
             ProductCategories category = getCategoryById(cateId).get(0);
             return new AbstractMap.SimpleEntry<>(category, total);
         };
-        return queryForMap(sql, rowMapper);
+        return queryForMap(sql, rowMapper, false);
     }
 
     /**

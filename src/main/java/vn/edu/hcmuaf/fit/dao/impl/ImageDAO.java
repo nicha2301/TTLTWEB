@@ -23,7 +23,7 @@ public class ImageDAO extends AbsDAO<Image> implements IImageDAO {
 
     @Override
     public Image addImage(Integer proId, String imgUrl) {
-        String sql = "INSERT INTO images (product_id, imageUrl) VALUES(?, ?)";
+        String sql = "INSERT INTO images (product_id, url) VALUES(?, ?)";
         return insert(sql, Image.class, proId, imgUrl);
     }
 

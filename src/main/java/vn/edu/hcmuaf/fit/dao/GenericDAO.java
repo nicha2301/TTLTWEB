@@ -15,6 +15,6 @@ public interface GenericDAO<T> {
 
     Integer count(String sql, Object... parameters);
 
-    <K, V> Map<K, V> queryForMap(String sql, RowMapper<Map.Entry<K, V>> rowMapper, Object... parameters);
+    <K, V> Map<K, V> queryForMap(String sql, RowMapper<Map.Entry<K, V>> rowMapper, boolean mergeValues, Object... parameters);
 
 }

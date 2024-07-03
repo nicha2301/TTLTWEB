@@ -25,9 +25,9 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
      * Retrieves all products from the database.
      */
     @Override
-    public List<Product> getAllProducts() {
-        String sql = "SELECT * FROM products";
-        return query(sql, Product.class);
+    public Map<Product, List<String>> getAllProducts() {
+        String sql = "SELECT p.*, i.url AS image_url FROM products p LEFT JOIN images i ON p.id = i.product_id";
+        return queryForMap(sql, new ProductImageMapper("image_url"), true);
     }
 
     /**
@@ -35,10 +35,14 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
      * Retrieves all products from the database, limited by the provided start and limit parameters.
      */
     @Override
-    public List<Product> getAllProductsLimited(Integer start, Integer limit) {
-        String sql = "SELECT * FROM products LIMIT ?, ?";
-        return query(sql, Product.class, start, limit);
+    public Map<Product, List<String>> getAllProductsLimited(Integer start, Integer limit) {
+        String sql = "SELECT p.*, i.url AS image_url FROM (" +
+                " SELECT * FROM products LIMIT ?, ? " +
+                ") AS p LEFT JOIN images i ON p.id = i.product_id";
+        return queryForMap(sql, new ProductImageMapper("image_url"), true, start, limit);
     }
+
+
 
     /**
      * TESTED
@@ -55,9 +59,11 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
      * Retrieves all products from the database that match the search term.
      */
     @Override
-    public List<Product> searchProductsLimited(String searchTerm, Integer start, Integer pageSize) {
-        String sql = "SELECT * FROM products WHERE productName LIKE ? LIMIT ?, ?";
-        return query(sql, Product.class, "%" + searchTerm + "%", start, pageSize);
+    public Map<Product, List<String>> searchProductsLimited(String searchTerm, Integer start, Integer pageSize) {
+        String sql = "SELECT p.*, i.url AS image_url FROM (" +
+                " SELECT * FROM products WHERE productName LIKE ? LIMIT ?, ? " +
+                ") AS p LEFT JOIN images i ON p.id = i.product_id";
+        return queryForMap(sql, new ProductImageMapper("image_url"), true, "%" + searchTerm + "%", start, pageSize);
     }
 
     /**
@@ -85,7 +91,7 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
             Integer total = rs.getInt("total");
             return new AbstractMap.SimpleEntry<>(cateName, total);
         };
-        return queryForMap(sql, rowMapper);
+        return queryForMap(sql, rowMapper, false);
     }
 
     /**
@@ -129,7 +135,7 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
             Integer productCount = rs.getInt("productCount");
             return new AbstractMap.SimpleEntry<>(groupName, productCount);
         };
-        return queryForMap(sql, rowMapper);
+        return queryForMap(sql, rowMapper, false);
     }
 
     /**
@@ -147,7 +153,7 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
             Integer total = rs.getInt("total");
             return new AbstractMap.SimpleEntry<>(typeName, total);
         };
-        return queryForMap(sql, rowMapper);
+        return queryForMap(sql, rowMapper, false);
     }
 
     /**
@@ -218,10 +224,30 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
      * TESTED
      * Retrieves a list of products that belong to a specific type, limited by the provided start and limit parameters.
      */
-    public List<Product> getProductsLimit(Integer type_id, Integer limit) {
-        String sql = "SELECT p.* FROM product_types pt" +
-                "JOIN products p ON pt.id = p.type_id" +
-                "WHERE p.type_id =? LIMIT ?";
-        return query(sql, Product.class, type_id, limit);
+    public Map<Product, List<String>> getProductsLimit(Integer type_id, Integer limit) {
+        String sql = "SELECT p.*, i.url AS image_url FROM (" +
+                " SELECT pr.* FROM product_types pt JOIN products pr ON pt.id = pr.type_id WHERE pr.type_id = ? LIMIT ?" +
+                ") AS p LEFT JOIN images i ON p.id = i.product_id";
+        return queryForMap(sql, new ProductImageMapper("image_url"), true, type_id, limit);
+    }
+
+    public static void main(String[] args) {
+        Map<Product, List<String>> re = ProductDAO.getInstance().getProductsLimit(4, 3);
+        for (Map.Entry<Product, List<String>> entry : re.entrySet()) {
+            Product product = entry.getKey();
+            List<String> images = entry.getValue();
+            System.out.println("Product ID: " + product.getId());
+
+            // Kiểm tra và in danh sách hình ảnh
+            if (images.isEmpty()) {
+                System.out.println("No images available for this product.");
+            } else {
+                System.out.println("Images URLs:");
+                for (String url : images) {
+                    System.out.println(url);
+                }
+            }
+            System.out.println("--------------------------------------");
+        }
     }
 }
