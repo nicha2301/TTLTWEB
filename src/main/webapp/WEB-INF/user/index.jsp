@@ -213,7 +213,7 @@
                         <c:when test="${not empty products}">
                             <c:forEach var="entry" items="${products}">
                                 <c:set var="p" value="${entry.key}" />
-                                <c:set var="firstImage" value="${entry.value[1]}" />
+                                <c:set var="firstImage" value="${entry.value[0]}" />
                                 <div class="item">
                                     <div>
                                         <div class="product-element-top">

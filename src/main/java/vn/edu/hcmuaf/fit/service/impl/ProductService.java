@@ -48,12 +48,12 @@ public class ProductService extends LogDAO<Product> implements IProductService {
     }
 
     @Override
-    public List<Product> getProductByCategory(String categoryName) {
+    public Map<Product, List<String>> getProductByCategory(String categoryName) {
         return ProductDAO.getInstance().getProductByCategory(categoryName);
     }
 
     @Override
-    public List<Product> getProductByType(String productType) {
+    public Map<Product, List<String>> getProductByType(String productType) {
         return ProductDAO.getInstance().getProductByType(productType);
     }
 
@@ -68,7 +68,7 @@ public class ProductService extends LogDAO<Product> implements IProductService {
     }
 
     @Override
-    public List<Product> getProductByGroup(String groupName) {
+    public Map<Product, List<String>> getProductByGroup(String groupName) {
         return ProductDAO.getInstance().getProductByGroup(groupName);
     }
 

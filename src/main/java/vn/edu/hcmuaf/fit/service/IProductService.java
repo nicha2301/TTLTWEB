@@ -20,15 +20,15 @@ public interface IProductService {
 
     Map<String, Integer> getListObject();
 
-    List<Product> getProductByCategory(String categoryName);
+    Map<Product, List<String>> getProductByCategory(String categoryName);
 
-    List<Product> getProductByType(String productType);
+    Map<Product, List<String>> getProductByType(String productType);
 
     Map<String, Integer> getGroupListObject();
 
     Map<String, Integer> getListProductType();
 
-    List<Product> getProductByGroup(String groupName);
+    Map<Product, List<String>> getProductByGroup(String groupName);
 
     Product getProductByIdWithSupplierInfo(Product p, String ip, String address);
 
@@ -38,6 +38,6 @@ public interface IProductService {
 
     boolean deleteProductById(Product p, String ip, String address);
 
-    public Product addProduct(Product p, String ip, String address);
+    Product addProduct(Product p, String ip, String address);
 
 }

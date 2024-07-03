@@ -1,27 +1,8 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: DINHTUNG
-  Date: 30/11/2023
-  Time: 8:49 CH
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List" %>
-<%@ page import="vn.edu.hcmuaf.fit.model.Product" %>
-<%@ page import="vn.edu.hcmuaf.fit.dao.ProductDAO" %>
-<%@ page import="vn.edu.hcmuaf.fit.model.Product" %>
-<%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
-<%@ page import="java.math.BigDecimal" %>
-<%@ page import="java.text.DecimalFormat" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.Set" %>
 <%@include file="/WEB-INF/common/taglib.jsp" %>
-
-
 <html>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8"/>
     <link rel="stylesheet" href="/assets/user/css/products/styles.css"/>
@@ -36,20 +17,20 @@
 <body>
 <div class="website-wrapper">
     <%@include file="/WEB-INF/user/include/header.jsp" %>
-
     <div class="body">
         <div class="page-title" style="
-            background-image: url(https://tienthangvet.vn/wp-content/uploads/title-tag-tien-thang-vet-tsd1.jpg);
-          ">
+            background-image: url(https://tienthangvet.vn/wp-content/uploads/title-tag-tien-thang-vet-tsd1.jpg);">
             <div class="container">
                 <h1 class="title">
                     <%-- Hiển thị thông báo tùy thuộc vào biến từ khóa tìm kiếm --%>
-                    <% String searchTerm = (String) request.getAttribute("searchTerm"); %>
-                    <% if (searchTerm != null && !searchTerm.isEmpty()) { %>
-                    Kết quả tìm kiếm cho: <%= searchTerm %>
-                    <% } else { %>
-                    Sản phẩm
-                    <% } %>
+                    <c:choose>
+                        <c:when test="${not empty requestScope.searchTerm}">
+                            Kết quả tìm kiếm cho: ${requestScope.searchTerm}
+                        </c:when>
+                        <c:otherwise>
+                            Sản phẩm
+                        </c:otherwise>
+                    </c:choose>
                 </h1>
             </div>
         </div>
@@ -62,14 +43,19 @@
                         <div id="categories-1" class="widget">
                             <span class="widget-title">Danh mục sản phẩm</span>
                             <ul class="wd-swatches-filter wd-filter-list wd-labels-on wd-size-normal wd-layout-list wd-text-style-1 wd-bg-style-4 wd-shape-round wd-scroll-content">
-                                <c:forEach var="group" items="${groups}">
-                                    <li class="wc-layered-nav-term wd-swatch-wrap">
-                                        <a href="products?group=${group.key}" class="layered-nav-link">
-                                            <span class="wd-swatch wd-bg"></span>
-                                            <span class="wd-filter-lable layer-term-lable">${group.key}</span>
-                                        </a>
-                                    </li>
-                                </c:forEach>
+                            <c:choose>
+                                <c:when test="${not empty groups}">
+                                    <c:forEach var="group" items="${groups}">
+                                        <li class="wc-layered-nav-term wd-swatch-wrap">
+                                            <a href="products?group=${group.key}" class="layered-nav-link">
+                                                <span class="wd-swatch wd-bg"></span>
+                                                <span class="wd-filter-lable layer-term-lable">${group.key}</span>
+                                            </a>
+                                            <span class="count">${group.value}</span>
+                                        </li>
+                                    </c:forEach>
+                                </c:when>
+                            </c:choose>
                             </ul>
                         </div>
 
@@ -77,34 +63,37 @@
                             <span class="widget-title">Nhóm sản phẩm</span>
                             <div class="wd-scroll" style="max-height: 280px;overflow: auto;">
                                 <ul class="wd-swatches-filter wd-filter-list wd-labels-on wd-size-normal wd-layout-list wd-text-style-1 wd-bg-style-4 wd-shape-round wd-scroll-content">
-                                    <c:forEach var="object" items="${objects}">
-                                        <li class="wc-layered-nav-term">
-                                            <a rel="nofollow noopener"
-                                               href="products?category=${object.key}"
-                                               class="layered-nav-link">
-                                                <span class="wd-filter-lable layer-term-lable">${object.key}</span>
-                                            </a>
-                                            <span class="count">${object.value}</span>
-                                        </li>
-                                    </c:forEach>
+                                <c:choose>
+                                    <c:when test="${not empty groups}">
+                                        <c:forEach var="object" items="${objects}">
+                                            <li class="wc-layered-nav-term">
+                                                <a rel="nofollow noopener" href="products?category=${object.key}" class="layered-nav-link">
+                                                    <span class="wd-filter-lable layer-term-lable">${object.key}</span>
+                                                </a>
+                                                <span class="count">${object.value}</span>
+                                            </li>
+                                        </c:forEach>
+                                    </c:when>
+                                </c:choose>
                                 </ul>
                             </div>
                         </div>
-
                         <div id="categories-3" class="widget">
                             <span class="widget-title">Lọc theo đối tượng</span>
                             <div class="wd-scroll" style="max-height: 280px;overflow: auto;">
                                 <ul class="wd-swatches-filter wd-filter-list wd-labels-on wd-size-normal wd-layout-list wd-text-style-1 wd-bg-style-4 wd-shape-round wd-scroll-content">
-                                    <c:forEach var="type" items="${proTypes}">
-                                        <li class="wc-layered-nav-term">
-                                            <a rel="nofollow noopener"
-                                               href="products?type=${type.key}"
-                                               class="layered-nav-link">
-                                                <span class="wd-filter-lable layer-term-lable">${type.key}</span>
-                                            </a>
-                                            <span class="count">${type.value}</span>
-                                        </li>
-                                    </c:forEach>
+                                <c:choose>
+                                    <c:when test="${not empty groups}">
+                                        <c:forEach var="type" items="${proTypes}">
+                                            <li class="wc-layered-nav-term">
+                                                <a rel="nofollow noopener" href="products?type=${type.key}" class="layered-nav-link">
+                                                    <span class="wd-filter-lable layer-term-lable">${type.key}</span>
+                                                </a>
+                                                <span class="count">${type.value}</span>
+                                            </li>
+                                        </c:forEach>
+                                    </c:when>
+                                </c:choose>
                                 </ul>
                             </div>
                         </div>
@@ -119,29 +108,29 @@
                                 <nav class="woocommerce-breadcrumb">
                                     <a href="" class="breadcrumb-link">Trang chủ</a>
                                     <a href="" class="breadcrumb-link">Sản phẩm</a>
-
                                     <c:choose>
                                         <c:when test="${isFilteringByGroup}">
                                             <a href="" class="breadcrumb-link">Đã lọc theo danh mục sản phẩm</a>
                                         </c:when>
-                                        <c:when test="${not empty filteredProducts}">
+                                        <c:when test="${not empty requestScope.filteredProducts}">
+                                            <c:set var="filtered" value="${requestScope.filteredProducts.key}" />
                                             <a href="" class="breadcrumb-link">Đã lọc theo đối tượng: ${filteredProducts[0].productType}</a>
                                         </c:when>
                                         <c:when test="${not empty selectedCategory}">
                                             <a href="" class="breadcrumb-link"> ${selectedCategory}</a>
                                         </c:when>
                                         <c:otherwise>
-                                            <% String url = (String) request.getAttribute("url"); %>
-                                            <% if (url != null && !url.isEmpty()) { %>
-                                            <a href="" class="breadcrumb-link">Kết quả tìm kiếm cho: <%= url %></a>
-                                            <% } %>
+                                            <c:choose>
+                                                <c:when test="${not empty requestScope.url}">
+                                                    <a href="" class="breadcrumb-link">Kết quả tìm kiếm cho: ${requestScope.url}</a>
+                                                </c:when>
+                                            </c:choose>
                                         </c:otherwise>
                                     </c:choose>
                                 </nav>
                             </div>
                         </div>
                     </div>
-
                     <!-- Danh sách sản phẩm -->
                     <div class="wrapper-container">
                         <div class="container">
@@ -152,14 +141,15 @@
                                     </div>
                                 </c:when>
                                 <c:otherwise>
-                                    <c:forEach var="product" items="${product}">
+                                    <c:forEach var="entry" items="${product}">
+                                        <c:set var="product" value="${entry.key}" />
+                                        <c:set var="first" value="${entry.value[0]}" />
                                         <div class="item">
                                             <!-- Hiển thị thông tin sản phẩm -->
                                             <div>
                                                 <div class="product-element-top">
                                                     <a href="${pageContext.request.contextPath}/user/product?id=${product.id}">
-                                                        <img src="${pageContext.request.contextPath}/${product.imageUrl}"
-                                                             alt="">
+                                                        <img src="${pageContext.request.contextPath}${first}" alt="">
                                                     </a>
                                                 </div>
                                                 <div class="product-element-bottom">
@@ -169,10 +159,11 @@
                                                 </div>
                                                 <div class="product-element">
                                                     <div class="price-wrap">
-                                                        <div class="price">${Util.formatCurrency(product.price)}</div>
-                                                        <div class="unit">VND</div>
+                                                        <div class="price">
+                                                            <c:set var="unit" value="VND"/>
+                                                            <fmt:formatNumber value="${product.price}" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}
+                                                        </div>
                                                     </div>
-
                                                 </div>
                                             </div>
                                             <div class="wd-buttons wd-pos-r-t">
@@ -207,7 +198,6 @@
                     <!-- Phân trang -->
                     <div class="pagination">
                         <ul class="pagination-wrapper">
-
                             <c:if test="${currentPage > 1}">
                                 <li class="page-item">
                                     <a class="page-link" href="${pageContext.request.contextPath}/user/products?page=${currentPage - 1}" aria-label="Previous">
@@ -215,26 +205,22 @@
                                     </a>
                                 </li>
                             </c:if>
-
                             <c:if test="${currentPage >= 4 && totalPages > 15}">
                                 <li class="page-item disabled">
                                     <span class="page-link ellipsis" >...</span>
                                 </li>
                             </c:if>
-
                             <!-- Hiển thị các trang -->
                             <c:forEach begin="${currentPage - 2 > 0 ? currentPage - 2 : 1}" end="${currentPage + 2 <= totalPages ? currentPage + 2 : totalPages}" var="page">
                                 <li class="page-item ${page == currentPage ? 'active' : ''}">
                                     <a class="page-link" href="${pageContext.request.contextPath}/user/products?page=${page}">${page}</a>
                                 </li>
                             </c:forEach>
-
                             <c:if test="${currentPage + 2 < totalPages && totalPages > 15}">
                                 <li class="page-item disabled">
                                     <span class="page-link ellipsis">...</span>
                                 </li>
                             </c:if>
-
                             <c:if test="${currentPage < totalPages}">
                                 <li class="page-item">
                                     <a class="page-link" href="${pageContext.request.contextPath}/user/products?page=${currentPage + 1}" aria-label="Next">
@@ -244,13 +230,12 @@
                             </c:if>
                         </ul>
                     </div>
-
                 </div>
             </div>
         </div>
         <%@include file="/WEB-INF/user/include/footer.jsp" %>
     </div>
-    <script src="../.."></script>
+<%--    <script src="../.."></script>--%>
     <script>
         window.addEventListener("scroll", () => {
             var header = document.querySelector(".container");
@@ -265,5 +250,4 @@
         padding: 6px 12px;
     }
 </style>
-
 </html>
