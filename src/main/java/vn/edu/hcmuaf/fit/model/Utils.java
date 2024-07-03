@@ -17,6 +17,7 @@ public class Utils {
 
         return formattedPrice.trim(); // Loại bỏ khoảng trắng thừa
     }
+
     public static String formatTimestamp(Timestamp timestamp) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(new Date(timestamp.getTime()));

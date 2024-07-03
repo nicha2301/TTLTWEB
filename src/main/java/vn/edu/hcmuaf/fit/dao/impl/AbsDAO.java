@@ -13,6 +13,7 @@ import vn.edu.hcmuaf.fit.model.Table;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.function.Function;
 
 public class AbsDAO<T> implements GenericDAO<T> {
 
@@ -68,10 +69,10 @@ public class AbsDAO<T> implements GenericDAO<T> {
     }
 
     @Override
-    public <K, V> Map<K, V> queryForMap(String sql, RowMapper<Map.Entry<K, V>> rowMapper, boolean mergeValues, Object... parameters) {
+    public <K, V> Map<K, V> queryForMap(String sql, RowMapper<Map.Entry<K, V>> rowMapper, boolean merge, Object... parameters) {
         List<Map.Entry<K, V>> entries = query(sql, rowMapper, parameters);
         Map<K, V> result = new HashMap<>();
-        if (mergeValues) {
+        if (merge) {
             entries.forEach(entry -> result.merge(entry.getKey(), entry.getValue(), (oldVal, newVal) -> {
                 ((List<String>) oldVal).addAll((List<String>) newVal);
                 return oldVal;
@@ -109,22 +110,38 @@ public class AbsDAO<T> implements GenericDAO<T> {
     }
 
     class ProductImageMapper implements RowMapper<Map.Entry<Product, List<String>>> {
-        private String imageName;
+        private Function<ResultSet, String> mapper;
 
-        public ProductImageMapper(String imageName) {
-            this.imageName = imageName;
+        public ProductImageMapper(Function<ResultSet, String> mapper) {
+            this.mapper = mapper;
         }
 
         @Override
         public Map.Entry<Product, List<String>> map(ResultSet rs, StatementContext ctx) throws SQLException {
-            // Sử dụng BeanMapper để tự động map các cột tới các thuộc tính của đối tượng Product
             Product product = BeanMapper.of(Product.class).map(rs, ctx);
             List<String> images = new ArrayList<>();
-            String imageUrl = rs.getString(this.imageName);
+            String imageUrl = mapper.apply(rs);
             if (imageUrl != null) {
                 images.add(imageUrl);
             }
             return new AbstractMap.SimpleEntry<>(product, images);
+        }
+    }
+
+    class Mapper<K, V> implements RowMapper<Map.Entry<K, V>> {
+        private Function<ResultSet, K> mapper1;
+        private Function<ResultSet, V> mapper2;
+
+        public Mapper(Function<ResultSet, K> mapper1, Function<ResultSet, V> mapper2) {
+            this.mapper1 = mapper1;
+            this.mapper2 = mapper2;
+        }
+
+        @Override
+        public Map.Entry<K, V> map(ResultSet rs, StatementContext ctx) throws SQLException {
+            K value1 = mapper1.apply(rs);
+            V value2 = mapper2.apply(rs);
+            return new AbstractMap.SimpleEntry<>(value1, value2);
         }
     }
 }
