@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IImageService {
 
-    List<Image> getImageById(Product p, String ip, String address);
+    List<Image> getImageById(Product p);
 
     boolean addImage(Product p, List<Image> images, String ip, String address);
 

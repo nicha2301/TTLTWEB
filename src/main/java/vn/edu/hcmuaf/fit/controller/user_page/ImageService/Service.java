@@ -12,19 +12,7 @@ public class Service {
         File folder = new File(path);
         if (folder.exists() && folder.isDirectory()) {
             // Sử dụng FilenameFilter để lọc các file ảnh
-            FilenameFilter imageFilter = new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    String lowercaseName = name.toLowerCase();
-                    return lowercaseName.endsWith(".jpg") || lowercaseName.endsWith(".jpeg")
-                            || lowercaseName.endsWith(".png") || lowercaseName.endsWith(".gif")
-                            || lowercaseName.endsWith(".bmp");
-                    // Thêm hoặc thay đổi các định dạng file ảnh khác nếu cần
-                }
-            };
-
-            // Lấy danh sách các file trong thư mục sử dụng bộ lọc
-            File[] files = folder.listFiles(imageFilter);
+            File[] files = getFiles(folder);
 
             // Thêm các đường dẫn file vào danh sách
             if (files != null) {
@@ -45,6 +33,24 @@ public class Service {
 
         return imageFiles;
     }
+
+    private static File[] getFiles(File folder) {
+        FilenameFilter imageFilter = (dir, name) -> {
+            String lowercaseName = name.toLowerCase();
+            return lowercaseName.endsWith(".jpg") || lowercaseName.endsWith(".jpeg")
+                    || lowercaseName.endsWith(".png") || lowercaseName.endsWith(".gif")
+                    || lowercaseName.endsWith(".bmp");
+            // Thêm hoặc thay đổi các định dạng file ảnh khác nếu cần
+        };
+
+        // Lấy danh sách các file trong thư mục sử dụng bộ lọc
+        File[] files = folder.listFiles(imageFilter);
+        return files;
+    }
+
+//    public static void main(String[] args) {
+//        System.out.println(getImgUrlById("data\\sp_100"));
+//    }
 
     public static String getFirstImagePath(String folderPath) {
         File folder = new File(folderPath);

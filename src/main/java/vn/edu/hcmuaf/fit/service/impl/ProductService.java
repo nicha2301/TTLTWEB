@@ -10,14 +10,20 @@ import java.util.List;
 import java.util.Map;
 
 public class ProductService extends LogDAO<Product> implements IProductService {
+    private static IProductService instance;
+
+    public static IProductService getInstance() {
+        if (instance == null) instance = new ProductService();
+        return instance;
+    }
 
     @Override
-    public List<Product> getAllProducts() {
+    public Map<Product, List<String>> getAllProducts() {
         return ProductDAO.getInstance().getAllProducts();
     }
 
     @Override
-    public List<Product> getAllProductsLimited(Integer start, Integer limit) {
+    public Map<Product, List<String>> getAllProductsLimited(Integer start, Integer limit) {
         return ProductDAO.getInstance().getAllProductsLimited(start, limit);
     }
 
@@ -27,7 +33,7 @@ public class ProductService extends LogDAO<Product> implements IProductService {
     }
 
     @Override
-    public List<Product> searchProductsLimited(String searchTerm, Integer start, Integer pageSize) {
+    public Map<Product, List<String>> searchProductsLimited(String searchTerm, Integer start, Integer pageSize) {
         return ProductDAO.getInstance().searchProductsLimited(searchTerm, start, pageSize);
     }
 
@@ -88,7 +94,7 @@ public class ProductService extends LogDAO<Product> implements IProductService {
     }
 
     @Override
-    public List<Product> getProductsLimit(ProductTypes type, Integer limit) {
+    public Map<Product, List<String>> getProductsLimit(ProductTypes type, Integer limit) {
         return ProductDAO.getInstance().getProductsLimit(type.getId(), limit);
     }
 

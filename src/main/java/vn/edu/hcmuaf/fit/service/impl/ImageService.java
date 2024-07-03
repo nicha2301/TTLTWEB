@@ -21,23 +21,28 @@ public class ImageService extends LogDAO<Product> implements IImageService {
     }
 
     @Override
-    public List<Image> getImageById(Product p, String ip, String address) {
-        try {
-            Level level;
-            List<Image> images = ImageDAO.getInstance().getImageById(p.getId());
-            if(!images.isEmpty()) {
-                p.setAfterData("Load successful with ID=" + p.getId());
-                level = LevelDAO.getInstance().getLevel(1).get(0);
-            } else {
-                p.setAfterData("Load failed with ID=" + p.getId());
-                level = LevelDAO.getInstance().getLevel(2).get(0);
-            }
-            super.insert(p, level, ip, address);
-            return images;
-        } catch (Exception e) {
-            return null;
-        }
+    public List<Image> getImageById(Product p) {
+        return ImageDAO.getInstance().getImageById(p.getId());
     }
+
+    //    @Override
+//    public List<Image> getImageById(Product p) {
+//        try {
+//            Level level;
+//            List<Image> images = ImageDAO.getInstance().getImageById(p.getId());
+//            if(!images.isEmpty()) {
+//                p.setAfterData("Load successful with ID=" + p.getId());
+//                level = LevelDAO.getInstance().getLevel(1).get(0);
+//            } else {
+//                p.setAfterData("Load failed with ID=" + p.getId());
+//                level = LevelDAO.getInstance().getLevel(2).get(0);
+//            }
+//            super.insert(p, level, ip, address);
+//            return images;
+//        } catch (Exception e) {
+//            return null;
+//        }
+//    }
 
     @Override
     public boolean addImage(Product p, List<Image> images, String ip, String address) {

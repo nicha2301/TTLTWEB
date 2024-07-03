@@ -7,13 +7,13 @@ import java.util.Map;
 
 public interface IProductDAO extends GenericDAO<Product> {
 
-    List<Product> getAllProducts();
+    Map<Product, List<String>> getAllProducts();
 
-    List<Product> getAllProductsLimited(Integer start, Integer limit);
+    Map<Product, List<String>> getAllProductsLimited(Integer start, Integer limit);
 
     Integer getTotalProducts();
 
-    List<Product> searchProductsLimited(String searchTerm, Integer start, Integer pageSize);
+    Map<Product, List<String>> searchProductsLimited(String searchTerm, Integer start, Integer pageSize);
 
     Integer getTotalSearchResults(String searchTerm);
 
@@ -43,6 +43,6 @@ public interface IProductDAO extends GenericDAO<Product> {
                               String ingredients, String dosage, String instructions, String warrantyPeriod,
                               String storageCondition, Integer typeId, Integer supplierId, Boolean active);
 
-    List<Product> getProductsLimit(Integer type_id, Integer limit);
+    Map<Product, List<String>> getProductsLimit(Integer type_id, Integer limit);
 
 }

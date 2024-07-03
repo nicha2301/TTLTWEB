@@ -22,7 +22,7 @@ public class SignUp extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
-        request.getRequestDispatcher("/user/signUp.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/user/signUp.jsp").forward(request, response);
     }
 
     @Override

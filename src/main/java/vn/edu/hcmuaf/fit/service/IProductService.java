@@ -8,13 +8,13 @@ import java.util.Map;
 
 public interface IProductService {
 
-    List<Product> getAllProducts();
+    Map<Product, List<String>> getAllProducts();
 
-    List<Product> getAllProductsLimited(Integer start, Integer limit);
+    Map<Product, List<String>> getAllProductsLimited(Integer start, Integer limit);
 
     Integer getTotalProducts();
 
-    List<Product> searchProductsLimited(String searchTerm, Integer start, Integer pageSize);
+    Map<Product, List<String>> searchProductsLimited(String searchTerm, Integer start, Integer pageSize);
 
     Integer getTotalSearchResults(String searchTerm);
 
@@ -32,7 +32,7 @@ public interface IProductService {
 
     Product getProductByIdWithSupplierInfo(Product p, String ip, String address);
 
-    List<Product> getProductsLimit(ProductTypes type, Integer limit);
+    Map<Product, List<String>> getProductsLimit(ProductTypes type, Integer limit);
 
     boolean updateProduct(Product p, String ip, String address);
 

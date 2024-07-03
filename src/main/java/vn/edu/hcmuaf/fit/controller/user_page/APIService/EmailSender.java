@@ -1,6 +1,6 @@
 package vn.edu.hcmuaf.fit.controller.user_page.APIService;
 
-import vn.edu.hcmuaf.fit.connection_pool.DbProperties;
+import vn.edu.hcmuaf.fit.db.DbProperties;
 
 import java.util.Properties;
 import javax.mail.Authenticator;
