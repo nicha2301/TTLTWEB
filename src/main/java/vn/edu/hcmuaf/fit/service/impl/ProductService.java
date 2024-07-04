@@ -23,8 +23,8 @@ public class ProductService extends LogDAO<Product> implements IProductService {
     }
 
     @Override
-    public Map<Product, List<String>> getAllProductsLimited(Integer start, Integer limit) {
-        return ProductDAO.getInstance().getAllProductsLimited(start, limit);
+    public Map<Product, List<String>> getAllProductsLimited(Integer start, Integer pageSize) {
+        return ProductDAO.getInstance().getAllProductsLimited(start, pageSize);
     }
 
     @Override
@@ -48,13 +48,13 @@ public class ProductService extends LogDAO<Product> implements IProductService {
     }
 
     @Override
-    public Map<Product, List<String>> getProductByCategory(String categoryName) {
-        return ProductDAO.getInstance().getProductByCategory(categoryName);
+    public Map<Product, List<String>> getProductByCategory(String categoryName, Integer start, Integer pageSize) {
+        return ProductDAO.getInstance().getProductByCategory(categoryName, start, pageSize);
     }
 
     @Override
-    public Map<Product, List<String>> getProductByType(String productType) {
-        return ProductDAO.getInstance().getProductByType(productType);
+    public Map<Product, List<String>> getProductByType(String productType, Integer start, Integer pageSize) {
+        return ProductDAO.getInstance().getProductByType(productType, start, pageSize);
     }
 
     @Override
@@ -68,8 +68,8 @@ public class ProductService extends LogDAO<Product> implements IProductService {
     }
 
     @Override
-    public Map<Product, List<String>> getProductByGroup(String groupName) {
-        return ProductDAO.getInstance().getProductByGroup(groupName);
+    public Map<Product, List<String>> getProductByGroup(String groupName, Integer start, Integer pageSize) {
+        return ProductDAO.getInstance().getProductByGroup(groupName, start, pageSize);
     }
 
     @Override

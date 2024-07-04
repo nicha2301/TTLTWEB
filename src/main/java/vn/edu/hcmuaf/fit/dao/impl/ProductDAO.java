@@ -59,10 +59,10 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
     @Override
     public Map<Product, List<String>> searchProductsLimited(String searchTerm, Integer start, Integer pageSize) {
         String sql = "SELECT p.*, i.url AS image_url FROM (" +
-                " SELECT * FROM products WHERE productName LIKE ? LIMIT ?, ? " +
+                " SELECT * FROM products WHERE productName LIKE ? LIMIT ?, ?" +
                 ") AS p LEFT JOIN images i ON p.id = i.product_id";
         ProductImageMapper mapper = new ProductImageMapper(rs -> RSHandler.getString(rs, "image_url"));
-        return queryForMap(sql, mapper, true, "%" + searchTerm + "%", start, pageSize);
+        return queryForMap(sql, mapper, true, "%" + searchTerm.toLowerCase() + "%", start, pageSize);
     }
 
     /**
@@ -72,7 +72,7 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
     @Override
     public Integer getTotalSearchResults(String searchTerm) {
         String sql = "SELECT COUNT(*) FROM products WHERE productName LIKE ?";
-        return count(sql, searchTerm);
+        return count(sql, "%" + searchTerm.toLowerCase() + "%");
     }
 
     /**
@@ -95,12 +95,12 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
      * Retrieves all products from the database that belong to the specified category.
      */
     @Override
-    public Map<Product, List<String>> getProductByCategory(String categoryName) {
+    public Map<Product, List<String>> getProductByCategory(String categoryName, Integer start, Integer pageSize) {
         String sql = "SELECT p.*, i.url AS image_url FROM (" +
-                "SELECT pr.* FROM product_categories pc JOIN products pr ON pr.category_id = pc.id WHERE pc.categoryName = ?" +
+                "SELECT pr.* FROM product_categories pc JOIN products pr ON pr.category_id = pc.id WHERE pc.categoryName = ? LIMIT ?, ?" +
                 ") AS p LEFT JOIN images i ON p.id = i.product_id";
         ProductImageMapper mapper = new ProductImageMapper(rs -> RSHandler.getString(rs, "image_url"));
-        return queryForMap(sql, mapper, true, categoryName);
+        return queryForMap(sql, mapper, true, categoryName, start, pageSize);
     }
 
     /**
@@ -108,12 +108,12 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
      * Retrieves all products from the database that belong to the specified type.
      */
     @Override
-    public Map<Product, List<String>> getProductByType(String productType) {
+    public Map<Product, List<String>> getProductByType(String productType, Integer start, Integer pageSize) {
         String sql = "SELECT p.*, i.url AS image_url FROM (" +
-                " SELECT pr.* FROM product_types pt JOIN products pr ON pt.id = pr.type_id WHERE pt.type_name = ?" +
+                " SELECT pr.* FROM product_types pt JOIN products pr ON pt.id = pr.type_id WHERE pt.type_name = ? LIMIT ?, ?" +
                 ") AS p LEFT JOIN images i ON p.id = i.product_id";
         ProductImageMapper mapper = new ProductImageMapper(rs -> RSHandler.getString(rs, "image_url"));
-        return queryForMap(sql, mapper, true, productType);
+        return queryForMap(sql, mapper, true, productType, start, pageSize);
     }
 
     /**
@@ -122,10 +122,9 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
      */
     @Override
     public Map<String, Integer> getGroupListObject() {
-        String sql = "SELECT pg.groupName AS groupName, COUNT(pc.id) AS productCount " +
-                "FROM product_groups pg " +
-                "LEFT JOIN product_categories pc ON pg.id = pc.group_id " +
-                "GROUP BY pg.groupName";
+        String sql = "SELECT pg.groupName AS groupName, COUNT(p.id) AS productCount " +
+                "FROM product_groups pg LEFT JOIN product_categories pc ON pg.id = pc.group_id " +
+                "LEFT JOIN products p ON pc.id = p.category_id GROUP BY pg.id, pg.groupName";
         Mapper<String, Integer> mapper = new Mapper<String, Integer>(rs -> RSHandler.getString(rs, "groupName"),
                                                                      rs -> RSHandler.getInt(rs, "productCount"));
         return queryForMap(sql, mapper, false);
@@ -151,13 +150,13 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
      * Retrieves all products from the database that belong to the specified group.
      */
     @Override
-    public Map<Product, List<String>> getProductByGroup(String groupName) {
+    public Map<Product, List<String>> getProductByGroup(String groupName, Integer start, Integer pageSize) {
         String sql = "SELECT p.*, i.url AS image_url FROM (" +
                 "SELECT pr.* FROM products pr JOIN product_categories pc ON pr.category_id = pc.id " +
-                "JOIN product_groups pg ON pc.group_id = pg.id WHERE pg.groupName = ?" +
+                "JOIN product_groups pg ON pc.group_id = pg.id WHERE pg.groupName = ? LIMIT ?, ?" +
                 ") AS p LEFT JOIN images i ON p.id = i.product_id";
         ProductImageMapper mapper = new ProductImageMapper(rs -> RSHandler.getString(rs, "image_url"));
-        return queryForMap(sql, mapper, true, groupName);
+        return queryForMap(sql, mapper, true, groupName, start, pageSize);
     }
 
     /**

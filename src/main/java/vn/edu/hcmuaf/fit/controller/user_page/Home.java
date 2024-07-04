@@ -15,6 +15,7 @@ import java.util.Map;
 
 @WebServlet("/user/home")
 public class Home extends HttpServlet {
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         this.doPost(request, response);
@@ -25,20 +26,15 @@ public class Home extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
-        // Danh sách sản phẩm
         Map<Product, List<String>> products = ProductService.getInstance().getAllProductsLimited(0, 3);
         ProductTypes type = new ProductTypes();
         type.setId(4);
         Map<Product, List<String>> threePoultryProducts = ProductService.getInstance().getProductsLimit(type, 3);
         type.setId(6);
         Map<Product, List<String>> tt = ProductService.getInstance().getProductsLimit(type, 3);
-
         request.setAttribute("pro",threePoultryProducts);
         request.setAttribute("pr",tt);
         request.setAttribute("products", products);
-        //Danh sách banner
-
-        //Danh sách thương hiệu
         request.getRequestDispatcher("/WEB-INF/user/index.jsp").forward(request, response);
     }
 }

@@ -10,7 +10,7 @@ public interface IProductService {
 
     Map<Product, List<String>> getAllProducts();
 
-    Map<Product, List<String>> getAllProductsLimited(Integer start, Integer limit);
+    Map<Product, List<String>> getAllProductsLimited(Integer start, Integer pageSize);
 
     Integer getTotalProducts();
 
@@ -20,15 +20,15 @@ public interface IProductService {
 
     Map<String, Integer> getListObject();
 
-    Map<Product, List<String>> getProductByCategory(String categoryName);
+    Map<Product, List<String>> getProductByCategory(String categoryName, Integer start, Integer pageSize);
 
-    Map<Product, List<String>> getProductByType(String productType);
+    Map<Product, List<String>> getProductByType(String productType, Integer start, Integer pageSize);
 
     Map<String, Integer> getGroupListObject();
 
     Map<String, Integer> getListProductType();
 
-    Map<Product, List<String>> getProductByGroup(String groupName);
+    Map<Product, List<String>> getProductByGroup(String groupName, Integer start, Integer pageSize);
 
     Product getProductByIdWithSupplierInfo(Product p, String ip, String address);
 

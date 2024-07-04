@@ -27,7 +27,7 @@
                                 </a>
                             </li>
                             <li class="elementor-icon-list-item">
-                                <a href="tel:%200947513315">
+                                <a href="${request.servletContext.contextPath}/user/tel:%200947513315">
                       <span class="elementor-icon-list-icon">
                         <i aria-hidden="true" class="fas fa-phone-volume"></i>
                       </span>
@@ -35,7 +35,7 @@
                                 </a>
                             </li>
                             <li class="elementor-icon-list-item">
-                                <a href="tel:%20028%203948%203929">
+                                <a href="${request.servletContext.contextPath}/user/tel:%20028%203948%203929">
                       <span class="elementor-icon-list-icon">
                         <i aria-hidden="true" class="fas fa-headphones-alt"></i>
                       </span>
@@ -43,7 +43,7 @@
                                 </a>
                             </li>
                             <li class="elementor-icon-list-item">
-                                <a href="mailto:tienthangvet@gmail.com">
+                                <a href="${request.servletContext.contextPath}/user/mailto:tienthangvet@gmail.com">
                       <span class="elementor-icon-list-icon">
                         <i aria-hidden="true" class="far fa-envelope"></i>
                       </span>
@@ -73,28 +73,28 @@
                                 style="color: #ffffff;"><strong>THÔNG
                                             TIN
                                             CHUNG</strong></span></p>
-                        <p><a href="../introduce.jsp" rel="nofollow"><span
+                        <p><a href="${request.servletContext.contextPath}/user/introduce.jsp" rel="nofollow"><span
                                 style="color: rgba(236, 236, 236, 0.4);">Giới
                                             thiệu</span></a></p>
                         <p><span style="color: rgba(236, 236, 236, 0.4);"><a
                                 style="color: rgba(236, 236, 236, 0.4);"
-                                href="../privacyPolicy.jsp" rel="nofollow">Chính sách
+                                href="${request.servletContext.contextPath}/user/privacyPolicy.jsp" rel="nofollow">Chính sách
                                             bảo mật</a></span></p>
                         <p><span style="color: rgba(236, 236, 236, 0.4);"><a
                                 style="color: rgba(236, 236, 236, 0.4);"
-                                href="../partnerPolicy.jsp" rel="nofollow">Chính sách
+                                href="${request.servletContext.contextPath}/user/partnerPolicy.jsp" rel="nofollow">Chính sách
                                             đối tác</a></span></p>
                         <p><span style="color: rgba(236, 236, 236, 0.4);"><a
                                 style="color: rgba(236, 236, 236, 0.4);"
-                                href="../agencyPolicy.jsp" rel="nofollow">Chính sách
+                                href="${request.servletContext.contextPath}/user/agencyPolicy.jsp" rel="nofollow">Chính sách
                                             đại lý</a></span></p>
                         <p><span style="color: rgba(236, 236, 236, 0.4);"><a
                                 style="color: rgba(236, 236, 236, 0.4);"
-                                href="../termsPolicy.jsp"
+                                href="${request.servletContext.contextPath}/user/termsPolicy.jsp"
                                 rel="nofollow">Chính sách điều khoản và điều kiện</a></span></p>
                         <p><span style="color: rgba(236, 236, 236, 0.4);"><a
                                 style="color: rgba(236, 236, 236, 0.4);"
-                                href="../contact.jsp" rel="nofollow">Thông tin liên
+                                href="${request.servletContext.contextPath}/user/contact.jsp" rel="nofollow">Thông tin liên
                                             hệ</a></span></p>
                     </div>
                 </div>
@@ -113,7 +113,7 @@
         <div class="copyrights-wrapper">
             <div class="container">
                 <div class="min-footer">
-                    <small><a href=""><strong style="color: #333333">Thuốc Y The Pet</strong></a>
+                    <small><a href="${request.servletContext.contextPath}/user/home"><strong style="color: #333333">Thuốc Y The Pet</strong></a>
                         <i class="fa fa-copyright"></i> 2023 được tạo bởi
                         <strong>Nhóm 30</strong>.</small>
                 </div>
