@@ -144,7 +144,7 @@
                                     </p>
                                 </div>
                                 <div>
-                                    <a href="products">Tất cả sản phẩm</a>
+                                    <a href="${request.servletContext.contextPath}/user/products">Tất cả sản phẩm</a>
                                 </div>
                             </div>
                             <div class="service">
@@ -229,12 +229,12 @@
                                     </div>
                                     <div class="wd-buttons wd-pos-r-t">
                                         <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
-                                            <a href="addtocart?id=${p.id}" class="button product_type_simple add-to-cart-loop">
+                                            <a href="${request.servletContext.contextPath}/user/addtocart?id=${p.id}" class="button product_type_simple add-to-cart-loop">
                                                 <span><i class="fa-solid fa-cart-shopping"></i></span>
                                             </a>
                                         </div>
                                         <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
-                                            <a href="#" class="open-quick-view quick-view-button">
+                                            <a href="" class="open-quick-view quick-view-button">
                                                 <span>
                                                     <i class="fa-solid fa-magnifying-glass"></i>
                                                 </span>
@@ -297,14 +297,14 @@
                                     </div>
                                     <div class="wd-buttons wd-pos-r-t">
                                         <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
-                                            <a href="addtocart?id=${prod.id}" class="button product_type_simple add-to-cart-loop">
+                                            <a href="${request.servletContext.contextPath}/user/addtocart?id=${prod.id}" class="button product_type_simple add-to-cart-loop">
                                             <span>
                                                 <i class="fa-solid fa-cart-shopping"></i>
                                             </span>
                                             </a>
                                         </div>
                                         <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
-                                            <a href="#" class="open-quick-view quick-view-button">
+                                            <a href="" class="open-quick-view quick-view-button">
                                                 <span>
                                                     <i class="fa-solid fa-magnifying-glass"></i>
                                                 </span>
@@ -367,7 +367,7 @@
                                     </div>
                                     <div class="wd-buttons wd-pos-r-t">
                                         <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
-                                            <a href="addtocart?id=${otherProd.id}" class="button product_type_simple add-to-cart-loop">
+                                            <a href="${request.servletContext.contextPath}/user/addtocart?id=${otherProd.id}" class="button product_type_simple add-to-cart-loop">
                                                 <span>
                                                     <i class="fa-solid fa-cart-shopping"></i>
                                                 </span>

@@ -19,17 +19,17 @@ public interface IProductDAO extends GenericDAO<Product> {
 
     Map<String, Integer> getListObject();
 
-    Map<Product, List<String>> getProductByCategory(String categoryName);
+    Map<Product, List<String>> getProductByCategory(String categoryName, Integer start, Integer pageSize);
 
-    Map<Product, List<String>> getProductByType(String productType);
+    Map<Product, List<String>> getProductByType(String productType, Integer start, Integer pageSize);
 
     Map<String, Integer> getGroupListObject();
 
     Map<String, Integer> getListProductType();
 
-    Map<Product, List<String>> getProductByGroup(String groupName);
+    Map<Product, List<String>> getProductByGroup(String groupName, Integer start, Integer pageSize);
 
-    Product getProductByIdWithSupplierInfo(Integer productId);
+    Map<Product, List<String>> getProductByIdWithSupplierInfo(Integer productId);
 
     boolean updateProduct(Integer id, String productName, Integer categoryId, Double percent,
                           Integer price, Integer quantity, String purpose, String contraindications,

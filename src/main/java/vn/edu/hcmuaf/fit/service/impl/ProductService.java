@@ -23,8 +23,8 @@ public class ProductService extends LogDAO<Product> implements IProductService {
     }
 
     @Override
-    public Map<Product, List<String>> getAllProductsLimited(Integer start, Integer limit) {
-        return ProductDAO.getInstance().getAllProductsLimited(start, limit);
+    public Map<Product, List<String>> getAllProductsLimited(Integer start, Integer pageSize) {
+        return ProductDAO.getInstance().getAllProductsLimited(start, pageSize);
     }
 
     @Override
@@ -48,13 +48,13 @@ public class ProductService extends LogDAO<Product> implements IProductService {
     }
 
     @Override
-    public Map<Product, List<String>> getProductByCategory(String categoryName) {
-        return ProductDAO.getInstance().getProductByCategory(categoryName);
+    public Map<Product, List<String>> getProductByCategory(String categoryName, Integer start, Integer pageSize) {
+        return ProductDAO.getInstance().getProductByCategory(categoryName, start, pageSize);
     }
 
     @Override
-    public Map<Product, List<String>> getProductByType(String productType) {
-        return ProductDAO.getInstance().getProductByType(productType);
+    public Map<Product, List<String>> getProductByType(String productType, Integer start, Integer pageSize) {
+        return ProductDAO.getInstance().getProductByType(productType, start, pageSize);
     }
 
     @Override
@@ -68,16 +68,16 @@ public class ProductService extends LogDAO<Product> implements IProductService {
     }
 
     @Override
-    public Map<Product, List<String>> getProductByGroup(String groupName) {
-        return ProductDAO.getInstance().getProductByGroup(groupName);
+    public Map<Product, List<String>> getProductByGroup(String groupName, Integer start, Integer pageSize) {
+        return ProductDAO.getInstance().getProductByGroup(groupName, start, pageSize);
     }
 
     @Override
-    public Product getProductByIdWithSupplierInfo(Product p, String ip, String address) {
+    public Map<Product, List<String>> getProductByIdWithSupplierInfo(Product p, String ip, String address) {
         try {
             Level level;
-            Product success = ProductDAO.getInstance().getProductByIdWithSupplierInfo(p.getId());
-            if(success!= null) {
+            Map<Product, List<String>> success = ProductDAO.getInstance().getProductByIdWithSupplierInfo(p.getId());
+            if(success != null && success.size()==1) {
                 p.setAfterData("Get product with ID=" + p.getId() + " successfully");
                 level = LevelDAO.getInstance().getLevel(1).get(0);
             } else {
@@ -138,10 +138,10 @@ public class ProductService extends LogDAO<Product> implements IProductService {
             super.insert(p, level, ip, address);
             return success;
         } catch (Exception e) {
-            Product product = ProductDAO.getInstance().getProductByIdWithSupplierInfo(p.getId());
+            Map<Product, List<String>> product = ProductDAO.getInstance().getProductByIdWithSupplierInfo(p.getId());
             p.setAfterData(e.getMessage() + " with ID=" + p.getId());
             super.insert(p, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
-            if(product == null) return true;
+            if(product == null || product.isEmpty()) return true;
             else return false;
         }
     }
