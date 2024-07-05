@@ -6,13 +6,12 @@
 <head>
     <meta charset="UTF-8"/>
     <link rel="stylesheet" href="/assets/user/css/products/styles.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-          integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="icon" href="https://tienthangvet.vn/wp-content/uploads/cropped-favicon-Tien-Thang-Vet-192x192.png"
           sizes="192x192"/>
     <title>Sản phẩm</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
 <div class="website-wrapper">
@@ -43,7 +42,7 @@
                                 <c:when test="${not empty requestScope.groups}">
                                     <c:forEach var="group" items="${requestScope.groups}">
                                         <li class="wc-layered-nav-term wd-swatch-wrap">
-                                            <a href="${request.servletContext.contextPath}/user/products?group=${group.key}" class="layered-nav-link">
+                                            <a class="layered-nav-link" href="javascript:void(0);" onclick="searchByName(null, '${group.key}', null, null)">
                                                 <span class="wd-swatch wd-bg"></span>
                                                 <span class="wd-filter-lable layer-term-lable">${group.key}</span>
                                             </a>
@@ -62,11 +61,13 @@
                                     <c:when test="${not empty requestScope.objects}">
                                         <c:forEach var="object" items="${requestScope.objects}">
                                             <li class="wc-layered-nav-term">
-                                                <a rel="nofollow noopener" href="${request.servletContext.contextPath}/user/products?category=${object.key}" class="layered-nav-link">
+                                                <a rel="nofollow noopener" href="javascript:void(0);"
+                                                   class="layered-nav-link" onclick="searchByName(null, null, '${object.key}', null)">
                                                     <span class="wd-filter-lable layer-term-lable">${object.key}</span>
                                                 </a>
                                                 <span class="count">${object.value}</span>
                                             </li>
+                                            <!--href="${request.servletContext.contextPath}/user/products?category=${object.key}"-->
                                         </c:forEach>
                                     </c:when>
                                 </c:choose>
@@ -81,11 +82,13 @@
                                     <c:when test="${not empty requestScope.proTypes}">
                                         <c:forEach var="protype" items="${requestScope.proTypes}">
                                             <li class="wc-layered-nav-term">
-                                                <a rel="nofollow noopener" href="${request.servletContext.contextPath}/user/products?type=${protype.key}" class="layered-nav-link">
+                                                <a rel="nofollow noopener" href="javascript:void(0);"
+                                                   class="layered-nav-link" onclick="searchByName(null, null, null, '${protype.key}')">
                                                     <span class="wd-filter-lable layer-term-lable">${protype.key}</span>
                                                 </a>
                                                 <span class="count">${protype.value}</span>
                                             </li>
+                                            <%--href="${request.servletContext.contextPath}/user/products?type=${protype.key}"--%>
                                         </c:forEach>
                                     </c:when>
                                 </c:choose>
@@ -231,30 +234,36 @@
         <%@include file="/WEB-INF/user/include/footer.jsp" %>
     </div>
 <%--    <script src="../.."></script>--%>
-    <script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript">
         window.addEventListener("scroll", () => {
             var header = document.querySelector(".container");
             header.classList.toggle("sticky", window.scrollY > 100);
         })
-        function searchByName(param) {
-            var txtSearch = param.value;
+        function searchByName(search, group, object, type) {
+            var txtSearch = search ? search.value : null;
+            var txtGroup = group ? group : null;
+            var txtObject = object ? object : null;
+            var txtType = type ? type : null;
             $.ajax({
                 url: "${pageContext.request.contextPath}/user/products",
                 type: "POST",
                 data: {
-                    searchTerm: txtSearch
+                    searchTerm: txtSearch,
+                    group: txtGroup,
+                    category: txtObject,
+                    type: txtType,
+                    page: 1
                 },
                 success: function (data) {
                     var row = document.getElementById("content");
                     row.innerHTML = data;
                 },
                 error: function (xhr) {
-
                 }
             });
         }
     </script>
-
 </body>
 <style>
     span.page-link.ellipsis {

@@ -14,77 +14,21 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet(urlPatterns = {"/user/products", "/user/search"})
+@WebServlet(urlPatterns = {"/user/products"})
 public class ProductServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html; charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        String searchTerm = request.getParameter("searchTerm");
-        int pageSize = 12;
-//        int start = (pageNumber - 1) * pageSize;
-        if (searchTerm != null && !searchTerm.isEmpty()) {
-            Map<Product, List<String>> products = ProductService.getInstance().searchProductsLimited(searchTerm, 0, 20);
-            PrintWriter out = response.getWriter();
-            for (Map.Entry<Product, List<String>> entry : products.entrySet()) {
-                out.println("                                        <div class=\"item\">\n" +
-                        "                                            <div>\n" +
-                        "                                                <div class=\"product-element-top\">\n" +
-                        "                                                    <a href=\"./product?id=" + entry.getKey().getId() + "\">\n" +
-                        "                                                        <img src=\"" + request.getServletContext().getContextPath() + entry.getValue().get(0) + "\" alt=\"\">\n" +
-                        "                                                    </a>\n" +
-                        "                                                </div>\n" +
-                        "                                                <div class=\"product-element-bottom\">\n" +
-                        "                                                    <a href=\"" + request.getServletContext().getContextPath() + "/user/product?id=" + entry.getKey().getId() + "\">\n" +
-                                                                                entry.getKey().getProductName() +
-                        "                                                    </a>\n" +
-                        "                                                </div>\n" +
-                        "                                                <div class=\"product-element\">\n" +
-                        "                                                    <div class=\"price-wrap\">\n" +
-                        "                                                        <div class=\"price\">\n" +
-                        "                                                             " + Utils.formatCurrency(entry.getKey().getPrice()) + " VND\n" +
-                        "                                                        </div>\n" +
-                        "                                                    </div>\n" +
-                        "                                                </div>\n" +
-                        "                                            </div>\n" +
-                        "                                            <div class=\"wd-buttons wd-pos-r-t\">\n" +
-                        "                                                <div class=\"wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon\">\n" +
-                        "                                                    <a href=\"" + request.getServletContext().getContextPath() + "/user/addtocart?id=" + entry.getKey().getId() + "\">\n" +
-                        "                                                        class=\"button product_type_simple add-to-cart-loop\" aria-label=\"\">\n" +
-                        "                                                        <span>\n" +
-                        "                                                            <i class=\"fa-solid fa-cart-shopping\"></i>\n" +
-                        "                                                        </span>\n" +
-                        "                                                    </a>\n" +
-                        "                                                </div>\n" +
-                        "                                                <div class=\"quick-view wd-action-btn wd-style-icon wd-quick-view-icon\">\n" +
-                        "                                                    <a href=\"\" class=\"open-quick-view quick-view-button\">\n" +
-                        "                                                        <span>\n" +
-                        "                                                            <i class=\"fa-solid fa-magnifying-glass\"></i>\n" +
-                        "                                                        </span>\n" +
-                        "                                                    </a>\n" +
-                        "                                                </div>\n" +
-                        "                                                <div class=\"wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon\">\n" +
-                        "                                                    <a class=\"wd-tltp wd-tooltip-inited\" href=\"\" data-added-text=\"Browse Wishlist\">\n" +
-                        "                                                        <span class=\"wd-tooltip-label\">\n" +
-                        "                                                            <i class=\"fa-regular fa-heart\"></i>\n" +
-                        "                                                        </span>\n" +
-                        "                                                    </a>\n" +
-                        "                                                </div>\n" +
-                        "                                            </div>\n" +
-                        "                                        </div>");
-            }
-        }
-    }
-
-    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+
         int pageSize = 12;
         int pageNumber = request.getParameter("page")!= null?Integer.parseInt(request.getParameter("page")):1;
         int start = (pageNumber - 1) * pageSize;
 
-//        String searchTerm = request.getParameter("searchTerm");
+        String searchTerm = request.getParameter("searchTerm");
         String group = request.getParameter("group");
         String object = request.getParameter("category");
         String productType = request.getParameter("type");
@@ -95,7 +39,7 @@ public class ProductServlet extends HttpServlet {
 
         Map<Product, List<String>> products;
         int totalProducts = 0;
-        if (productType != null) {
+        if (productType != null && !productType.isEmpty()) {
             products = ProductService.getInstance().getProductByType(productType, start, pageSize);
             for (Map.Entry<String, Integer> entry : listProductType.entrySet()) {
                 if (entry.getKey().equalsIgnoreCase(productType)) {
@@ -104,11 +48,11 @@ public class ProductServlet extends HttpServlet {
                 }
             }
             request.setAttribute("selectedType", productType);
-//        } else if (searchTerm != null) { // check 'search term' is searching correctly.
-//            products = ProductService.getInstance().searchProductsLimited(searchTerm, start, pageSize);
-//            totalProducts = ProductService.getInstance().getTotalSearchResults(searchTerm);
-//            request.setAttribute("searchTerm", searchTerm);
-        } else if (object != null) {
+        } else if (searchTerm != null && !searchTerm.isEmpty()) {
+            products = ProductService.getInstance().searchProductsLimited(searchTerm, start, pageSize);
+            totalProducts = ProductService.getInstance().getTotalSearchResults(searchTerm);
+            request.setAttribute("searchTerm", searchTerm);
+        } else if (object != null && !object.isEmpty()) {
             products = ProductService.getInstance().getProductByCategory(object, start, pageSize);
             for (Map.Entry<String, Integer> entry : listObject.entrySet()) {
                 if (entry.getKey().equalsIgnoreCase(object)) {
@@ -117,7 +61,7 @@ public class ProductServlet extends HttpServlet {
                 }
             }
             request.setAttribute("selectedCategory", object);
-        } else if (group != null) {
+        } else if (group != null && !group.isEmpty()) {
             products = ProductService.getInstance().getProductByGroup(group, start, pageSize);
             for (Map.Entry<String, Integer> entry : listGroups.entrySet()) {
                 if (entry.getKey().equalsIgnoreCase(group)) {
@@ -139,12 +83,117 @@ public class ProductServlet extends HttpServlet {
         request.setAttribute("proTypes", listProductType.entrySet());
         request.setAttribute("groups", listGroups.entrySet());
 
-//        String decodedQueryString = buildQueryString(request, object, group, productType, searchTerm);
-//        String contextPath = request.getContextPath();
-//        if (decodedQueryString.startsWith(contextPath)) decodedQueryString = decodedQueryString.substring(contextPath.length());
-//        String url = decodedQueryString.substring(decodedQueryString.indexOf("=") + 1);
-//        request.setAttribute("url", url);
+        String decodedQueryString = buildQueryString(request, object, group, productType, searchTerm);
+        String contextPath = request.getContextPath();
+        if (decodedQueryString.startsWith(contextPath)) decodedQueryString = decodedQueryString.substring(contextPath.length());
+        String url = decodedQueryString.substring(decodedQueryString.indexOf("=") + 1);
+        request.setAttribute("url", url);
         request.getRequestDispatcher("/WEB-INF/user/product.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+
+        int pageSize = 12;
+        int pageNumber = request.getParameter("page")!= null?Integer.parseInt(request.getParameter("page")):1;
+        int start = (pageNumber - 1) * pageSize;
+
+        String searchTerm = request.getParameter("searchTerm");
+        String group = request.getParameter("group");
+        String object = request.getParameter("category");
+        String productType = request.getParameter("type");
+
+        Map<String, Integer> listProductType = ProductService.getInstance().getListProductType();
+        Map<String, Integer> listObject = ProductService.getInstance().getListObject();
+        Map<String, Integer> listGroups = ProductService.getInstance().getGroupListObject();
+
+        Map<Product, List<String>> products;
+        int totalProducts = 0;
+        if (productType != null && !productType.isEmpty()) {
+            products = ProductService.getInstance().getProductByType(productType, start, pageSize);
+            for (Map.Entry<String, Integer> entry : listProductType.entrySet()) {
+                if (entry.getKey().equalsIgnoreCase(productType)) {
+                    totalProducts = entry.getValue();
+                    break;
+                }
+            }
+        } else if (searchTerm != null && !searchTerm.isEmpty()) {
+            products = ProductService.getInstance().searchProductsLimited(searchTerm, start, pageSize);
+            totalProducts = ProductService.getInstance().getTotalSearchResults(searchTerm);
+        } else if (object != null && !object.isEmpty()) {
+            products = ProductService.getInstance().getProductByCategory(object, start, pageSize);
+            for (Map.Entry<String, Integer> entry : listObject.entrySet()) {
+                if (entry.getKey().equalsIgnoreCase(object)) {
+                    totalProducts = entry.getValue();
+                    break;
+                }
+            }
+        } else if (group != null && !group.isEmpty()) {
+            products = ProductService.getInstance().getProductByGroup(group, start, pageSize);
+            for (Map.Entry<String, Integer> entry : listGroups.entrySet()) {
+                if (entry.getKey().equalsIgnoreCase(group)) {
+                    totalProducts = entry.getValue();
+                    break;
+                }
+            }
+        } else {
+            products = ProductService.getInstance().getAllProductsLimited(start, pageSize);
+            totalProducts = ProductService.getInstance().getTotalProducts();
+        }
+        int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
+        PrintWriter out = response.getWriter();
+        if (products != null && !products.isEmpty()) {
+            for (Map.Entry<Product, List<String>> entry : products.entrySet()) {
+                out.println("<div class=\"item\">\n" +
+                        "       <div>\n" +
+                        "           <div class=\"product-element-top\">\n" +
+                        "               <a href=\"" + request.getServletContext().getContextPath() + "/user/product?id=" + entry.getKey().getId() + "\">\n" +
+                        "                   <img src=\"" + request.getServletContext().getContextPath() + entry.getValue().get(0) + "\" alt=\"\">\n" +
+                        "               </a>\n" +
+                        "           </div>\n" +
+                        "           <div class=\"product-element-bottom\">\n" +
+                        "               <a href=\"" + request.getServletContext().getContextPath() + "/user/product?id=" + entry.getKey().getId() + "\">\n" +
+                        entry.getKey().getProductName() +
+                        "               </a>\n" +
+                        "           </div>\n" +
+                        "           <div class=\"product-element\">\n" +
+                        "               <div class=\"price-wrap\">\n" +
+                        "                   <div class=\"price\">\n" +
+                        Utils.formatCurrency(entry.getKey().getPrice()) + " VND\n" +
+                        "                   </div>\n" +
+                        "               </div>\n" +
+                        "           </div>\n" +
+                        "       </div>\n" +
+                        "       <div class=\"wd-buttons wd-pos-r-t\">\n" +
+                        "           <div class=\"wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon\">\n" +
+                        "               <a href=\"" + request.getServletContext().getContextPath() + "/user/addtocart?id=" + entry.getKey().getId() + "\">\n" +
+                        "                   class=\"button product_type_simple add-to-cart-loop\" aria-label=\"\">\n" +
+                        "                       <span>\n" +
+                        "                           <i class=\"fa-solid fa-cart-shopping\"></i>\n" +
+                        "                       </span>\n" +
+                        "               </a>\n" +
+                        "           </div>\n" +
+                        "           <div class=\"quick-view wd-action-btn wd-style-icon wd-quick-view-icon\">\n" +
+                        "               <a href=\"\" class=\"open-quick-view quick-view-button\">\n" +
+                        "                   <span>\n" +
+                        "                       <i class=\"fa-solid fa-magnifying-glass\"></i>\n" +
+                        "                   </span>\n" +
+                        "               </a>\n" +
+                        "           </div>\n" +
+                        "           <div class=\"wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon\">\n" +
+                        "               <a class=\"wd-tltp wd-tooltip-inited\" href=\"\" data-added-text=\"Browse Wishlist\">\n" +
+                        "                   <span class=\"wd-tooltip-label\">\n" +
+                        "                       <i class=\"fa-regular fa-heart\"></i>\n" +
+                        "                   </span>\n" +
+                        "               </a>\n" +
+                        "           </div>\n" +
+                        "       </div>\n" +
+                        "   </div>");
+            }
+        }
     }
 
     private String buildQueryString(HttpServletRequest request, String object, String group, String type, String search) {

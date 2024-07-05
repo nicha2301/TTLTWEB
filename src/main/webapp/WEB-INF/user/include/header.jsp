@@ -56,10 +56,8 @@
         <div class="header-right">
             <form role="search" class="searchform" data-thumbnail="1" data-price="1" data-post_type="product" data-count="20" data-sku="0" data-symbols_count="3">
                 <input type="text" id="searchTerm" name="searchTerm" class="s" placeholder="Tìm kiếm sản phẩm" value="" aria-label="Search"
-                       title="Search for products" required="" oninput="searchByName(this)"/>
-                <button type="submit" class="searchsubmit">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
+                       title="Search for products" required="" oninput="searchByName(this, null, null, null)" />
+                <button type="submit" class="searchsubmit"><i class="fa-solid fa-magnifying-glass"></i></button>
             </form>
             <div class="action">
                 <div class="cart" style="margin: 0 30px 0 30px;">
