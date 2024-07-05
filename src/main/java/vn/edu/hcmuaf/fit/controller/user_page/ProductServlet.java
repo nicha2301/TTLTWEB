@@ -145,55 +145,155 @@ public class ProductServlet extends HttpServlet {
         }
         int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
         PrintWriter out = response.getWriter();
-        if (products != null && !products.isEmpty()) {
-            for (Map.Entry<Product, List<String>> entry : products.entrySet()) {
-                out.println("<div class=\"item\">\n" +
-                        "       <div>\n" +
-                        "           <div class=\"product-element-top\">\n" +
-                        "               <a href=\"" + request.getServletContext().getContextPath() + "/user/product?id=" + entry.getKey().getId() + "\">\n" +
-                        "                   <img src=\"" + request.getServletContext().getContextPath() + entry.getValue().get(0) + "\" alt=\"\">\n" +
-                        "               </a>\n" +
-                        "           </div>\n" +
-                        "           <div class=\"product-element-bottom\">\n" +
-                        "               <a href=\"" + request.getServletContext().getContextPath() + "/user/product?id=" + entry.getKey().getId() + "\">\n" +
-                        entry.getKey().getProductName() +
-                        "               </a>\n" +
-                        "           </div>\n" +
-                        "           <div class=\"product-element\">\n" +
-                        "               <div class=\"price-wrap\">\n" +
-                        "                   <div class=\"price\">\n" +
-                        Utils.formatCurrency(entry.getKey().getPrice()) + " VND\n" +
-                        "                   </div>\n" +
-                        "               </div>\n" +
-                        "           </div>\n" +
-                        "       </div>\n" +
-                        "       <div class=\"wd-buttons wd-pos-r-t\">\n" +
-                        "           <div class=\"wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon\">\n" +
-                        "               <a href=\"" + request.getServletContext().getContextPath() + "/user/addtocart?id=" + entry.getKey().getId() + "\">\n" +
-                        "                   class=\"button product_type_simple add-to-cart-loop\" aria-label=\"\">\n" +
-                        "                       <span>\n" +
-                        "                           <i class=\"fa-solid fa-cart-shopping\"></i>\n" +
-                        "                       </span>\n" +
-                        "               </a>\n" +
-                        "           </div>\n" +
-                        "           <div class=\"quick-view wd-action-btn wd-style-icon wd-quick-view-icon\">\n" +
-                        "               <a href=\"\" class=\"open-quick-view quick-view-button\">\n" +
-                        "                   <span>\n" +
-                        "                       <i class=\"fa-solid fa-magnifying-glass\"></i>\n" +
-                        "                   </span>\n" +
-                        "               </a>\n" +
-                        "           </div>\n" +
-                        "           <div class=\"wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon\">\n" +
-                        "               <a class=\"wd-tltp wd-tooltip-inited\" href=\"\" data-added-text=\"Browse Wishlist\">\n" +
-                        "                   <span class=\"wd-tooltip-label\">\n" +
-                        "                       <i class=\"fa-regular fa-heart\"></i>\n" +
-                        "                   </span>\n" +
-                        "               </a>\n" +
-                        "           </div>\n" +
-                        "       </div>\n" +
-                        "   </div>");
-            }
+
+        String decodedQueryString = buildQueryString(request, object, group, productType, searchTerm);
+        String contextPath = request.getContextPath();
+        if (decodedQueryString.startsWith(contextPath)) decodedQueryString = decodedQueryString.substring(contextPath.length());
+        String url = decodedQueryString.substring(decodedQueryString.indexOf("=") + 1);
+
+        StringBuilder linkBuilder = new StringBuilder();
+        linkBuilder.append("onclick=\"searchByName(");
+        if (searchTerm != null && !searchTerm.isEmpty()) {
+            linkBuilder.append("'").append(searchTerm).append("'");
+            System.out.println(searchTerm);
+        } else {
+            linkBuilder.append("null");
         }
+        linkBuilder.append(", ");
+        if (group != null && !group.isEmpty()) {
+            linkBuilder.append("'").append(group).append("'");
+        } else {
+            linkBuilder.append("null");
+        }
+        linkBuilder.append(", ");
+        if (object != null && !object.isEmpty()) {
+            linkBuilder.append("'").append(object).append("'");
+        } else {
+            linkBuilder.append("null");
+        }
+        linkBuilder.append(", ");
+        if (productType != null && !productType.isEmpty()) {
+            linkBuilder.append("'").append(productType).append("'");
+        } else {
+            linkBuilder.append("null");
+        }
+        linkBuilder.append(", ");
+        String linkHTML = linkBuilder.toString();
+        String data = "";
+        data += "       <div class=\"shop-loop-head\">\n" +
+                "           <div class=\"wd-shop-tools\">\n" +
+                "               <div class=\"wd-breadcrumbs\">\n" +
+                "                   <nav class=\"woocommerce-breadcrumb\">\n" +
+                "                       <a href=\""+request.getServletContext().getContextPath()+"/user/home\" class=\"breadcrumb-link\">Trang chủ</a>\n" +
+                "                           <a href=\""+request.getServletContext().getContextPath()+"/user/products\" class=\"breadcrumb-link\">Sản phẩm</a>\n";
+                if(group != null && !group.isEmpty()) {
+                    data += "<a href=\"\" class=\"breadcrumb-link\">"+group+"</a>\n";
+                } else if(productType != null && !productType.isEmpty()) {
+                    data += "<a href=\"\" class=\"breadcrumb-link\">"+productType+"</a>\n";
+                } else if(object != null && !object.isEmpty()) {
+                    data += "<a href=\"\" class=\"breadcrumb-link\">"+object+"</a>\n";
+                } else {
+                    if(url != null && !url.isEmpty()) {
+                        data += "<a href=\"\" class=\"breadcrumb-link\">Kết quả tìm kiếm cho: "+searchTerm+"</a>\n";
+                    }
+                }
+                data += "           </nav>\n" +
+                "               </div>\n" +
+                "           </div>\n" +
+                "       </div>\n" +
+                "       <div class=\"wrapper-container\">\n" +
+                "           <div class=\"container\">\n";
+                if(products == null || products.isEmpty()) {
+                    data += "   <div class=\"no-products-found\">\n" +
+                            "       <p>Xin lỗi, không tìm thấy sản phẩm nào có tên này.</p>\n" +
+                            "           </div>\n";
+                } else {
+                    for (Map.Entry<Product, List<String>> entry : products.entrySet()) {
+                        data += "<div class=\"item\">\n" +
+                                "       <div>\n" +
+                                "           <div class=\"product-element-top\">\n" +
+                                "               <a href=\"" + request.getServletContext().getContextPath() + "/user/product?id=" + entry.getKey().getId() + "\">\n" +
+                                "                   <img src=\"" + request.getServletContext().getContextPath() + entry.getValue().get(0) + "\" alt=\"\">\n" +
+                                "               </a>\n" +
+                                "           </div>\n" +
+                                "           <div class=\"product-element-bottom\">\n" +
+                                "               <a href=\"" + request.getServletContext().getContextPath() + "/user/product?id=" + entry.getKey().getId() + "\">\n" +
+                                                    entry.getKey().getProductName() +
+                                "               </a>\n" +
+                                "           </div>\n" +
+                                "           <div class=\"product-element\">\n" +
+                                "               <div class=\"price-wrap\">\n" +
+                                "                   <div class=\"price\">\n" +
+                                                        Utils.formatCurrency(entry.getKey().getPrice()) + " VND\n" +
+                                "                   </div>\n" +
+                                "               </div>\n" +
+                                "           </div>\n" +
+                                "       </div>\n" +
+                                "       <div class=\"wd-buttons wd-pos-r-t\">\n" +
+                                "           <div class=\"wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon\">\n" +
+                                "               <a href=\"" + request.getServletContext().getContextPath() + "/user/addtocart?id=" + entry.getKey().getId() + "\"\n" +
+                                "                   class=\"button product_type_simple add-to-cart-loop\" aria-label=\"\">\n" +
+                                "                       <span>\n" +
+                                "                           <i class=\"fa-solid fa-cart-shopping\"></i>\n" +
+                                "                       </span>\n" +
+                                "               </a>\n" +
+                                "           </div>\n" +
+                                "           <div class=\"quick-view wd-action-btn wd-style-icon wd-quick-view-icon\">\n" +
+                                "               <a href=\"\" class=\"open-quick-view quick-view-button\">\n" +
+                                "                   <span>\n" +
+                                "                       <i class=\"fa-solid fa-magnifying-glass\"></i>\n" +
+                                "                   </span>\n" +
+                                "               </a>\n" +
+                                "           </div>\n" +
+                                "           <div class=\"wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon\">\n" +
+                                "               <a class=\"wd-tltp wd-tooltip-inited\" href=\"\" data-added-text=\"Browse Wishlist\">\n" +
+                                "                   <span class=\"wd-tooltip-label\">\n" +
+                                "                       <i class=\"fa-regular fa-heart\"></i>\n" +
+                                "                   </span>\n" +
+                                "               </a>\n" +
+                                "           </div>\n" +
+                                "       </div>\n" +
+                                "   </div>";
+                    }
+                }
+                data += "       </div>\n" +
+                        "   </div>\n" +
+                        "<div class=\"pagination\">\n" +
+                        "   <ul class=\"pagination-wrapper\">\n";
+                if (pageNumber > 1) {
+                    data += "<li class=\"page-item\">\n" +
+                            "   <a class=\"page-link\" href=\"javascript:void(0);\" aria-label=\"Previous\" " + linkHTML + (pageNumber-1) + ")\">\n" +
+                            "       <span aria-hidden=\"true\">&laquo;</span>\n" +
+                            "   </a>\n" +
+                            "</li>\n";
+                }
+                if (pageNumber >= 4 && totalPages > 15) {
+                    data += "<li class=\"page-item disabled\">\n" +
+                            "   <span class=\"page-link ellipsis\" >...</span>\n" +
+                            "</li>\n";
+                }
+                int begin = Math.max(pageNumber - 2, 1);
+                int end = Math.min(pageNumber + 2, totalPages);
+                for (int page = begin; page <= end; page++) {
+                    data += "<li class=\"page-item " + (page==pageNumber?"active":"") + "\">\n" +
+                            "   <a class=\"page-link\" href=\"javascript:void(0);\" " + linkHTML + page + ")\">" + page + "</a>\n" +
+                            "</li>\n";
+                }
+                if(pageNumber+2<totalPages && totalPages>15) {
+                    data += "<li class=\"page-item disabled\">\n" +
+                            "   <span class=\"page-link ellipsis\">...</span>\n" +
+                            "</li>\n";
+                }
+                if (pageNumber < totalPages) {
+                    data += "<li class=\"page-item\">\n" +
+                            "   <a class=\"page-link\" href=\"javascript:void(0);\" " + linkHTML + (pageNumber + 1) + ")\" aria-label=\"Next\">\n" +
+                            "       <span aria-hidden=\"true\">&raquo;</span>\n" +
+                            "   </a>\n" +
+                            "</li>\n";
+                }
+                data += "   </ul>\n" +
+                        "</div>";
+        out.print(data);
     }
 
     private String buildQueryString(HttpServletRequest request, String object, String group, String type, String search) {

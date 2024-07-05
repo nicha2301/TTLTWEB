@@ -20,14 +20,15 @@
         <div class="page-title" style="background-image: url(https://tienthangvet.vn/wp-content/uploads/title-tag-tien-thang-vet-tsd1.jpg);">
             <div class="container">
                 <h1 class="title">
-                    <c:choose>
-                        <c:when test="${not empty requestScope.searchTerm}">
-                            Kết quả tìm kiếm cho: ${requestScope.searchTerm}
-                        </c:when>
-                        <c:otherwise>
-                            Sản phẩm
-                        </c:otherwise>
-                    </c:choose>
+<%--                    <c:choose>--%>
+<%--                        <c:when test="${not empty requestScope.searchTerm}">--%>
+<%--                            Kết quả tìm kiếm cho: ${requestScope.searchTerm}--%>
+<%--                        </c:when>--%>
+<%--                        <c:otherwise>--%>
+<%--                            Sản phẩm--%>
+<%--                        </c:otherwise>--%>
+<%--                    </c:choose>--%>
+                    Sản phẩm
                 </h1>
             </div>
         </div>
@@ -42,7 +43,7 @@
                                 <c:when test="${not empty requestScope.groups}">
                                     <c:forEach var="group" items="${requestScope.groups}">
                                         <li class="wc-layered-nav-term wd-swatch-wrap">
-                                            <a class="layered-nav-link" href="javascript:void(0);" onclick="searchByName(null, '${group.key}', null, null)">
+                                            <a class="layered-nav-link" href="javascript:void(0);" onclick="searchByName(null, '${group.key}', null, null, null)">
                                                 <span class="wd-swatch wd-bg"></span>
                                                 <span class="wd-filter-lable layer-term-lable">${group.key}</span>
                                             </a>
@@ -62,7 +63,7 @@
                                         <c:forEach var="object" items="${requestScope.objects}">
                                             <li class="wc-layered-nav-term">
                                                 <a rel="nofollow noopener" href="javascript:void(0);"
-                                                   class="layered-nav-link" onclick="searchByName(null, null, '${object.key}', null)">
+                                                   class="layered-nav-link" onclick="searchByName(null, null, '${object.key}', null, null)">
                                                     <span class="wd-filter-lable layer-term-lable">${object.key}</span>
                                                 </a>
                                                 <span class="count">${object.value}</span>
@@ -83,7 +84,7 @@
                                         <c:forEach var="protype" items="${requestScope.proTypes}">
                                             <li class="wc-layered-nav-term">
                                                 <a rel="nofollow noopener" href="javascript:void(0);"
-                                                   class="layered-nav-link" onclick="searchByName(null, null, null, '${protype.key}')">
+                                                   class="layered-nav-link" onclick="searchByName(null, null, null, '${protype.key}', null)">
                                                     <span class="wd-filter-lable layer-term-lable">${protype.key}</span>
                                                 </a>
                                                 <span class="count">${protype.value}</span>
@@ -98,7 +99,7 @@
                     </div>
                 </aside>
                 <!-- Content -->
-                <div class="content">
+                <div id="content" class="content">
                     <!-- Breadcrumbs -->
                     <div class="shop-loop-head">
                         <div class="wd-shop-tools">
@@ -130,7 +131,7 @@
                     </div>
                     <!-- Danh sách sản phẩm -->
                     <div class="wrapper-container">
-                        <div class="container" id="content">
+                        <div class="container">
                             <c:choose>
                                 <c:when test="${empty requestScope.product or requestScope.product.size() == 0}">
                                     <div class="no-products-found">
@@ -166,7 +167,7 @@
                                             <div class="wd-buttons wd-pos-r-t">
                                                 <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
                                                     <a href="${request.servletContext.contextPath}/user/addtocart?id=${product.id}"
-                                                        class="button product_type_simple add-to-cart-loop" aria-label="">
+                                                       class="button product_type_simple add-to-cart-loop" aria-label="">
                                                         <span>
                                                             <i class="fa-solid fa-cart-shopping"></i>
                                                         </span>
@@ -240,11 +241,13 @@
             var header = document.querySelector(".container");
             header.classList.toggle("sticky", window.scrollY > 100);
         })
-        function searchByName(search, group, object, type) {
-            var txtSearch = search ? search.value : null;
-            var txtGroup = group ? group : null;
-            var txtObject = object ? object : null;
-            var txtType = type ? type : null;
+        function searchByName(search, group, object, type, page) {
+            var txtSearch = search ? search : null;
+            var txtGroup = group!=null && group.length!==0 ? group : null;
+            var txtObject = object!=null && object.length!==0 ? object : null;
+            var txtType = type!=null && type.length!==0 ? type : null;
+            var pagination = page ? page : 1;
+            console.log(txtSearch, txtGroup, txtObject, txtType, pagination)
             $.ajax({
                 url: "${pageContext.request.contextPath}/user/products",
                 type: "POST",
@@ -253,7 +256,7 @@
                     group: txtGroup,
                     category: txtObject,
                     type: txtType,
-                    page: 1
+                    page: pagination
                 },
                 success: function (data) {
                     var row = document.getElementById("content");

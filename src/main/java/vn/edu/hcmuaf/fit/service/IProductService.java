@@ -30,7 +30,7 @@ public interface IProductService {
 
     Map<Product, List<String>> getProductByGroup(String groupName, Integer start, Integer pageSize);
 
-    Product getProductByIdWithSupplierInfo(Product p, String ip, String address);
+    Map<Product, List<String>> getProductByIdWithSupplierInfo(Product p, String ip, String address);
 
     Map<Product, List<String>> getProductsLimit(ProductTypes type, Integer limit);
 

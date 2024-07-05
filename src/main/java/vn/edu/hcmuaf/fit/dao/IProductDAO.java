@@ -29,7 +29,7 @@ public interface IProductDAO extends GenericDAO<Product> {
 
     Map<Product, List<String>> getProductByGroup(String groupName, Integer start, Integer pageSize);
 
-    Product getProductByIdWithSupplierInfo(Integer productId);
+    Map<Product, List<String>> getProductByIdWithSupplierInfo(Integer productId);
 
     boolean updateProduct(Integer id, String productName, Integer categoryId, Double percent,
                           Integer price, Integer quantity, String purpose, String contraindications,

@@ -164,7 +164,7 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
      * Retrieves a product along with its supplier information by its ID.
      */
     @Override
-    public Product getProductByIdWithSupplierInfo(Integer productId) {
+    public Map<Product, List<String>> getProductByIdWithSupplierInfo(Integer productId) {
         try {
             String sql = "SELECT p.*, i.url AS image_url FROM (" +
                     "SELECT * FROM products WHERE id = ?" +
@@ -172,10 +172,10 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
             ProductImageMapper mapper = new ProductImageMapper(rs -> RSHandler.getString(rs, "image_url"));
             Map<Product, List<String>> map = queryForMap(sql, mapper, true, productId);
             if(map.size()==1) {
-                for(Product p : map.keySet()) {
-                    Supplier supplier = SupplierService.getInstance().getSupplierById(p.getSupplier().getId());
-                    p.setSupplier(supplier);
-                    return p;
+                for(Product product : map.keySet()) {
+                    Supplier supplier = SupplierService.getInstance().getSupplierById(product.getSupplier().getId());
+                    product.setSupplier(supplier);
+                    return map;
                 }
             }
             return null;
