@@ -63,6 +63,12 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
         return update(sql, email);
     }
 
+    @Override
+    public boolean updateAvatar(Integer id, String avatar) {
+        String sql = "UPDATE users SET avatar =? WHERE id =?";
+        return update(sql, avatar, id);
+    }
+
     /**
      * TESTED
      * Updates the user's information in the database.

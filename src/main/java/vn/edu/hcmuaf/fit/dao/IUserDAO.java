@@ -38,4 +38,6 @@ public interface IUserDAO extends GenericDAO<User> {
     boolean deleteUserById(Integer userId);
 
     boolean resetLoginTimes(String email);
+
+    boolean updateAvatar(Integer id, String avatar);
 }

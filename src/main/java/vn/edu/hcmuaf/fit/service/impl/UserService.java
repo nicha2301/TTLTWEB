@@ -437,4 +437,20 @@ public class UserService extends LogDAO<User> implements IUserService {
             return check;
         }
     }
+
+    @Override
+    public boolean updateAvatar(User user, String ip, String address) {
+        try {
+            user.setBeforeData("Old avatar of ID=" + user.getId() + " is " + user.getAvatar());
+            boolean success = UserDAO.getInstance().updateAvatar(user.getId(), user.getAvatar());
+            if(success) user.setAfterData("New avatar of ID=" + user.getId() + " is " + user.getAvatar());
+            else user.setAfterData("Update failed! New avatar of ID=" + user.getId() + " don't change!");
+            super.insert(user, LevelDAO.getInstance().getLevel(1).get(0), ip, address);
+            return success;
+        } catch (Exception e) {
+            user.setAfterData("Update failed! New user info of ID=" + user.getId() + " don't change!");
+            super.insert(user, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
+            return false;
+        }
+    }
 }
