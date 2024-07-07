@@ -84,7 +84,7 @@ public class OAuth2Callback {
             json = json.getAsJsonObject("data");
             String username = json.has("username") ? json.get("username").getAsString() : null;
             user.setUsername(username);
-            user.setEmail(username + "@users.noreply.twitter.com");
+            user.setEmail("");
             user.setFullName(json.has("name") ? json.get("name").getAsString() : null);
             user.setAvatar(json.has("profile_image_url") ? json.get("profile_image_url").getAsString() : null);
             user.setLoginBy(3);
@@ -95,7 +95,7 @@ public class OAuth2Callback {
             user.setAvatar(json.has("picture") ? json.get("picture").getAsString() : null);
             user.setLoginBy(1);
         } else if (apis.equals(FACEBOOK)) {
-            user.setUsername(json.has("last_name") ? json.get("last_name").getAsString() : null);
+            user.setUsername(json.has("last_name") ? json.get("last_name").getAsString() : "");
             user.setEmail(json.has("email") ? json.get("email").getAsString() : null);
             user.setFullName(json.has("name") ? json.get("name").getAsString() : null);
             if (json.has("picture") && json.getAsJsonObject("picture").has("data")) {
@@ -112,7 +112,7 @@ public class OAuth2Callback {
         } else if (apis.equals(GITHUB)) {
             String userName = json.has("login") ? json.get("login").getAsString() : null;
             user.setUsername(userName);
-            user.setEmail(userName + "@users.noreply.github.com");
+            user.setEmail("");
             user.setFullName(json.has("name") ? json.get("name").getAsString() : null);
             user.setAvatar(json.has("avatar_url") ? json.get("avatar_url").getAsString() : null);
             user.setLoginBy(5);

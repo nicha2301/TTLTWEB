@@ -38,7 +38,7 @@ public class UpdateInfoUser extends HttpServlet {
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("auth");
         if (user == null) {
-            resp.sendRedirect("/login"); // Redirect to login if not authenticated
+            resp.sendRedirect("signin");// Redirect to login if not authenticated
             return;
         }
 
@@ -58,7 +58,7 @@ public class UpdateInfoUser extends HttpServlet {
                 try (InputStream input = filePart.getInputStream()) {
                     Files.copy(input, uploadFile.toPath(), StandardCopyOption.REPLACE_EXISTING); // Sao chép file vào đường dẫn
                 }
-                user.setAvatar(fileName); // Cập nhật avatar cho user
+                user.setAvatar(req.getServletContext().getContextPath() + "/uploads/" + fileName); // Cập nhật avatar cho user
                 UserService.getInstance().updateAvatar(user, req.getRemoteAddr(), "/user/updateinfouser");
                 out.print("{\"status\":\"" + fileName + "\"}"); // Trả về tên file đã lưu
             } catch (Exception e) {
