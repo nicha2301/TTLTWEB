@@ -88,8 +88,8 @@ CREATE TABLE `discounts` (
                              `description` text DEFAULT NULL,
                              `sale_percent` double NOT NULL,
                              `quantity` int(11) DEFAULT NULL,
-                             `startDate` datetime DEFAULT NULL,
-                             `expirationDate` datetime DEFAULT NULL
+                             `startDate` date DEFAULT NULL,
+                             `expirationDate` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
