@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.function.DoubleToIntFunction;
 
 @WebFilter(
         filterName = "AdminAccessFilter",
@@ -35,14 +36,13 @@ public class AdminAccessFilter implements Filter {
         String requestURI = httpRequest.getRequestURI();
 
         // Kiểm tra nếu đường dẫn chứa "admin" và không chứa "signIn"
-        if (requestURI.contains("admin") && requestURI.indexOf("signIn") == -1) {
+        if (requestURI.contains("admin") && requestURI.indexOf("signin") == -1) {
             // Kiểm tra xem người dùng đã đăng nhập hay chưa
             HttpSession session = httpRequest.getSession();
             User user = (User) session.getAttribute("adminAuth");
-
             if (user == null) {
                 // Người dùng chưa đăng nhập, chuyển hướng đến trang đăng nhập admin
-                httpResponse.sendRedirect(httpRequest.getContextPath() + "/admin/signIn.jsp");
+                request.getRequestDispatcher("/WEB-INF/admin/login.jsp").forward(request, response);
                 return;
             }
         }

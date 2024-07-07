@@ -106,6 +106,12 @@ public class SignIn extends HttpServlet {
                         response.addCookie(uc);
                         response.addCookie(pc);
                         out.write("{ \"status\": \"success\"}");
+
+                    } else if (user.getRole().getId() == 2 && user.getLoginTimes() < 5) {
+                        UserService.getInstance().resetLoginTimes(user, "", "", ip, "/user/signin");
+                        HttpSession session = request.getSession();
+                        session.setAttribute("adminAuth", user);
+                        out.write("{ \"status\": \"success\", \"role\": \"admin\"}");
                     } else {
                         if(user.getLoginTimes() == 5) out.write("{\"error\":\"Login failed. We have locked the email " + email + "!\"}");
                         else if(user.getRole().getId() != 1) out.write("{\"error\":\"You do not have access rights\"}");
