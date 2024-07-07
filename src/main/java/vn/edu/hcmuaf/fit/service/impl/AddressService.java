@@ -6,10 +6,20 @@ import vn.edu.hcmuaf.fit.dao.impl.LogDAO;
 import vn.edu.hcmuaf.fit.model.Address;
 import vn.edu.hcmuaf.fit.model.Level;
 import vn.edu.hcmuaf.fit.service.IAddressService;
+import vn.edu.hcmuaf.fit.service.IOrderService;
 
 import java.util.List;
 
 public class AddressService extends LogDAO<Address> implements IAddressService {
+    private static IOrderService instance;
+
+    public static IOrderService getInstance() {
+        if (instance == null) {
+            instance = new OrderService();
+        }
+        return instance;
+    }
+
 
     @Override
     public List<Address> loadAddress() {
