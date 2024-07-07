@@ -42,7 +42,11 @@
                                     $('#success').html("");
                                     $('#errorCaptcha').html("");
                                 } else {
-                                    window.location.href = context + "/user/home";
+                                    if(result.role === "admin") {
+                                        window.location.href = context + "/admin/dashboard";
+                                    } else {
+                                        window.location.href = context + "/user/home";
+                                    }
                                 }
                             }
                         } catch (e) {

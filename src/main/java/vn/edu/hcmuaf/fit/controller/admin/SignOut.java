@@ -22,6 +22,6 @@ public class SignOut extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         session.removeAttribute("adminAuth");
-        response.sendRedirect("./dashboard.jsp");
+        response.sendRedirect("/user/signin");
     }
 }
