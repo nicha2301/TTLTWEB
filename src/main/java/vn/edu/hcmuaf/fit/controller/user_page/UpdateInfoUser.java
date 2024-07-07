@@ -78,11 +78,9 @@ public class UpdateInfoUser extends HttpServlet {
         } else if (action.equals("update")) {
             String fullName = req.getParameter("fullName");
             String birthday = !req.getParameter("birthday").isEmpty()?req.getParameter("birthday"):null;
-            System.out.println(birthday);
             String email = req.getParameter("email");
             String phone = req.getParameter("phone");
             String city = req.getParameter("tinh");
-            System.out.println(city);
             String district = req.getParameter("quan");
             String ward = req.getParameter("phuong");
             String detail_address = req.getParameter("address");
@@ -106,6 +104,7 @@ public class UpdateInfoUser extends HttpServlet {
             if ((detail_address == null) || (detail_address.equals(""))) {
                 ok = false;
             }
+            System.out.println(ok);
             if (!ok) {
                 out.write("{\"error\":\"Please fill in all information completely\"}");
             } else {

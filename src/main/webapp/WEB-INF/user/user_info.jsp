@@ -105,6 +105,8 @@
                                         <div class="row">
                                             <label class="col-md-3 control-label">Tỉnh/Thành phố<span>(*)</span></label>
                                             <div class="col-lg-6 col-md-9">
+                                                <input type="text" name="city" id="city" value="${sessionScope.auth.city}"
+                                                    placeholder="Thành phố" class="validate[required,custom[email]] form-control input-sm">
                                                 <select class="validate[required] form-control input-sm" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
                                                     <option value="0">--Chọn Tỉnh/Thành phố--</option>
                                                 </select>
@@ -115,6 +117,8 @@
                                         <div class="row">
                                             <label class="col-md-3 control-label">Quận/ Huyện: <span>(*)</span></label>
                                             <div class="col-lg-6 col-md-9">
+                                                <input type="text" id="district" name="district" value="${sessionScope.auth.district}"
+                                                    placeholder="Quận/ Huyện" class="validate[required,custom[email]] form-control input-sm">
                                                 <select class="validate[required] form-control input-sm" id="quan" name="quan" title="Chọn Quận Huyện">
                                                     <option value="0">--Chọn Quận/ Huyện--</option>
                                                 </select>
@@ -125,6 +129,8 @@
                                         <div class="row">
                                             <label class="col-md-3 control-label">Xã/ Phường/ Thị trấn: <span>(*)</span></label>
                                             <div class="col-lg-6 col-md-9">
+                                                <input type="text" id="ward" name="ward" value="${sessionScope.auth.ward}"
+                                                    placeholder="Xã/ Phường/ Thị trấn" class="validate[required,custom[email]] form-control input-sm">
                                                 <select class="validate[required] form-control input-sm" id="phuong" name="phuong" title="Chọn Phường Xã">
                                                     <option value="0">--Chọn Phường/ Xã/ Thị trấn--</option>
                                                 </select>
@@ -148,8 +154,9 @@
                                     <div class="form-group clearfix">
                                         <div class="row">
                                             <label class="col-md-3 control-label"></label>
+                                            <button id="btnHuy" class="btn-update" type="submit">CẬP NHẬT</button>
                                             <div class="col-lg-6 col-md-9">
-                                                <button id="btnUpdate" class="btn-update" type="submit">CẬP NHẬT</button>
+                                                <button id="btnUpdate" class="btn-update" type="submit">XÁC NHẬN</button>
                                             </div>
                                         </div>
                                     </div>
@@ -296,6 +303,50 @@
 <%--        header.classList.toggle('sticky', window.scrollY > 100)--%>
 <%--    });--%>
 <%--</script>--%>
+<script>
+    var hidden = true;
+    function toggleHidden(event) {
+        hidden = !hidden;
+        console.log("Hidden status:", hidden);
+        updateVisibility();
+    }
+    function handleCancel(event) {
+        event.preventDefault();  // Ngăn chặn hành vi mặc định, không gửi form
+        toggleHidden();          // Chạy hàm toggle để thay đổi trạng thái và cập nhật giao diện
+    }
+
+    function updateVisibility() {
+        var cityI = document.getElementById("city");
+        var districtI = document.getElementById("district");
+        var wardI = document.getElementById("ward");
+        var city = document.getElementById("tinh");
+        var district = document.getElementById("quan");
+        var ward = document.getElementById("phuong");
+        var update = document.getElementById("btnUpdate");
+        var huy = document.getElementById("btnHuy");
+        if (hidden) {
+            city.style.display = 'none';
+            district.style.display = 'none';
+            ward.style.display = 'none';
+            cityI.style.display = 'block';
+            districtI.style.display = 'block';
+            wardI.style.display = 'block';
+            update.style.display = 'none';
+        } else {
+            city.style.display = 'block';
+            district.style.display = 'block';
+            ward.style.display = 'block';
+            cityI.style.display = 'none';
+            districtI.style.display = 'none';
+            wardI.style.display = 'none';
+            update.style.display = 'block';
+            huy.style.background = 'silver';
+        }
+    }
+    // document.getElementById("btnUpdate").addEventListener("click", toggleHidden);
+    document.getElementById("btnHuy").addEventListener("click", handleCancel);
+    document.addEventListener("DOMContentLoaded", updateVisibility);
+</script>
 <script type="text/javascript">
     document.getElementById('file').onchange = function() {
         var fileInput = document.getElementById('file');
@@ -361,45 +412,48 @@
     var context = "${pageContext.request.contextPath}";
     $(document).ready(function() {
         $('#btnUpdate').click(function (event) {
-            event.preventDefault();
-            var fullName = $('#fullName').val();
-            var birthday = $('#birthday').val();
-            var phone = $('#mobile').val();
-            var email = $('#email').val();
-            var tinh = $('#tinh').val();
-            var quan = $('#quan').val();
-            var phuong = $('#phuong').val();
-            var address = $('#address').val();
-            var action = $('#action').val();
-            $.ajax({
-                type: 'POST',
-                data: {
-                    fullName: fullName,
-                    birthday: birthday,
-                    phone: phone,
-                    email: email,
-                    tinh: tinh,
-                    quan: quan,
-                    phuong: phuong,
-                    address: address,
-                    action: action
-                },
-                url: 'updateinfouser',
-                success: function (result) {
-                    try {
-                        if (result.status !== "success") {
-                            $('#errorUpdate').html(result.error);
-                        } else {
-                            window.location.href = context + "/user/updateinfouser";
+            if(!hidden) {
+                event.preventDefault();
+                var fullName = $('#fullName').val();
+                var birthday = $('#birthday').val();
+                var phone = $('#mobile').val();
+                var email = $('#email').val();
+                var tinh = $('#tinh').val();
+                var quan = $('#quan').val();
+                var phuong = $('#phuong').val();
+                var address = $('#address').val();
+                var action = $('#action').val();
+                $.ajax({
+                    type: 'POST',
+                    data: {
+                        fullName: fullName,
+                        birthday: birthday,
+                        phone: phone,
+                        email: email,
+                        tinh: tinh,
+                        quan: quan,
+                        phuong: phuong,
+                        address: address,
+                        action: action
+                    },
+                    url: 'updateinfouser',
+                    success: function (result) {
+                        console.log(hidden)
+                        try {
+                            if (result.status !== "success") {
+                                $('#errorUpdate').html(result.error);
+                            } else {
+                                window.location.href = context + "/user/updateinfouser";
+                            }
+                        } catch (e) {
+                            $('#errorUpdate').html("Error loading request, please try again!");
                         }
-                    } catch (e) {
-                        $('#errorUpdate').html("Error loading request, please try again!");
+                    },
+                    error: function() {
+                        $('#errorUpdate').html("Connection errors. Please check your network and try again!");
                     }
-                },
-                error: function() {
-                    $('#errorUpdate').html("Connection errors. Please check your network and try again!");
-                }
-            });
+                });
+            }
         });
     });
 </script>
