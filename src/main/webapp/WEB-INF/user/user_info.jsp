@@ -20,16 +20,6 @@
     <link rel="icon" href="https://tienthangvet.vn/wp-content/uploads/cropped-favicon-Tien-Thang-Vet-192x192.png"
           sizes="192x192"/>
     <title>Trang cá nhân</title>
-    <style>
-        .css_select {
-            display: inline-table;
-            width: 100%;
-            padding: 5px;
-            margin: 5px 2%;
-            border: solid 1px #686868;
-            border-radius: 5px;
-        }
-    </style>
 </head>
 <body>
 <div class="website-wrapper">
@@ -74,8 +64,7 @@
                                                 <input type="text" id="fullName" name="fullName"
                                                        value="${sessionScope.auth.fullName}"
                                                        placeholder="Họ tên"
-                                                       class="validate[required,minSize[4],maxSize[32]] form-control input-sm"
-                                                       required>
+                                                       class="validate[required,minSize[4],maxSize[32]] form-control input-sm">
                                             </div>
                                         </div>
                                     </div>
@@ -86,7 +75,7 @@
                                                 <input type="date" id="birthday" name="birthday"
                                                        value="${sessionScope.auth.dateOfBirth}"
                                                        placeholder="Ngày sinh"
-                                                       class="validate[required] form-control input-sm" required>
+                                                       class="validate[required] form-control input-sm">
                                             </div>
                                         </div>
                                     </div>
@@ -97,8 +86,7 @@
                                                 <input type="text" id="mobile" name="phone"
                                                        value="${sessionScope.auth.phone}"
                                                        placeholder="Điện thoại"
-                                                       class="validate[required,custom[phone]] form-control input-sm"
-                                                       required>
+                                                       class="validate[required,custom[phone]] form-control input-sm">
                                             </div>
                                         </div>
                                     </div>
@@ -106,11 +94,10 @@
                                         <div class="row">
                                             <label class="col-md-3 control-label">Email: <span>(*)</span></label>
                                             <div class="col-lg-6 col-md-9">
-                                                <input type="text" name="email"
+                                                <input type="text" name="email" id="email"
                                                        value="${sessionScope.auth.email}"
                                                        placeholder="Email"
-                                                       class="validate[required,custom[email]] form-control input-sm"
-                                                       required>
+                                                       class="validate[required,custom[email]] form-control input-sm">
                                             </div>
                                         </div>
                                     </div>
@@ -119,7 +106,7 @@
                                             <label class="col-md-3 control-label">Tỉnh/Thành phố<span>(*)</span></label>
                                             <div class="col-lg-6 col-md-9">
                                                 <select class="validate[required] form-control input-sm" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
-                                                    <option value="0">Tỉnh/ Thành phố</option>
+                                                    <option value="0">--Chọn Tỉnh/Thành phố--</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -129,7 +116,7 @@
                                             <label class="col-md-3 control-label">Quận/ Huyện: <span>(*)</span></label>
                                             <div class="col-lg-6 col-md-9">
                                                 <select class="validate[required] form-control input-sm" id="quan" name="quan" title="Chọn Quận Huyện">
-                                                    <option value="0">Quận/ Huyện</option>
+                                                    <option value="0">--Chọn Quận/ Huyện--</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -139,7 +126,7 @@
                                             <label class="col-md-3 control-label">Xã/ Phường/ Thị trấn: <span>(*)</span></label>
                                             <div class="col-lg-6 col-md-9">
                                                 <select class="validate[required] form-control input-sm" id="phuong" name="phuong" title="Chọn Phường Xã">
-                                                    <option value="0">Xã/ Phường/ Thị trấn</option>
+                                                    <option value="0">--Chọn Phường/ Xã/ Thị trấn--</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -156,11 +143,13 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <span style="color: red;" id="errorUpdate"></span>
+                                    <input type="hidden" id="action" name="action" value="update">
                                     <div class="form-group clearfix">
                                         <div class="row">
                                             <label class="col-md-3 control-label"></label>
                                             <div class="col-lg-6 col-md-9">
-                                                <button class="btn-update">CẬP NHẬT</button>
+                                                <button id="btnUpdate" class="btn-update" type="submit">CẬP NHẬT</button>
                                             </div>
                                         </div>
                                     </div>
@@ -189,8 +178,7 @@
                                             <label class="col-md-3 control-label"> Mật khẩu cũ: </label>
                                             <div class="col-lg-6 col-md-9">
                                                 <input type="password" name="pass"
-                                                       class="validate[required,minSize[4],maxSize[32]] form-control input-sm"
-                                                       required>
+                                                       class="validate[required,minSize[4],maxSize[32]] form-control input-sm">
                                             </div>
                                         </div>
                                     </div>
@@ -199,8 +187,7 @@
                                             <label class="col-md-3 control-label"> Mật khẩu mới: </label>
                                             <div class="col-lg-6 col-md-9">
                                                 <input type="password" name="newpass"
-                                                       class="validate[required,minSize[4],maxSize[32]] form-control input-sm"
-                                                       required>
+                                                       class="validate[required,minSize[4],maxSize[32]] form-control input-sm">
                                             </div>
                                         </div>
                                     </div>
@@ -209,8 +196,7 @@
                                             <label class="col-md-3 control-label"> Xác nhận mật khẩu: </label>
                                             <div class="col-lg-6 col-md-9">
                                                 <input type="password" id="pass" name="renewpass"
-                                                       class="validate[required,minSize[4],maxSize[32]] form-control input-sm"
-                                                       required>
+                                                       class="validate[required,minSize[4],maxSize[32]] form-control input-sm">
                                             </div>
                                         </div>
                                     </div>
@@ -304,60 +290,12 @@
 <script src="/assets/user/js/thuvien/main.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://esgoo.net/scripts/jquery.js"></script>
-<script>
-    window.addEventListener('scroll', () => {
-        var header = document.querySelector('.container-2')
-        header.classList.toggle('sticky', window.scrollY > 100)
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        $("#formAcount").validate({
-            rules: {
-                fullname: {
-                    required: true
-                },
-                email: {
-                    required: true,
-                    email: true
-                },
-                cityID: {
-                    required: true
-                },
-                district: {
-                    required: true
-                },
-                ward: {
-                    required: true
-                },
-                address: {
-                    required: true
-                }
-            },
-            messages: {
-                fullname: {
-                    required: "Xin vui lòng nhập tên"
-                },
-                email: {
-                    required: "Xin vui lòng nhập email",
-                    email: "Email không hợp lệ, xin vui lòng nhập lại"
-                },
-                cityID: {
-                    required: "Xin chọn tỉnh/thành phố"
-                },
-                district: {
-                    required: "Xin vui lòng nhập quận/huyện"
-                },
-                ward: {
-                    required: "Xin vui lòng nhập xã/ phường/ thị trấn"
-                },
-                address: {
-                    required: "Xin vui lòng nhập địa chỉ"
-                }
-            }
-        });
-    });
-</script>
+<%--<script>--%>
+<%--    window.addEventListener('scroll', () => {--%>
+<%--        var header = document.querySelector('.container-2')--%>
+<%--        header.classList.toggle('sticky', window.scrollY > 100)--%>
+<%--    });--%>
+<%--</script>--%>
 <script type="text/javascript">
     document.getElementById('file').onchange = function() {
         var fileInput = document.getElementById('file');
@@ -372,11 +310,9 @@
                 processData: false,  // Báo cho jQuery không xử lý dữ liệu
                 contentType: false,  // Báo cho jQuery không thiết lập contentType
                 success: function (result) {
-                    console.log(result);
                     $('#avatar').attr("src", "/uploads/" + result.status);
                 },
-                error: function(xhr, status, error) {
-                    console.log("Error: " + error);
+                error: function() {
                 }
             });
         }
@@ -384,43 +320,88 @@
 </script>
 <script>
     $(document).ready(function () {
-        //Lấy tỉnh thành
+        // Lấy tỉnh thành
         $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
             if (data_tinh.error == 0) {
                 $.each(data_tinh.data, function (key_tinh, val_tinh) {
                     $("#tinh").append('<option value="' + val_tinh.id + '">' + val_tinh.full_name + '</option>');
                 });
-                $("#tinh").change(function (e) {
-                    var idtinh = $(this).val();
-                    //Lấy quận huyện
-                    $.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
-                        if (data_quan.error == 0) {
-                            $("#quan").html('<option value="0">Quận Huyện</option>');
-                            $("#phuong").html('<option value="0">Phường Xã</option>');
-                            $.each(data_quan.data, function (key_quan, val_quan) {
-                                $("#quan").append('<option value="' + val_quan.id + '">' + val_quan.full_name + '</option>');
-                            });
-                            //Lấy phường xã
-                            $("#quan").change(function (e) {
-                                var idquan = $(this).val();
-                                $.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
-                                    if (data_phuong.error == 0) {
-                                        $("#phuong").html('<option value="0">Phường Xã</option>');
-                                        $.each(data_phuong.data, function (key_phuong, val_phuong) {
-                                            $("#phuong").append('<option value="' + val_phuong.id + '">' + val_phuong.full_name + '</option>');
-                                        });
-                                    }
-                                });
-                            });
-                        }
-                    });
-                });
             }
+        });
+
+        $("#tinh").change(function (e) {
+            var idtinh = $(this).val();
+            // Lấy quận huyện
+            $.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
+                if (data_quan.error == 0) {
+                    $("#quan").empty().append('<option value="0">--Chọn Quận Huyện--</option>');
+                    $("#phuong").empty().append('<option value="0">--Chọn Phường/ Xã/ Thị trấn--</option>');
+                    $.each(data_quan.data, function (key_quan, val_quan) {
+                        $("#quan").append('<option value="' + val_quan.id + '">' + val_quan.full_name + '</option>');
+                    });
+                }
+            });
+        });
+
+        $("#quan").change(function (e) {
+            var idquan = $(this).val();
+            // Lấy phường xã
+            $.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
+                if (data_phuong.error == 0) {
+                    $("#phuong").empty().append('<option value="0">--Chọn Phường/ Xã/ Thị trấn--</option>');
+                    $.each(data_phuong.data, function (key_phuong, val_phuong) {
+                        $("#phuong").append('<option value="' + val_phuong.id + '">' + val_phuong.full_name + '</option>');
+                    });
+                }
+            });
         });
     });
 </script>
 <script>
-    // ajax
+    var context = "${pageContext.request.contextPath}";
+    $(document).ready(function() {
+        $('#btnUpdate').click(function (event) {
+            event.preventDefault();
+            var fullName = $('#fullName').val();
+            var birthday = $('#birthday').val();
+            var phone = $('#mobile').val();
+            var email = $('#email').val();
+            var tinh = $('#tinh').val();
+            var quan = $('#quan').val();
+            var phuong = $('#phuong').val();
+            var address = $('#address').val();
+            var action = $('#action').val();
+            $.ajax({
+                type: 'POST',
+                data: {
+                    fullName: fullName,
+                    birthday: birthday,
+                    phone: phone,
+                    email: email,
+                    tinh: tinh,
+                    quan: quan,
+                    phuong: phuong,
+                    address: address,
+                    action: action
+                },
+                url: 'updateinfouser',
+                success: function (result) {
+                    try {
+                        if (result.status !== "success") {
+                            $('#errorUpdate').html(result.error);
+                        } else {
+                            window.location.href = context + "/user/updateinfouser";
+                        }
+                    } catch (e) {
+                        $('#errorUpdate').html("Error loading request, please try again!");
+                    }
+                },
+                error: function() {
+                    $('#errorUpdate').html("Connection errors. Please check your network and try again!");
+                }
+            });
+        });
+    });
 </script>
 </body>
 </html>

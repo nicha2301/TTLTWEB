@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import vn.edu.hcmuaf.fit.model.User;
+import vn.edu.hcmuaf.fit.model.Utils;
 import vn.edu.hcmuaf.fit.service.impl.UserService;
 
 import java.io.File;
@@ -15,6 +16,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 
 @WebServlet("/user/updateinfouser")
 @MultipartConfig
@@ -26,6 +28,13 @@ public class UpdateInfoUser extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
+
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("auth");
+        if (user == null) {
+            request.getRequestDispatcher("/WEB-INF/user/signIn.jsp").forward(request, response);
+            return;
+        }
         request.getRequestDispatcher("/WEB-INF/user/user_info.jsp").forward(request, response);
     }
 
@@ -37,10 +46,9 @@ public class UpdateInfoUser extends HttpServlet {
 
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("auth");
-        if (user == null) {
-            resp.sendRedirect("signin");// Redirect to login if not authenticated
-            return;
-        }
+
+        String ip = req.getHeader("X-FORWARDED-FOR");
+        if (ip == null) ip = req.getRemoteAddr();
 
         String action = req.getParameter("action");
         if ("set".equals(action)) {
@@ -67,70 +75,55 @@ public class UpdateInfoUser extends HttpServlet {
             } finally {
                 out.close();
             }
+        } else if (action.equals("update")) {
+            String fullName = req.getParameter("fullName");
+            String birthday = !req.getParameter("birthday").isEmpty()?req.getParameter("birthday"):null;
+            System.out.println(birthday);
+            String email = req.getParameter("email");
+            String phone = req.getParameter("phone");
+            String city = req.getParameter("tinh");
+            System.out.println(city);
+            String district = req.getParameter("quan");
+            String ward = req.getParameter("phuong");
+            String detail_address = req.getParameter("address");
+
+            boolean ok = true;
+            if ((phone == null) || (phone.equals(""))) {
+                ok = false;
+            }
+            if ((email == null) || (email.equals(""))) {
+                ok = false;
+            }
+            if ((city == null) || (city.equals("")) || (city.equals("0"))) {
+                ok = false;
+            }
+            if ((district == null) || (district.equals("")) || (district.equals("0"))) {
+                ok = false;
+            }
+            if ((ward == null) || (ward.equals("")) || (ward.equals("0"))) {
+                ok = false;
+            }
+            if ((detail_address == null) || (detail_address.equals(""))) {
+                ok = false;
+            }
+            if (!ok) {
+                out.write("{\"error\":\"Please fill in all information completely\"}");
+            } else {
+                if (!Utils.isValidEmail(email)) {
+                    out.write("{\"error\":\"Email is invalid!\"}");
+                } else {
+                    req.setAttribute("order", new ArrayList<>());
+                    if (UserService.getInstance().updateUserInfo(user, fullName, birthday, city, district, ward, detail_address, phone, ip, "/user/updateinfouser")) {
+                        User u = UserService.getInstance().loadUsersWithId(user, ip, "/user/updateinfouser");
+                        if (u != null) {
+                            session.setAttribute("auth", u);
+                            out.write("{ \"status\": \"success\"}");
+                        } else out.write("{ \"error\" :\"update fail!\"}");
+                    } else out.write("{ \"error\" :\"update fail!\"}");
+                }
+            }
+            out.flush();
+            out.close();
         }
     }
-
-//
-//    @Override
-//    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        HttpSession session = req.getSession();
-//        User user = (User) session.getAttribute("auth");
-//        if (user == null) {
-//            req.getRequestDispatcher("/WEB-INF/user/signIn.jsp").forward(req, resp);
-//            return;
-//        }
-//        String ip = req.getHeader("X-FORWARDED-FOR");
-//        if (ip == null) ip = req.getRemoteAddr();
-//        PrintWriter out = resp.getWriter();
-//
-//        String action = req.getParameter("action");
-//        if (action != null && action.equals("set")) {
-//            try {
-//                resp.setHeader("Content-type", "text/html;charset=UTF-8");
-//                Part filePart = req.getPart("filename");
-//                if (filePart == null){
-//                    out.print("please choose a file");
-//                    return;
-//                }
-//                String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-//                System.out.println("jjjjjjjjjjjjjjjj "+ fileName);
-//                ServletContext servletContext = this.getServletConfig().getServletContext();
-//                String storePath = servletContext.getRealPath("/uploads");
-//                System.out.println(storePath);
-//                File uploadFile = new File(storePath + "/" + fileName);
-//                File file = new File(uploadFile, fileName);
-//                try (InputStream input = filePart.getInputStream()) {
-//                    Files.copy(input, file.toPath());
-//                }
-//                User u = new User();
-//                u.setId(user.getId());
-//                u.setAvatar(fileName);
-//                if(UserService.getInstance().updateAvatar(user, ip, "/user/updateinfouser")) out.write("{\"status\":\""+fileName+"\"}");
-//                out.close();
-//                return;
-//            } catch (IOException | ServletException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//        String fullName = req.getParameter("fullName");
-//        String birthday = req.getParameter("birthday");
-//        String phone = req.getParameter("phone");
-//        String city = req.getParameter("city");
-//        String district = req.getParameter("district");
-//        String ward = req.getParameter("ward");
-//        String detail_address = req.getParameter("address");
-//
-////        List<Order> orders = OrderDAO.loadOrderByUserId(user.getId());
-////        req.setAttribute("order", orders);
-//        List<Order> orders = new ArrayList<>();
-//        req.setAttribute("order", orders);
-//
-//        if (UserService.getInstance().updateUserInfo(user, fullName, birthday, city, district, ward, detail_address, phone, ip, "/user/updateinfouser")) {
-//            user = UserService.getInstance().loadUsersWithId(user, ip, "/user/updateinfouser");
-//            if (user != null) {
-//                session.setAttribute("auth", user);
-//                req.getRequestDispatcher("/WEB-INF/user/user_info.jsp").forward(req, resp);
-//            } else req.getRequestDispatcher("/WEB-INF/user/signIn.jsp").forward(req, resp);
-//        }
-//    }
 }
