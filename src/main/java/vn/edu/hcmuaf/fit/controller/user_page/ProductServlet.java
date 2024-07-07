@@ -17,14 +17,10 @@ import java.util.Map;
 @WebServlet(urlPatterns = {"/user/products"})
 public class ProductServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private static final int pageSize = 12;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
-        response.setCharacterEncoding("UTF-8");
-
-        int pageSize = 12;
         int pageNumber = request.getParameter("page")!= null?Integer.parseInt(request.getParameter("page")):1;
         int start = (pageNumber - 1) * pageSize;
 
@@ -97,7 +93,6 @@ public class ProductServlet extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        int pageSize = 12;
         int pageNumber = request.getParameter("page")!= null?Integer.parseInt(request.getParameter("page")):1;
         int start = (pageNumber - 1) * pageSize;
 

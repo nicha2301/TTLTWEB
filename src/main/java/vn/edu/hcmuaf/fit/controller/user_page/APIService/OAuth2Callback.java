@@ -79,7 +79,6 @@ public class OAuth2Callback {
             response = Request.Get(link + accessToken).execute().returnContent().asString();
         }
         JsonObject json = JsonParser.parseString(response).getAsJsonObject();
-        System.out.println(json.toString());
         User user = new User();
         if (apis.equals(TWITTER)) {
             json = json.getAsJsonObject("data");
