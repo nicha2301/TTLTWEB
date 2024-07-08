@@ -21,6 +21,22 @@
           sizes="192x192"/>
     <title>Trang cá nhân</title>
 </head>
+<style>
+    .row .power-container {
+        background-color: gainsboro;
+        width: 80%;
+        height: 5px;
+        border-radius: 3px;
+    }
+
+    .power-container #power-point {
+        background-color: #D73F40;
+        width: 1%;
+        height: 100%;
+        border-radius: 3px;
+        transition: 0.2s;
+    }
+</style>
 <body>
 <div class="website-wrapper">
     <%@include file="/WEB-INF/user/include/header.jsp" %>
@@ -173,19 +189,18 @@
                                     <h1>THAY ĐỔI MẬT KHẨU</h1>
                                     <div class="content">Bạn nên cập nhật mật khẩu thường xuyên vì lí do bảo mật</div>
                                 </header>
-                                <form id="formAcount" class="formAcount validate clearfix" method="post"
-                                      action="resetpassword">
+                                <form id="formAcount" class="formAcount validate clearfix">
                                     <% String error = (String) request.getAttribute("wrongInfor");%>
                                     <% if (error != null) {%>
                                     <p style="color: <%=error.equals("Mật khẩu đã được thay đổi") ? "#7cb342" : "red"%>; margin-bottom: 10px"><%=error%>
                                     </p>
                                     <% } %>
+                                    <span style="color: red;" id="errorReset"></span>
                                     <div class="form-group clearfix">
                                         <div class="row">
                                             <label class="col-md-3 control-label"> Mật khẩu cũ: </label>
                                             <div class="col-lg-6 col-md-9">
-                                                <input type="password" name="pass"
-                                                       class="validate[required,minSize[4],maxSize[32]] form-control input-sm">
+                                                <input type="password" name="pass" class="validate[required,minSize[4],maxSize[32]] form-control input-sm">
                                             </div>
                                         </div>
                                     </div>
@@ -193,8 +208,13 @@
                                         <div class="row">
                                             <label class="col-md-3 control-label"> Mật khẩu mới: </label>
                                             <div class="col-lg-6 col-md-9">
-                                                <input type="password" name="newpass"
-                                                       class="validate[required,minSize[4],maxSize[32]] form-control input-sm">
+                                                <input type="password" id="password" name="newpass" class="validate[required,minSize[4],maxSize[32]] form-control input-sm"
+                                                oninput="getPower(this.value)">
+                                                <label for="password">Power password</label>
+                                                <div class="power-container">
+                                                    <div id="power-point"></div>
+                                                </div>
+                                                <span id="color-status"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -202,8 +222,7 @@
                                         <div class="row">
                                             <label class="col-md-3 control-label"> Xác nhận mật khẩu: </label>
                                             <div class="col-lg-6 col-md-9">
-                                                <input type="password" id="pass" name="renewpass"
-                                                       class="validate[required,minSize[4],maxSize[32]] form-control input-sm">
+                                                <input type="password" id="pass" name="renewpass" class="validate[required,minSize[4],maxSize[32]] form-control input-sm">
                                             </div>
                                         </div>
                                     </div>
@@ -375,33 +394,35 @@
         $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
             if (data_tinh.error == 0) {
                 $.each(data_tinh.data, function (key_tinh, val_tinh) {
-                    $("#tinh").append('<option value="' + val_tinh.id + '">' + val_tinh.full_name + '</option>');
+                    $("#tinh").append('<option value="' + val_tinh.id + '" data-full-name="' + val_tinh.full_name + '">' + val_tinh.full_name + '</option>');
                 });
             }
         });
 
         $("#tinh").change(function (e) {
-            var idtinh = $(this).val();
+            var idtinh = $(this).val(); // lấy ID của tỉnh
+            var fullNameTinh = $("#tinh option:selected").data('full-name'); // lấy full name của tỉnh đã chọn
             // Lấy quận huyện
             $.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
                 if (data_quan.error == 0) {
                     $("#quan").empty().append('<option value="0">--Chọn Quận Huyện--</option>');
                     $("#phuong").empty().append('<option value="0">--Chọn Phường/ Xã/ Thị trấn--</option>');
                     $.each(data_quan.data, function (key_quan, val_quan) {
-                        $("#quan").append('<option value="' + val_quan.id + '">' + val_quan.full_name + '</option>');
+                        $("#quan").append('<option value="' + val_quan.id + '" data-full-name="' + val_quan.full_name + '">' + val_quan.full_name + '</option>');
                     });
                 }
             });
         });
 
         $("#quan").change(function (e) {
-            var idquan = $(this).val();
+            var idquan = $(this).val(); // lấy ID của quận/huyện
+            var fullNameQuan = $("#quan option:selected").data('full-name'); // lấy full name của quận/huyện đã chọn
             // Lấy phường xã
             $.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
                 if (data_phuong.error == 0) {
                     $("#phuong").empty().append('<option value="0">--Chọn Phường/ Xã/ Thị trấn--</option>');
                     $.each(data_phuong.data, function (key_phuong, val_phuong) {
-                        $("#phuong").append('<option value="' + val_phuong.id + '">' + val_phuong.full_name + '</option>');
+                        $("#phuong").append('<option value="' + val_phuong.id + '" data-full-name="' + val_phuong.full_name + '">' + val_phuong.full_name + '</option>');
                     });
                 }
             });
@@ -418,9 +439,9 @@
                 var birthday = $('#birthday').val();
                 var phone = $('#mobile').val();
                 var email = $('#email').val();
-                var tinh = $('#tinh').val();
-                var quan = $('#quan').val();
-                var phuong = $('#phuong').val();
+                var fullNameTinh = $("#tinh option:selected").data('full-name');
+                var fullNameQuan = $("#quan option:selected").data('full-name');
+                var fullNamePhuong = $("#phuong option:selected").data('full-name');
                 var address = $('#address').val();
                 var action = $('#action').val();
                 $.ajax({
@@ -430,9 +451,9 @@
                         birthday: birthday,
                         phone: phone,
                         email: email,
-                        tinh: tinh,
-                        quan: quan,
-                        phuong: phuong,
+                        tinh: fullNameTinh,
+                        quan: fullNameQuan,
+                        phuong: fullNamePhuong,
                         address: address,
                         action: action
                     },
@@ -456,6 +477,27 @@
             }
         });
     });
+</script>
+<script>
+    function getPower(password) {
+        let point = 0;
+        let colorPower = ['#D73F40', '#DC6551', '#F2B84F', '#BDE952', '#30CEC7'];
+        let stringColor = ['', 'weak', 'medium', 'strong', 'very strong'];
+        let power = document.getElementById('power-point');
+        let widthPower = ['1%', '25%', '50%', '75%', '100%'];
+        if (password.length >= 8) {
+            let arrayTest = [/[0-9]/, /[a-z]/, /[A-Z]/, /[^0-9a-zA-Z]/];
+            arrayTest.forEach(item => {
+                if(item.test(password)) {
+                    point += 1;
+                    console.log(point)
+                }
+            });
+        }
+        power.style.width = widthPower[point];
+        power.style.backgroundColor = colorPower[point];
+        document.getElementById('color-status').innerHTML = stringColor[point];
+    }
 </script>
 </body>
 </html>
