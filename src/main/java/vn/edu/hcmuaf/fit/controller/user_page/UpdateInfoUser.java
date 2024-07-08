@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
+import org.mindrot.jbcrypt.BCrypt;
 import vn.edu.hcmuaf.fit.model.User;
 import vn.edu.hcmuaf.fit.model.Utils;
 import vn.edu.hcmuaf.fit.service.impl.UserService;
@@ -113,6 +114,42 @@ public class UpdateInfoUser extends HttpServlet {
                 } else {
                     req.setAttribute("order", new ArrayList<>());
                     if (UserService.getInstance().updateUserInfo(user, fullName, birthday, city, district, ward, detail_address, phone, ip, "/user/updateinfouser")) {
+                        User u = UserService.getInstance().loadUsersWithId(user, ip, "/user/updateinfouser");
+                        if (u != null) {
+                            session.setAttribute("auth", u);
+                            out.write("{ \"status\": \"success\"}");
+                        } else out.write("{ \"error\" :\"update fail!\"}");
+                    } else out.write("{ \"error\" :\"update fail!\"}");
+                }
+            }
+            out.flush();
+            out.close();
+        } else if (action.equals("reset")) {
+            String oldPassword = req.getParameter("oldPass");
+            String newPassword = req.getParameter("password");
+            String rePassword = req.getParameter("repass");
+
+            boolean ok = true;
+            if ((oldPassword == null) || (oldPassword.equals(""))) {
+                ok = false;
+            }
+            if ((newPassword == null) || (newPassword.equals(""))) {
+                ok = false;
+            }
+            if ((rePassword == null) || (rePassword.equals(""))) {
+                ok = false;
+            }
+            if (!ok) {
+                out.write("{\"error\":\"Please fill in all information completely\"}");
+            } else {
+                if (!newPassword.equals(rePassword)) {
+                    out.write("{\"error\":\"Password doesn't match with re password!\"}");
+                } else if (newPassword.equals(oldPassword)) {
+                    out.write("{\"error\":\"Old password and new password are the same!\"}");
+                } else if (!BCrypt.checkpw(oldPassword, user.getPassword())) {
+                    out.write("{\"error\":\"Old password is invalid!\"}");
+                } else {
+                    if (UserService.getInstance().updatePassword(user, newPassword, ip, "/user/updateinfouser")) {
                         User u = UserService.getInstance().loadUsersWithId(user, ip, "/user/updateinfouser");
                         if (u != null) {
                             session.setAttribute("auth", u);

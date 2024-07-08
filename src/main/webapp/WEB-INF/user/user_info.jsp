@@ -190,17 +190,12 @@
                                     <div class="content">Bạn nên cập nhật mật khẩu thường xuyên vì lí do bảo mật</div>
                                 </header>
                                 <form id="formAcount" class="formAcount validate clearfix">
-                                    <% String error = (String) request.getAttribute("wrongInfor");%>
-                                    <% if (error != null) {%>
-                                    <p style="color: <%=error.equals("Mật khẩu đã được thay đổi") ? "#7cb342" : "red"%>; margin-bottom: 10px"><%=error%>
-                                    </p>
-                                    <% } %>
                                     <span style="color: red;" id="errorReset"></span>
                                     <div class="form-group clearfix">
                                         <div class="row">
                                             <label class="col-md-3 control-label"> Mật khẩu cũ: </label>
                                             <div class="col-lg-6 col-md-9">
-                                                <input type="password" name="pass" class="validate[required,minSize[4],maxSize[32]] form-control input-sm">
+                                                <input type="password" id="old-pass" name="pass" class="validate[required,minSize[4],maxSize[32]] form-control input-sm">
                                             </div>
                                         </div>
                                     </div>
@@ -226,11 +221,12 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <input type="hidden" id="act-reset" name="action" value="reset">
                                     <div class="form-group clearfix">
                                         <div class="row">
                                             <label class="col-md-3 control-label"></label>
                                             <div class="col-lg-6 col-md-9">
-                                                <button class="btn-update">LƯU</button>
+                                                <button id="btnReset" class="btn-update" type="submit">LƯU</button>
                                             </div>
                                         </div>
                                     </div>
@@ -326,7 +322,6 @@
     var hidden = true;
     function toggleHidden(event) {
         hidden = !hidden;
-        console.log("Hidden status:", hidden);
         updateVisibility();
     }
     function handleCancel(event) {
@@ -459,7 +454,6 @@
                     },
                     url: 'updateinfouser',
                     success: function (result) {
-                        console.log(hidden)
                         try {
                             if (result.status !== "success") {
                                 $('#errorUpdate').html(result.error);
@@ -490,7 +484,6 @@
             arrayTest.forEach(item => {
                 if(item.test(password)) {
                     point += 1;
-                    console.log(point)
                 }
             });
         }
@@ -498,6 +491,46 @@
         power.style.backgroundColor = colorPower[point];
         document.getElementById('color-status').innerHTML = stringColor[point];
     }
+</script>
+<script>
+    var context = "${pageContext.request.contextPath}";
+    $(document).ready(function() {
+        $('#btnReset').click(function (event) {
+            event.preventDefault();
+            var oldPass = $('#old-pass').val();
+            console.log(oldPass);
+            var password = $('#password').val();
+            console.log(password)
+            var repass = $('#pass').val();
+            console.log(repass)
+            var action = $('#act-reset').val();
+            console.log(action)
+            $.ajax({
+                type: 'POST',
+                data: {
+                    oldPass: oldPass,
+                    password: password,
+                    repass: repass,
+                    action: action
+                },
+                url: 'updateinfouser',
+                success: function (result) {
+                    try {
+                        if (result.status !== "success") {
+                            $('#errorReset').html(result.error);
+                        } else {
+                            window.location.href = context + "/user/updateinfouser";
+                        }
+                    } catch (e) {
+                        $('#errorReset').html("Error loading request, please try again!");
+                    }
+                },
+                error: function() {
+                    $('#errorReset').html("Connection errors. Please check your network and try again!");
+                }
+            });
+        });
+    });
 </script>
 </body>
 </html>
