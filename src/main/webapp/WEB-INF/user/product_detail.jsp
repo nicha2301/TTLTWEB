@@ -1,14 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: DINHTUNG
-  Date: 01/12/2023
-  Time: 3:57 CH
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@include file="/WEB-INF/common/taglib.jsp" %>
-<%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
-
+<%@ include file="/WEB-INF/common/taglib.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,11 +13,9 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <title>Chi tiết sản phẩm</title>
 </head>
-
 <body>
 <div class="website-wrapper">
     <%@include file="/WEB-INF/user/include/header.jsp" %>
-
     <div class="body">
         <div class="wrapper-content">
             <div class="content">

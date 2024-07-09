@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/common/taglib.jsp" %>
 <html lang="en">
@@ -6,7 +5,6 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="/assets/user/css/contact/contact.css">
     <link rel="stylesheet" href="/assets/user/css/HomePage/styles.css">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
           integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -15,7 +13,6 @@
     <link rel="stylesheet" href="/assets/user/css/header&footer.css" />
     <title>Liên hệ</title>
 </head>
-
 <body>
 <div class="website-wrapper">
     <%@include file="/WEB-INF/user/include/header.jsp" %>
@@ -23,9 +20,8 @@
     <div class="body">
         <div class="col-lg-12">
             <div class="map">
-                <iframe
-                        src="${applicationScope.address.get(0).map}"
-                        height="500" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+                <iframe src="${applicationScope.address.get(0).map}"
+                    height="500" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
             </div>
             <!-- Map End -->
             <!-- From Begin-->
@@ -36,10 +32,12 @@
                             <div class="elementor-widget-container">
                                 <h2 class="elementor-heading-titler">ĐÓNG GÓP Ý KIẾN</h2>
                             </div>
+                            <span id="feedbackMessage" class="feedback-message" style="color: Green;">${sessionScope.ok}</span>
+                            <span id="errorMessage" class="error-message"  style="color: red;"></span>
                         </div>
                         <div class="elementor-element elementor">
                             <div class="elementor-widget-container">
-                                 <form class="elementor-form" method="post" action="${pageContext.request.contextPath}/user/feedback">
+                                 <form class="elementor-form">
                                     <div class="elementor-field-type-text">
                                         <label for="form-name" class="elementor-label">
                                             Họ tên </label>
@@ -51,9 +49,6 @@
                                             Email </label>
                                         <input size="1" type="email" name="email" id="form-email" class="elementor-field"
                                                placeholder="Email" required="required" aria-required="true">
-                                        <c:if test="${not empty emailError}">
-                                            <div id="emailError" class="error-message" style="color: red;">${emailError}</div>
-                                        </c:if>
                                     </div>
                                      <div class="elementor-field-type-textarea">
                                         <label for="form-message" class="elementor-label">
@@ -61,26 +56,16 @@
                                         <textarea class="elementor-field-textual" name="form_fields[message]"
                                                   id="form-message" rows="4" placeholder="Nội dung đóng góp" required="required"
                                                   aria-required="true"></textarea>
-                                         <c:if test="${not empty contentError}">
-                                             <div id="contentError" class="error-message" style="color: red;">${contentError}</div>
-                                         </c:if>
                                     </div>
                                     <div class="elementor-field-group">
-                                        <button type="submit" class="elementor-button" onclick="showErrorMessage()">
+                                        <button type="submit" id="btnSend" class="elementor-button">
                                         <span>
-                                            <span class="elementor-button-icon">
-                                            </span>
+                                            <span class="elementor-button-icon"></span>
                                             <span class="elementor-button-text">Gửi</span>
                                         </span>
                                         </button>
                                     </div>
                                 </form>
-                                <c:if test="${not empty feedbackMessage}">
-                                    <div id="feedbackMessage" class="feedback-message" style="color: Green;">${feedbackMessage}</div>
-                                </c:if>
-                                <c:if test="${not empty errorMessage}">
-                                    <div id="errorMessage" class="error-message"  style="color: red;">${errorMessage}</div>
-                                </c:if>
                             </div>
                         </div>
                     </div>
@@ -107,13 +92,9 @@
                                                         <div class="info-box-content">
                                                             <div class="info-box-inner"
                                                                  data-elementor-setting-key="content">
-                                                                <p><span style="color: #333333;"><strong>Địa
-                                                                        chỉ:</strong></span> ${applicationScope.address.get(0).address}</p>
-                                                                <p><span style="color: #333333;"><strong>Điện
-                                                                        thoại:</strong></span> 0${applicationScope.address.get(0).phone}</p>
-                                                                <p><span
-                                                                        style="color: #333333;"><strong>Email:</strong></span>
-                                                                    ${applicationScope.address.get(0).email}</p>
+                                                                <p><span style="color: #333333;"><strong>Địa chỉ:</strong></span> ${applicationScope.address.get(0).address}</p>
+                                                                <p><span style="color: #333333;"><strong>Điện thoại:</strong></span> ${applicationScope.address.get(0).phone}</p>
+                                                                <p><span style="color: #333333;"><strong>Email:</strong></span> ${applicationScope.address.get(0).email}</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -130,10 +111,9 @@
                                                     <div class="wd-info-box ">
                                                         <div class="info-box-content">
                                                             <div class="info-box-inner ">
-                                                                <p><b>THỜI GIAN LÀM VIỆC</b></p>
-                                                                <p>Thứ 2 - Thứ 6: 08h00 - 17h00</p>
-                                                                <p>Thứ bảy: Nghỉ</p>
-                                                                <p>Chủ nhật: Nghỉ</p>
+                                                                <p><span style="color: #333333;"><strong>Hotline:</strong></span> ${applicationScope.address.get(0).hotline}</p>
+                                                                <p><span style="color: #333333;"><strong>Thời gian hoạt động:</strong></span>
+                                                                <p>${applicationScope.address.get(0).timeOpen}</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -163,55 +143,81 @@
 
     </div>
     <%@include file="/WEB-INF/user/include/footer.jsp" %>
+<%--    <script>--%>
+<%--        // Ẩn thông báo lỗi khi trang được tải--%>
+<%--        window.onload = function() {--%>
+<%--            var errorMessage = document.getElementById('errorMessage');--%>
+<%--            errorMessage.innerHTML = "${emailError}";--%>
+<%--            errorMessage.style.display = '${not empty emailError ? "block" : "none"}';--%>
 
+<%--            var contentError = document.getElementById('contentError');--%>
+<%--            contentError.innerHTML = "${contentError}";--%>
+<%--            contentError.style.display = '${not empty contentError ? "block" : "none"}';--%>
+<%--        }--%>
+<%--        // Hàm ẩn thông báo lỗi--%>
+<%--        function hideErrorMessage() {--%>
+<%--            var errorMessage = document.getElementById('errorMessage');--%>
+<%--            errorMessage.style.display = 'none';--%>
 
-    <script>
-        // Ẩn thông báo lỗi khi trang được tải
-        window.onload = function() {
-            var errorMessage = document.getElementById('errorMessage');
-            errorMessage.innerHTML = "${emailError}";
-            errorMessage.style.display = '${not empty emailError ? "block" : "none"}';
-
-            var contentError = document.getElementById('contentError');
-            contentError.innerHTML = "${contentError}";
-            contentError.style.display = '${not empty contentError ? "block" : "none"}';
-        }
-
-        // Hàm ẩn thông báo lỗi
-        function hideErrorMessage() {
-            var errorMessage = document.getElementById('errorMessage');
-            errorMessage.style.display = 'none';
-
-            var contentError = document.getElementById('contentError');
-            contentError.style.display = 'none';
-        }
-    </script>
-
-
-    <script>
-        // Ẩn thông báo lỗi khi trang được tải
-        window.onload = function() {
-            var errorMessage = document.getElementById('errorMessage');
-            errorMessage.style.display = 'none';
-        }
-
-        // Hàm hiển thị thông báo lỗi khi cần thiết
-        function showErrorMessage() {
-            var errorMessage = document.getElementById('errorMessage');
-            errorMessage.style.display = 'block';
-        }
-    </script>
-
-
-
-
+<%--            var contentError = document.getElementById('contentError');--%>
+<%--            contentError.style.display = 'none';--%>
+<%--        }--%>
+<%--    </script>--%>
+<%--    <script>--%>
+<%--        // Ẩn thông báo lỗi khi trang được tải--%>
+<%--        window.onload = function() {--%>
+<%--            var errorMessage = document.getElementById('errorMessage');--%>
+<%--            errorMessage.style.display = 'none';--%>
+<%--        }--%>
+<%--        // Hàm hiển thị thông báo lỗi khi cần thiết--%>
+<%--        function showErrorMessage() {--%>
+<%--            var errorMessage = document.getElementById('errorMessage');--%>
+<%--            errorMessage.style.display = 'block';--%>
+<%--        }--%>
+<%--    </script>--%>
     <script>
         window.addEventListener('scroll', () => {
             var header = document.querySelector('.container')
             header.classList.toggle('sticky', window.scrollY > 100)
         })
     </script>
+    <script type="text/javascript">
+        var context = "${pageContext.request.contextPath}";
+        let feedbackMessage = document.getElementById('feedbackMessage');
+        $(document).ready(function() {
+            $('#btnSend').click(function (event) {
+                event.preventDefault();
+                feedbackMessage.style.display = 'none';
+                var name = $('#form-name').val();
+                var email = $('#form-email').val();
+                var feedback = $('#form-message').val();
+                console.log(feedback);
+                $.ajax({
+                    type: 'POST',
+                    data: {
+                        name: name,
+                        email: email,
+                        feedback: feedback
+                    },
+                    url: 'feedback',
+                    success: function (result) {
+                        try {
+                            if (result.status !== "success") {
+                                $('#errorMessage').html(result.error);
+                            } else {
+                                window.location.href = context + "/user/feedback";
+                            }
+                        } catch (e) {
+                            $('#errorMessage').html("Error loading request, please try again!");
+                        }
+                    },
+                    error: function() {
+                        $('#errorMessage').html("Connection errors. Please check your network and try again!");
+                    }
+                });
+            });
+        });
+    </script>
 </div>
 </body>
-
 </html>

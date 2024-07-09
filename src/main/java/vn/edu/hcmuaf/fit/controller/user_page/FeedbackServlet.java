@@ -1,69 +1,63 @@
-//package vn.edu.hcmuaf.fit.controller.user_page;
-//
-//import vn.edu.hcmuaf.fit.dao.FeedbackDAO;
-//import vn.edu.hcmuaf.fit.model.Feedback;
-//
-//import jakarta.servlet.*;
-//import jakarta.servlet.http.*;
-//import jakarta.servlet.annotation.*;
-//
-//import java.io.IOException;
-//import java.sql.Timestamp;
-//import java.util.Date;
-//import java.util.regex.Matcher;
-//import java.util.regex.Pattern;
-//
-//
-//@WebServlet("/user/feedback")
-//public class FeedbackServlet extends HttpServlet {
-//    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        String name = request.getParameter("name");
-//        String email = request.getParameter("email");
-//        String content = request.getParameter("form_fields[message]");
-//
-//
-//        if (name == null || email == null || content == null || name.isEmpty() || email.isEmpty() || content.isEmpty()) {
-//
-//            request.setAttribute("errorMessage", "Vui lòng nhập đầy đủ thông tin.");
-//        } else if (!isValidEmail(email)) {
-//
-//            request.setAttribute("emailError", "Địa chỉ email không hợp lệ. Vui lòng nhập lại");
-//        } else if (content.length() < 10) {
-//
-//            request.setAttribute("contentError", "Nội dung đóng góp phải có ít nhất 10 ký tự.");
-//        } else {
-//
-//            Feedback feedback = new Feedback();
-//            feedback.setName(name);
-//            feedback.setEmail(email);
-//            feedback.setContent(content);
-//            feedback.setSubmissionDate(new Timestamp(new Date().getTime()));
-//
-//
-//            boolean success = FeedbackDAO.addFeedback(feedback);
-//
-//
-//            if (success) {
-//                request.setAttribute("feedbackMessage", "Phản hồi của bạn đã được gửi thành công!");
-//            } else {
-//                request.setAttribute("errorMessage", "Có lỗi xảy ra khi gửi phản hồi. Vui lòng thử lại sau.");
-//            }
-//        }
-//
-//
-//        request.getRequestDispatcher("./contact.jsp").forward(request, response);
-//    }
-//
-//    private boolean isValidEmail(String email) {
-//        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-//        Pattern pattern = Pattern.compile(emailRegex);
-//        Matcher matcher = pattern.matcher(email);
-//        return matcher.matches();
-//    }
-//
-//
-//    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        doPost(request, response);
-//
-//    }
-//}
+package vn.edu.hcmuaf.fit.controller.user_page;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import vn.edu.hcmuaf.fit.model.Feedback;
+import vn.edu.hcmuaf.fit.model.Utils;
+import vn.edu.hcmuaf.fit.service.impl.FeedbackService;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+@WebServlet("/user/feedback")
+public class FeedbackServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        request.getRequestDispatcher("/WEB-INF/user/contact.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String content = request.getParameter("feedback");
+
+        if (name == null || email == null || content == null || name.isEmpty() || email.isEmpty() || content.isEmpty()) {
+            out.write("{\"error\":\"Please fill in all information completely!\"}");
+        } else if (!Utils.isValidEmail(email)) {
+            out.write("{\"error\":\"Email is invalid!\"}");
+        } else if (content.length() < 10) {
+            out.write("{\"error\":\"Nội dung đóng góp phải có ít nhất 10 ký tự!\"}");
+        } else {
+            String ip = request.getHeader("X-FORWARDED-FOR");
+            if (ip == null) ip = request.getRemoteAddr();
+
+            Feedback feedback = new Feedback();
+            feedback.setName(name);
+            feedback.setEmail(email);
+            feedback.setContent(content);
+
+            Feedback success = FeedbackService.getInstance().addFeedback(feedback, ip, "/user/feedback");
+            if (success != null) {
+                out.write("{ \"status\": \"success\"}");
+                request.getSession().setAttribute("ok", "Phản hồi của bạn đã được gửi thành công!");
+            } else {
+                out.write("{\"error\":\"Phản hồi của bạn được gửi thất bại!\"}");
+            }
+        }
+        out.flush();
+        out.close();
+    }
+}

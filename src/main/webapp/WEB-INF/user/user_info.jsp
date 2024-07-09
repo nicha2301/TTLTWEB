@@ -498,13 +498,9 @@
         $('#btnReset').click(function (event) {
             event.preventDefault();
             var oldPass = $('#old-pass').val();
-            console.log(oldPass);
             var password = $('#password').val();
-            console.log(password)
             var repass = $('#pass').val();
-            console.log(repass)
             var action = $('#act-reset').val();
-            console.log(action)
             $.ajax({
                 type: 'POST',
                 data: {

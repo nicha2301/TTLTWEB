@@ -12,6 +12,14 @@ import vn.edu.hcmuaf.fit.service.IFeedbackService;
 import java.util.List;
 
 public class FeedbackService extends LogDAO<Feedback>  implements IFeedbackService {
+    private static IFeedbackService instance;
+
+    public static IFeedbackService getInstance() {
+        if (instance == null) {
+            instance = new FeedbackService();
+        }
+        return instance;
+    }
 
     @Override
     public Feedback addFeedback(Feedback feedback, String ip, String address) {

@@ -18,7 +18,7 @@
                         <a href="${request.servletContext.contextPath}/user/home"><span class="nav-link-text">Thuốc Y The Pet</span></a>
                     </li>
                     <li class="menu-item">
-                        <a href="${request.servletContext.contextPath}/user/introduce.jsp"><span class="nav-link-text">Giới thiệu</span></a>
+                        <a href="${request.servletContext.contextPath}/user/introduce"><span class="nav-link-text">Giới thiệu</span></a>
                     </li>
                     <li class="menu-item">
                         <a href="${request.servletContext.contextPath}/user/products"><span class="nav-link-text">Sản phẩm</span></a>
