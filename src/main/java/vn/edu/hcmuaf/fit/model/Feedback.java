@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 
 @Table(name = "feedbacks")
 @EqualsAndHashCode(callSuper = true)
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

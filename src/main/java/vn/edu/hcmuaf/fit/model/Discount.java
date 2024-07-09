@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 
 @Table(name = "discounts")
 @EqualsAndHashCode(callSuper = true)
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

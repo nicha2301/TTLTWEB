@@ -8,7 +8,6 @@ import java.io.Serializable;
 
 @Table(name = "order_items")
 @EqualsAndHashCode(callSuper = true)
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

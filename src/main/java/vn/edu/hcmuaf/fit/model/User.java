@@ -10,7 +10,6 @@ import java.sql.Timestamp;
 
 @Table(name = "users")
 @EqualsAndHashCode(callSuper = true)
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

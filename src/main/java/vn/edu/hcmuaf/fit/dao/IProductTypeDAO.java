@@ -12,9 +12,9 @@ public interface IProductTypeDAO extends GenericDAO<ProductTypes> {
 
     List<ProductTypes> getProductTypeById(Integer id);
 
-    ProductTypes insertProductTypes(String name, String detail_address, String phone, String email);
+    ProductTypes insertProductTypes(String typeName, Boolean active);
 
-    boolean updateProductTypes(Integer id, String name, String email, String phone, String detailAddress);
+    boolean updateProductTypes(Integer id, String typeName, Boolean active);
 
     boolean deleteProductTypes(Integer id);
 }

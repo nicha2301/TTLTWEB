@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Table(name = "images")
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

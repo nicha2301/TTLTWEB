@@ -8,7 +8,6 @@ import java.io.Serializable;
 
 @Table(name = "delivery_address")
 @EqualsAndHashCode(callSuper = true)
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

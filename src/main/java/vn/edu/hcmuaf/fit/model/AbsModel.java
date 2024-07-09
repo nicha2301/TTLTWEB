@@ -3,7 +3,6 @@ package vn.edu.hcmuaf.fit.model;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

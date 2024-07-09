@@ -9,7 +9,6 @@ import java.sql.Timestamp;
 
 @Table(name = "product_review")
 @EqualsAndHashCode(callSuper = true)
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

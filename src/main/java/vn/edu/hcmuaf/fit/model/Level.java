@@ -6,7 +6,6 @@ import lombok.experimental.FieldDefaults;
 import java.io.Serializable;
 
 @Table(name = "level")
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

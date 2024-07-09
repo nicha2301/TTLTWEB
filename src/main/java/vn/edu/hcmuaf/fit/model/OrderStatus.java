@@ -6,7 +6,6 @@ import lombok.experimental.FieldDefaults;
 import java.io.Serializable;
 
 @Table(name = "order_status")
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

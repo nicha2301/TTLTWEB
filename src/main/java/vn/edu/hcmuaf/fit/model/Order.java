@@ -9,7 +9,6 @@ import java.sql.Timestamp;
 
 @Table(name = "orders")
 @EqualsAndHashCode(callSuper = true)
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

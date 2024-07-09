@@ -2,7 +2,9 @@ package vn.edu.hcmuaf.fit.dao.impl;
 
 import vn.edu.hcmuaf.fit.dao.IProductDAO;
 import vn.edu.hcmuaf.fit.model.Product;
+import vn.edu.hcmuaf.fit.model.ProductTypes;
 import vn.edu.hcmuaf.fit.model.Supplier;
+import vn.edu.hcmuaf.fit.service.impl.ProductTypeService;
 import vn.edu.hcmuaf.fit.service.impl.SupplierService;
 
 import java.util.List;
@@ -174,7 +176,9 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
             if(map.size()==1) {
                 for(Product product : map.keySet()) {
                     Supplier supplier = SupplierService.getInstance().getSupplierById(product.getSupplier().getId());
+                    ProductTypes type = ProductTypeService.getInstance().getProductTypeById(product.getType().getId());
                     product.setSupplier(supplier);
+                    product.setType(type);
                     return map;
                 }
             }

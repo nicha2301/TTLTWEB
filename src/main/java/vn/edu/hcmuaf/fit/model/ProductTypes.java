@@ -7,7 +7,6 @@ import java.io.Serializable;
 
 @Table(name = "product_types")
 @EqualsAndHashCode(callSuper = true)
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

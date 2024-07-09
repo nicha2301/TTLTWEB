@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Table(name = "payment")
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

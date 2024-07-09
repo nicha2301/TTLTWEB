@@ -193,7 +193,7 @@
                                                                     <p>
                                                                         ${prod.instructions}
                                                                     </p>
-                                                                    <h2>Đối tượng: ${prod.productType} </h2>
+                                                                    <h2>Đối tượng: ${prod.type.typeName} </h2>
                                                                     <h2>CHỐNG CHỈ ĐỊNH:</h2>
                                                                     <p>
                                                                          ${prod.contraindications}<br/>
@@ -230,7 +230,7 @@
                                         <c:forEach var="item" items="${requestScope.products}" >
                                             <c:set var="similar" value="${item.key}" />
                                             <c:set var="first" value="${item.value[0]}" />
-                                            <c:set var="listImgs" value="${item.value}" />
+                                            <c:set var="listImages" value="${item.value}" />
                                             <div class="item">
                                                 <div>
                                                     <div class="product-element-top">
@@ -246,9 +246,8 @@
                                                     <div class="product-element">
                                                         <div class="price-wrap">
                                                             <div class="price">
-                                                                <fmt:formatNumber value="${similar.price}" type="number" maxFractionDigits="0" pattern="#,##0"/>
+                                                                <fmt:formatNumber value="${similar.price}" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}
                                                             </div>
-                                                            <div class="unit">${unit}</div>
                                                         </div>
                                                     </div>
                                                 </div>

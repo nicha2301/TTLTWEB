@@ -6,7 +6,6 @@ import lombok.experimental.FieldDefaults;
 import java.io.Serializable;
 
 @Table(name = "role")
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

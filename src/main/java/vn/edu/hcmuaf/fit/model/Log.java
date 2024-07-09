@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Table(name = "log")
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
