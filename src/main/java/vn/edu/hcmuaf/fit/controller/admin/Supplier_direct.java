@@ -20,7 +20,7 @@
 //    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //        request.setAttribute("current_page", "supplier");
 //        request.setAttribute("title", "Nhà cung cấp");
-//        List<Supplier> supplierList = SupplierDAO.loadSupplierList();
+//        List<Supplier> supplierList = SupplierDAO.loadProductType();
 //        request.setAttribute("sup_view", supplierList);
 //        System.out.println(request.getAttribute("sup_view"));
 //        request.getRequestDispatcher("./supplier.jsp").forward(request, response);

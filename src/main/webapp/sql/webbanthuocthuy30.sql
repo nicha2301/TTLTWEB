@@ -1553,7 +1553,6 @@ CREATE TABLE `payment` (
 CREATE TABLE `products` (
   `id` int(11) NOT NULL,
   `productName` varchar(255) NOT NULL,
-  `category_id` int(11) NOT NULL,
   `sale_percent` double DEFAULT NULL,
   `price` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
@@ -1564,6 +1563,7 @@ CREATE TABLE `products` (
   `instructions` text DEFAULT NULL,
   `warrantyPeriod` text DEFAULT NULL,
   `storageCondition` text DEFAULT NULL,
+  `cate_id` int(11) NOT NULL,
   `type_id` int(11) NOT NULL,
   `supplier_id` int(11) DEFAULT NULL,
   `active` tinyint(1) NOT NULL
@@ -1573,7 +1573,7 @@ CREATE TABLE `products` (
 -- Đang đổ dữ liệu cho bảng `products`
 --
 
-INSERT INTO `products` (`id`, `productName`, `category_id`, `sale_percent`, `price`, `quantity`, `purpose`, `contraindications`, `ingredients`, `dosage`, `instructions`, `warrantyPeriod`, `storageCondition`, `type_id`, `supplier_id`, `active`) VALUES
+INSERT INTO `products` (`id`, `productName`, `cate_id`, `sale_percent`, `price`, `quantity`, `purpose`, `contraindications`, `ingredients`, `dosage`, `instructions`, `warrantyPeriod`, `storageCondition`, `type_id`, `supplier_id`, `active`) VALUES
 (1, ' Dipomax-J trị viêm da', 10, NULL, 50000, 100, 'DIPROMAX-J là sản phẩm điều trị viêm da Tiết Bã Do Vi Khuẩn (Staphylococcus Pseudintermedius),  Nấm Men (Malassezia Pachydermatis) Và Nấm Ngoài Da (Dermatophytosis). các triệu chứng viêm da cấp trên chó mèo.', '– Không để thuốc dính vào mắt hoặc bôi lên vết thương hở.– Không dùng cho vật nuôi quá mẫn cảm với bất kỳ thành phần nào của thuốc.', 'Betamethasone Dipropionate, Gentamicin Sulfate.', 'Thoa 2 lầngày (sáng & tối) cho đến khi hết các', 'Liều lượng sử dụng tùy thuộc vào mức độ vùng da bị bệnh', '24 tháng kể từ ngày sản xuất', 'Bảo quản ở nhiệt độ mát', 1, 1, 1),
 (2, 'Vắc-xin vô hoạt Nisseiken ARBP ', 8, NULL, 35000, 50, 'Vắc xin ARBP ME giúp phòng ngừa bệnh teo mũi truyền nhiễm ở heo (AR) do nhiễm trùng kết hợp giữa Bordetella bronchiseptica (Bb) và độc tố được Pasteurella multocida (Pm) sinh ra hoặc do Bb hoặc Pm.', 'Dùng cho chó, mèo qua đường miệng, có thể cho ăn trực tiếp hoặc trộn với thức ăn', 'Bordetella bronchiseptica, Pasteurella  multocida,', 'Tiêm 2 mũi', 'Tiêm bắp liều 2ml cho mỗi heo nái mang thai, mỗi lần cách nhau từ 1-2 tháng.', '24 tháng kể từ ngày sản xuất', 'Bảo quản ở nhiệt độ mát', 1, 2, 1),
 (3, 'Vắc-xin vô hoạt Nisseiken Swine ', 8, NULL, 25000, 80, 'Vắc-xin vô hoạt kết hợp phòng Actinobacillus pleuropneumoniae (serotypes 1, 2 và 5, cùng các giả độc đố tái tổ hợp) và Mycoplasma hyopneumoniae (cùng chất bổ trợ)', 'Khi con vật biểu hiện một trong những vấn đề sức khỏe hoặc tình trạng thể chất sau đây, hãy xem xét cẩn thận liệu có nên tiêm phòng hay không', 'Actinobacillus pleuropneumoniae, Escherichia coli ', 'Tiêm 2 mũi', 'Tiêm bắp liều 2ml/con từ 3 tuần tuổi hoặc lớn hơn, 2 lần mỗi lần cách nhau 3 – 5 tuần', '24 tháng kể từ ngày sản xuất', 'Bảo quản ở nhiệt độ mát', 2, 1, 1),
@@ -1692,7 +1692,7 @@ INSERT INTO `products` (`id`, `productName`, `category_id`, `sale_percent`, `pri
 (116, 'Thuốc bổ sung Crom hữu cơ cho heo', 13, NULL, 45000, 90, 'Giúp heo Cải thiện màu sắc thịt,Tăng tỷ lệ thân thịt,Tăng tỷ lệ thịt thăn...', 'Không có.', 'Chromium (min – max)', 'Trộn thức ăn với liều 1kg/tấn thức ăn', 'Sử dụng theo hướng dẫn của bác sĩ thú y.', '24 tháng kể từ ngày sản xuất', 'Bảo quản ở nhiệt độ thấp', 2, 4, 1),
 (117, 'Dịch truyền Advance Normal', 14, NULL, 28000, 80, 'Bù nước và chất điện giải do mất nước, dùng làm thuốc nhỏ mắt, rửa vết thương mắt, niêm mạ mũi, làm dung môi pha vaccine.', 'Không có', 'Trong 100ml chứa: Natri clorid ……………………..0.9 g', '1 viêngày', 'Sử dụng theo hướng dẫn của bác sĩ thú y.', '20 tháng kể từ ngày sản xuất', 'Bảo quản ở nhiệt độ mát', 4, 5, 1),
 (118, 'Vi khoáng tăng năng suất cho gia cầm', 7, NULL, 20000, 95, 'Bổ sung khoáng chất trong thức ăn chăn nuôi.', 'Không có', 'Canxi, Kẽm', '5mlgày', 'Hòa tan vào nước uống với liều cho gia cầm; 1-2ml / lít nước trong vòng 5 ngày.', '24 tháng kể từ ngày sản xuất', 'Bảo quản ở nhiệt độ mát', 4, 1, 1);
-INSERT INTO `products` (`id`, `productName`, `category_id`, `sale_percent`, `price`, `quantity`, `purpose`, `contraindications`, `ingredients`, `dosage`, `instructions`, `warrantyPeriod`, `storageCondition`, `type_id`, `supplier_id`, `active`) VALUES
+INSERT INTO `products` (`id`, `productName`, `cate_id`, `sale_percent`, `price`, `quantity`, `purpose`, `contraindications`, `ingredients`, `dosage`, `instructions`, `warrantyPeriod`, `storageCondition`, `type_id`, `supplier_id`, `active`) VALUES
 (119, 'Vaccine vô hoạt phòng bệnh cúm', 8, NULL, 26000, 70, ' Phòng bệnh cúm gia cầm gây bởi vi-rút cúm gia cầm tái tổ hợp subtype H5.', 'Không nên sử dụng cho gia cầm con.', 'Vaccine chứa vi-rút cúm gia cầm tái tổ hợp subtype H5N1, chủng Re-5 vô hoạt, trước khi vô hoạt, hiệu giá HA≥ 8log2', '0,5 ml/con', 'Sử dụng theo hướng dẫn của bác sĩ thú y.', '18 tháng kể từ ngày sản xuất', 'Ở nhiệt độ 2-8 °C. Không được để vaccine đóng đá.', 4, 2, 1),
 (120, 'Thuốc trị viêm phổi', 10, NULL, 32000, 75, 'Đặc trị hen khẹc, viêm phổi, e.coli kéo màng, bại huyết, tiêu chảy nặng.', 'Không có', 'Apramycin sulfat, Tá dược vđ', '100g/1,5-2,0 tấnTTgày', 'Hoà nước cho uống hoặc trộn thức ăn, liệu trình 3-5 ngày liên tục.', '15 tháng kể từ ngày sản xuất', 'Nơi khô, nhiệt độ dưới 30 độ C, tránh ánh sáng', 6, 3, 1),
 (121, 'Thuốc đặc trị viêm phổi, tiêu chảy nặng', 10, NULL, 18000, 90, 'Đặc trị bại huyết, E.coli kéo màng, tụ huyết trùng, hen khẹc, viêm phổi, viêm màng phổi.', 'Không có', 'Trong 1kg chứa: Cefalexin monohydrate 600g, Tá dược đặc biệt vđ 400g.', '1g/25 – 30kgTTgày', 'Pha nước uống hoặc trộn thức ăn, liệu trình 3-5 ngày liên tục.', '24 tháng kể từ ngày sản xuất', 'Bảo quản ở nhiệt độ mát', 6, 4, 1),
@@ -2127,7 +2127,7 @@ ALTER TABLE `payment`
 ALTER TABLE `products`
     ADD PRIMARY KEY (`id`),
   ADD KEY `fk_products_supplier` (`supplier_id`),
-  ADD KEY `fk_products_category` (`category_id`),
+  ADD KEY `fk_products_category` (`cate_id`),
   ADD KEY `FK_products_product_types` (`type_id`);
 
 --
@@ -2362,7 +2362,7 @@ ALTER TABLE `order_items`
 --
 ALTER TABLE `products`
     ADD CONSTRAINT `FK_products_product_types` FOREIGN KEY (`type_id`) REFERENCES `product_types` (`id`),
-  ADD CONSTRAINT `fk_products_category` FOREIGN KEY (`category_id`) REFERENCES `product_categories` (`id`),
+  ADD CONSTRAINT `fk_products_category` FOREIGN KEY (`cate_id`) REFERENCES `product_categories` (`id`),
   ADD CONSTRAINT `fk_products_supplier` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`);
 
 --

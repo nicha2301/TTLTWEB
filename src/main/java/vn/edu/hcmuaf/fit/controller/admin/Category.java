@@ -31,7 +31,7 @@
 //        CategoryDao dao = new CategoryDao();
 //
 //        List<ProductGroups> groups = dao.getGroupCategory();
-//        List<ProductCategories> categories = dao.getCategories();
+//        List<ProductCategories> categories = dao.getCate();
 //        List<CategoryQuantity> quantities = dao.getQuantityCategories();
 //
 //

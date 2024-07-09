@@ -1,19 +1,22 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Table(name = "feedbacks")
-@Data
 @EqualsAndHashCode(callSuper = true)
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Feedback extends AbsModel implements Serializable {
-    private Integer id;
-    private String email;
-    private String name;
-    private String content;
-    private Timestamp submissionDate;
-
+     Integer id;
+     String email;
+     String name;
+     String content;
+     Timestamp submissionDate;
 }

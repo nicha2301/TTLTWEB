@@ -1,14 +1,18 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 
 @Table(name = "role")
+@Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Role implements Serializable {
-    private Integer id;
-    private String roleName;
+    Integer id;
+    String roleName;
 
 }

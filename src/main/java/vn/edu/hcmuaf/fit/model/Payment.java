@@ -1,16 +1,21 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Table(name = "payment")
+@Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Payment implements Serializable {
-    private Integer id;
-    private String payName;
-    private String description;
-    private Timestamp remainingTime;
+     Integer id;
+     String payName;
+     String description;
+     Timestamp remainingTime;
 
 }

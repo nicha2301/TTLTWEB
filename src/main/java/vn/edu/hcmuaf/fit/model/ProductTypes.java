@@ -1,20 +1,20 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 
 @Table(name = "product_types")
+@EqualsAndHashCode(callSuper = true)
+@Builder
 @Data
-public class ProductTypes implements Serializable {
-    private Integer id;
-    private String typeName;
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class ProductTypes extends AbsModel implements Serializable {
+     Integer id;
+     String typeName;
+     Boolean active;
 
-    public ProductTypes() {
-    }
-
-    public ProductTypes(Integer id, String typeName) {
-        this.id = id;
-        this.typeName = typeName;
-    }
 }

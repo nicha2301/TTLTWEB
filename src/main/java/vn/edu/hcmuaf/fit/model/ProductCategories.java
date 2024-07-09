@@ -1,30 +1,24 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.jdbi.v3.core.mapper.Nested;
 
 import java.io.Serializable;
 
 @Table(name = "product_categories")
-@Data
 @EqualsAndHashCode(callSuper = true)
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductCategories extends AbsModel implements Serializable {
-    private Integer id;
-    private String categoryName;
-    @Nested("group")
-    private ProductGroups group;
-    private Boolean active;
-
-    public ProductCategories() {
-    }
-
-    public ProductCategories(Integer id, String categoryName, ProductGroups group, Boolean active) {
-        this.id = id;
-        this.categoryName = categoryName;
-        this.group = group;
-        this.active = active;
-    }
+     Integer id;
+     String categoryName;
+     @Nested("group")
+     ProductGroups group;
+     Boolean active;
 
     @Nested("group")
     public ProductGroups getGroup() {

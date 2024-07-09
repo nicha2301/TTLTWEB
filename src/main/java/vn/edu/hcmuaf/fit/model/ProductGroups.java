@@ -1,24 +1,20 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 
 @Table(name = "product_groups")
-@Data
 @EqualsAndHashCode(callSuper = true)
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductGroups extends AbsModel implements Serializable {
-    private Integer id;
-    private String groupName;
-    private Boolean active;
+     Integer id;
+     String groupName;
+     Boolean active;
 
-    public ProductGroups() {
-    }
-
-    public ProductGroups(Integer id, String groupName, Boolean active) {
-        this.id = id;
-        this.groupName = groupName;
-        this.active = active;
-    }
 }

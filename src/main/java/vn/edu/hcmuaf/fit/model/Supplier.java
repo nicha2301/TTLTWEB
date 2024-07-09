@@ -1,21 +1,25 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 
 @Table(name = "suppliers")
 @EqualsAndHashCode(callSuper = true)
+@Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Supplier extends AbsModel implements Serializable {
-    private Integer id;
-    private String supplierName;
-    private String contactName;
-    private String email;
-    private String phone;
-    private String detailAddress;
-    private String imageUrl;
-    private Boolean active;
+     Integer id;
+     String supplierName;
+     String contactName;
+     String email;
+     String phone;
+     String detailAddress;
+     String imageUrl;
+     Boolean active;
 
 }

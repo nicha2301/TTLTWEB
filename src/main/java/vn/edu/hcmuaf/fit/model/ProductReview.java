@@ -1,25 +1,29 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.jdbi.v3.core.mapper.Nested;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Table(name = "product_review")
-@Data
 @EqualsAndHashCode(callSuper = true)
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductReview extends AbsModel implements Serializable {
-    private Integer id;
-    @Nested("user")
-    private User user;
-    private int rating;
-    @Nested("order")
-    private Order order;
-    private String reviewText;
-    private Timestamp reviewDate;
-    private String imageUrl;
+     Integer id;
+     @Nested("user")
+     User user;
+     int rating;
+     @Nested("order")
+     Order order;
+     String reviewText;
+     Timestamp reviewDate;
+     String imageUrl;
 
     @Nested("user")
     public User getUsersByUsername() {

@@ -1,22 +1,26 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.jdbi.v3.core.mapper.Nested;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Table(name = "cart")
-@Data
 @EqualsAndHashCode(callSuper = true)
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Cart extends AbsModel implements Serializable {
     @Nested("user")
-    private User user;
+    User user;
     @Nested("product")
-    private Product product;
-    private Integer quantity;
-    private Timestamp addDate;
+    Product product;
+    Integer quantity;
+    Timestamp addDate;
 
     @Nested("user")
     public User getUser() {

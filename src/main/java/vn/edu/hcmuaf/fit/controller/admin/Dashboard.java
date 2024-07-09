@@ -28,7 +28,7 @@
 //        int countProduct = ProductDAO.sumOfProduct("SELECT COUNT(*) FROM products");
 //        request.setAttribute("c_product", countProduct);
 //
-//        int countSupplier = SupplierDAO.sumOfSupplier("SELECT COUNT(*) FROM suppliers");
+//        int countSupplier = SupplierDAO.sumOfProductType("SELECT COUNT(*) FROM suppliers");
 //        request.setAttribute("c_supplier", countSupplier);
 //
 //        List<Order> orderList = OrderDAO.loadOrderNear(5);

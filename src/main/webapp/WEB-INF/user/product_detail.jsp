@@ -5,7 +5,6 @@
 <head>
     <meta charset="UTF-8"/>
     <link rel="stylesheet" href="/assets/user/css/products/detailproduct.css"/>
-
     <link rel="icon" href="https://tienthangvet.vn/wp-content/uploads/cropped-favicon-Tien-Thang-Vet-192x192.png"
           sizes="192x192"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
@@ -20,18 +19,24 @@
         <div class="wrapper-content">
             <div class="content">
                 <div class="single-breadcrumbs-wrapper">
+                    <c:choose>
+                        <c:when test="${not empty requestScope.product}">
+                            <c:forEach var="entry" items="${requestScope.product}" >
+                                <c:set var="prod" value="${entry.key}" />
+                                <c:set var="supplier" value="${prod.supplier}" />
+                                <c:set var="firstImage" value="${entry.value[0]}" />
+                                <c:set var="listImg" value="${entry.value}" />
+                            </c:forEach>
+                        </c:when>
+                    </c:choose>
                     <div class="container">
                         <div class="wd-breadcrumbs">
                             <nav class="woocommerce-breadcrumb">
-                                <a href="" class="breadcrumb-link">
-                                    Trang chủ
-                                </a>
-                                <a href="" class="breadcrumb-link">
-                                    Sản phẩm
-                                </a>
+                                <a href="${request.servletContext.contextPath}/user/home" class="breadcrumb-link">Trang chủ</a>
+                                <a href="${request.servletContext.contextPath}/user/products" class="breadcrumb-link">Sản phẩm</a>
                                 <span class="breadcrumb-last">
-                                      <span class="breadcrumb-last"> ${product.productName}</span>
-                                    </span>
+                                      <span class="breadcrumb-last"> ${prod.productName}</span>
+                                </span>
                             </nav>
                         </div>
                     </div>
@@ -43,13 +48,13 @@
                                 <div class="owl-stage">
                                     <div class="item" style="width: 575px; height: 575px">
                                         <div class="product-image-wrap">
-                                            <img src="${pageContext.request.contextPath}/${listImg[0]}"
+                                            <img src="${pageContext.request.contextPath}${firstImage}"
                                                  class="wp-post-image wp-post-image"/>
                                         </div>
                                     </div>
                                     <div class="product-additional-galleries">
                                         <a id="see-more"
-                                           href="${pageContext.request.contextPath}/${listImg[0]}"
+                                           href="${pageContext.request.contextPath}${firstImage}"
                                            class="woodmart-show-product-gallery">
                                             <i class="fa-solid fa-compress"></i>
                                             <span class="see-more">Click to enlarge</span>
@@ -63,8 +68,7 @@
                                         <c:forEach var="url" items="${listImg}">
                                             <div class="item" style="width: 145.25px">
                                                 <div class="product-image-thumbnail">
-                                                    <img width="150" height="150"
-                                                         src="${pageContext.request.contextPath}/${url}"/>
+                                                    <img width="150" height="150" src="${pageContext.request.contextPath}${url}"/>
                                                 </div>
                                             </div>
                                         </c:forEach>
@@ -77,19 +81,19 @@
                         <div class="summary-inner set-mb-l reset-last-child">
                             <div class="wd-product-brands">
                                 <a href="">
-                                    <img src="${supplierImgUrl}"
-                                         alt="Supplier Image"/>
+                                    <img src="${supplier.imageUrl}" alt="Supplier Image"/>
                                 </a>
                             </div>
                             <h1 class="product_title entry-title wd-entities-title">
-                                ${product.productName}
+                                ${prod.productName}
                             </h1>
                             <div class="price-wrapper">
-                                <div class="price">${Util.formatCurrency(product.price)}</div>
-                                <div class="unit">VND</div>
+                                <div class="price">
+                                    <c:set var="unit" value="VND"/>
+                                    <fmt:formatNumber value="${prod.price}" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}
+                                </div>
                             </div>
-                            <div
-                                    class="wd-compare-btn product-compare-button wd-action-btn wd-style-text wd-compare-icon">
+                            <div class="wd-compare-btn product-compare-button wd-action-btn wd-style-text wd-compare-icon">
                                 <a href="">
                                     <i class="fa-solid fa-shuffle"></i>
                                     <span>So sánh</span>
@@ -103,11 +107,10 @@
                             </div>
                             <div class="product_meta">
                                     <span class="posted_in"><span class="meta-label">Danh mục:</span>
-                                        <a href="" rel="tag">Thuốc
-                                            thú y</a></span>
+                                        <a href="${pageContext.request.contextPath}/user/products?group=Thuốc%20thú%20y" rel="tag">Thuốc thú y</a></span>
                             </div>
                             <div class="container">
-                                <a style="color: #fff;" href="addtocart?id=${product.id}">
+                                <a style="color: #fff;" href="${request.servletContext.contextPath}/user/addtocart?id=${prod.id}">
                                     <button class="add-to-cart-button">
                                         <svg class="add-to-cart-box box-1" width="24" height="24" viewBox="0 0 24 24"
                                              fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -115,7 +118,7 @@
                                         </svg>
                                         <svg class="add-to-cart-box box-2" width="24" height="24" viewBox="0 0 24 24"
                                              fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <rect width="24" height="24" rx="2" fill="#ffffff"/>
+                                            <rect width="24" height="24" rx="2" fill="#ffffff" />
                                         </svg>
                                         <svg class="cart-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                              viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
@@ -181,24 +184,24 @@
                                                                 <div class="elementor-widget-container">
                                                                     <h1>Công dụng:</h1>
                                                                     <p>
-                                                                        ${product.purpose}
+                                                                        ${prod.purpose}
                                                                     </p>
                                                                     <h1>Thành phần:</h1>
-                                                                    <p>${product.ingredients}</p>
-                                                                    <h2>Liều lượng: ${product.dosage} </h2>
+                                                                    <p>${prod.ingredients}</p>
+                                                                    <h2>Liều lượng: ${prod.dosage} </h2>
                                                                     <h2>Hướng dẫn sử dụng:</h2>
                                                                     <p>
-                                                                        ${product.instructions}
+                                                                        ${prod.instructions}
                                                                     </p>
-                                                                    <h2>Đối tượng: ${product.productType} </h2>
+                                                                    <h2>Đối tượng: ${prod.productType} </h2>
                                                                     <h2>CHỐNG CHỈ ĐỊNH:</h2>
                                                                     <p>
-                                                                         ${product.contraindications}<br/>
+                                                                         ${prod.contraindications}<br/>
                                                                     </p>
                                                                     <h2>
-                                                                        BẢO QUẢN<br/> ${product.storageCondition}<br/>
+                                                                        BẢO QUẢN<br/> ${prod.storageCondition}<br/>
                                                                     </h2>
-                                                                    <h2>Hạn sử dụng: ${product.warrantyPeriod}</h2>
+                                                                    <h2>Hạn sử dụng: ${prod.warrantyPeriod}</h2>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -214,6 +217,7 @@
                 </div>
             </div>
         </div>
+
         <div class="wrapper-content">
             <div class="container related-and-upsells">
                 <div class="related-products">
@@ -221,48 +225,55 @@
                     <div class="products">
                         <div class="wrapper-container">
                             <div class="container">
-                                <c:forEach var="product" items="${products}">
-                                    <div class="item">
-                                        <div>
-                                            <div class="product-element-top">
-                                                <a href="${pageContext.request.contextPath}/user/product?id=${product.id}">
-                                                    <img src="${pageContext.request.contextPath}/${product.imageUrl}"
-                                                         alt="">
-                                                </a>
-                                            </div>
-                                            <div class="product-element-bottom">
-                                                <a href="${pageContext.request.contextPath}/user/product?id=${product.id}">
-                                                        ${product.productName}
-                                                </a>
-                                            </div>
-                                            <div class="product-element">
-                                                <div class="price-wrap">
-                                                    <div class="price">${Util.formatCurrency(product.price)}</div>
-                                                    <div class="unit">VND</div>
+                                <c:choose>
+                                    <c:when test="${not empty requestScope.products}">
+                                        <c:forEach var="item" items="${requestScope.products}" >
+                                            <c:set var="similar" value="${item.key}" />
+                                            <c:set var="first" value="${item.value[0]}" />
+                                            <c:set var="listImgs" value="${item.value}" />
+                                            <div class="item">
+                                                <div>
+                                                    <div class="product-element-top">
+                                                        <a href="${pageContext.request.contextPath}/user/product?id=${similar.id}">
+                                                            <img src="${pageContext.request.contextPath}${first}" alt="">
+                                                        </a>
+                                                    </div>
+                                                    <div class="product-element-bottom">
+                                                        <a href="${pageContext.request.contextPath}/user/product?id=${similar.id}">
+                                                                ${similar.productName}
+                                                        </a>
+                                                    </div>
+                                                    <div class="product-element">
+                                                        <div class="price-wrap">
+                                                            <div class="price">
+                                                                <fmt:formatNumber value="${similar.price}" type="number" maxFractionDigits="0" pattern="#,##0"/>
+                                                            </div>
+                                                            <div class="unit">${unit}</div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="wd-buttons wd-pos-r-t">
-                                            <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
-                                                <a href="" class="button product_type_simple add-to-cart-loop">
+                                                <div class="wd-buttons wd-pos-r-t">
+                                                    <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
+                                                        <a href="" class="button product_type_simple add-to-cart-loop">
                                                     <span>
                                                         <i class="fa-solid fa-cart-shopping"></i> </span></a>
-                                            </div>
-                                            <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
-                                                <a href="" class="open-quick-view quick-view-button">
+                                                    </div>
+                                                    <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
+                                                        <a href="" class="open-quick-view quick-view-button">
                                                     <span>
                                                         <i class="fa-solid fa-magnifying-glass"></i> </span></a>
-                                            </div>
-                                            <div class="wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon">
-                                                <a class="wd-tltp wd-tooltip-inited" href=""
-                                                   data-added-text="Browse Wishlist">
+                                                    </div>
+                                                    <div class="wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon">
+                                                        <a class="wd-tltp wd-tooltip-inited" href=""
+                                                           data-added-text="Browse Wishlist">
                                                     <span class="wd-tooltip-label">
                                                         <i class="fa-regular fa-heart"></i> </span></a>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </c:forEach>
+                                        </c:forEach>
+                                    </c:when>
+                                </c:choose>
                             </div>
                         </div>
                     </div>

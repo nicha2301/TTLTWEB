@@ -1,34 +1,38 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.jdbi.v3.core.mapper.Nested;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Table(name = "orders")
-@Data
 @EqualsAndHashCode(callSuper = true)
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Order extends AbsModel implements Serializable {
-    private Integer id;
-    @Nested("user")
-    private User user;
-    @Nested("address")
-    private DeliveryAddress address;
-    @Nested("type")
-    private ShippingType type;
-    @Nested("discount")
-    private Discount discount;
-    @Nested("payment")
-    private Payment payment;
-    private Timestamp dateCreated;
-    private Timestamp datePayment;
-    private String note;
-    @Nested("status")
-    private OrderStatus status;
-    @Nested("admin")
-    private User admin;
+     Integer id;
+     @Nested("user")
+     User user;
+     @Nested("address")
+     DeliveryAddress address;
+     @Nested("type")
+     ShippingType type;
+     @Nested("discount")
+     Discount discount;
+     @Nested("payment")
+     Payment payment;
+     Timestamp dateCreated;
+     Timestamp datePayment;
+     String note;
+     @Nested("status")
+     OrderStatus status;
+     @Nested("admin")
+     User admin;
 
     @Nested("user")
     public User getUser() {

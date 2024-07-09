@@ -1,18 +1,23 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.jdbi.v3.core.mapper.Nested;
 
 import java.io.Serializable;
 
 @Table(name = "shipping_type")
+@Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ShippingType implements Serializable {
-    private Integer id;
-    private String type;
-    private String description;
-    @Nested("info")
-    private ShippingInfo info;
+     Integer id;
+     String type;
+     String description;
+     @Nested("info")
+     ShippingInfo info;
 
     @Nested("info")
     public ShippingInfo getInfo() {
