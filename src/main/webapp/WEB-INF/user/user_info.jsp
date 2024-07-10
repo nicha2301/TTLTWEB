@@ -21,6 +21,22 @@
           sizes="192x192"/>
     <title>Trang cá nhân</title>
 </head>
+<style>
+    .row .power-container {
+        background-color: gainsboro;
+        width: 80%;
+        height: 5px;
+        border-radius: 3px;
+    }
+
+    .power-container #power-point {
+        background-color: #D73F40;
+        width: 1%;
+        height: 100%;
+        border-radius: 3px;
+        transition: 0.2s;
+    }
+</style>
 <body>
 <div class="website-wrapper">
     <%@include file="/WEB-INF/user/include/header.jsp" %>
@@ -56,16 +72,15 @@
                                     <h1>HỒ SƠ CỦA TÔI</h1>
                                     <div class="content">Quản lý thông tin hồ sơ để bảo mật tài khoản</div>
                                 </header>
-                                <form class="formAcount validate clearfix" method="post" action="updateinfouser">
+                                <form class="formAcount validate clearfix">
                                     <div class="form-group clearfix">
                                         <div class="row">
-                                            <label class="col-md-3 control-label"> Họ tên: <span>(*)</span></label>
+                                            <label class="col-md-3 control-label"> Họ tên: <span></span></label>
                                             <div class="col-lg-6 col-md-9">
                                                 <input type="text" id="fullName" name="fullName"
-                                                       value="${empty sessionScope.auth.fullName?"Họ và tên":sessionScope.auth.fullName}"
+                                                       value="${sessionScope.auth.fullName}"
                                                        placeholder="Họ tên"
-                                                       class="validate[required,minSize[4],maxSize[32]] form-control input-sm"
-                                                       required>
+                                                       class="validate[required,minSize[4],maxSize[32]] form-control input-sm">
                                             </div>
                                         </div>
                                     </div>
@@ -74,21 +89,20 @@
                                             <label class="col-md-3 control-label">Ngày sinh: <span></span></label>
                                             <div class="col-lg-6 col-md-9">
                                                 <input type="date" id="birthday" name="birthday"
-                                                       value="${empty sessionScope.auth.dateOfBirth?"":sessionScope.auth.dateOfBirth}"
+                                                       value="${sessionScope.auth.dateOfBirth}"
                                                        placeholder="Ngày sinh"
-                                                       class="validate[required] form-control input-sm" required>
+                                                       class="validate[required] form-control input-sm">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group clearfix">
                                         <div class="row">
-                                            <label class="col-md-3 control-label">Điện thoại: <span></span></label>
+                                            <label class="col-md-3 control-label">Điện thoại: <span>(*)</span></label>
                                             <div class="col-lg-6 col-md-9">
                                                 <input type="text" id="mobile" name="phone"
-                                                       value="${empty sessionScope.auth.phone?"":sessionScope.auth.phone}"
+                                                       value="${sessionScope.auth.phone}"
                                                        placeholder="Điện thoại"
-                                                       class="validate[required,custom[phone]] form-control input-sm"
-                                                       required>
+                                                       class="validate[required,custom[phone]] form-control input-sm">
                                             </div>
                                         </div>
                                     </div>
@@ -96,24 +110,22 @@
                                         <div class="row">
                                             <label class="col-md-3 control-label">Email: <span>(*)</span></label>
                                             <div class="col-lg-6 col-md-9">
-                                                <input type="text" name="email"
+                                                <input type="text" name="email" id="email"
                                                        value="${sessionScope.auth.email}"
                                                        placeholder="Email"
-                                                       class="validate[required,custom[email]] form-control input-sm"
-                                                       required>
+                                                       class="validate[required,custom[email]] form-control input-sm">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group clearfix">
                                         <div class="row">
-                                            <label class="col-md-3 control-label">Tỉnh/Thành phố
-                                                <span>(*)</span></label>
+                                            <label class="col-md-3 control-label">Tỉnh/Thành phố<span>(*)</span></label>
                                             <div class="col-lg-6 col-md-9">
-                                                <input type="text" name="city"
-                                                       value="${empty sessionScope.auth.city?"Tỉnh/Thành Phố":sessionScope.auth.city}"
-                                                       placeholder="Thành phố"
-                                                       class="validate[required,custom[email]] form-control input-sm"
-                                                       required>
+                                                <input type="text" name="city" id="city" value="${sessionScope.auth.city}"
+                                                    placeholder="Thành phố" class="validate[required,custom[email]] form-control input-sm">
+                                                <select class="validate[required] form-control input-sm" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
+                                                    <option value="0">--Chọn Tỉnh/Thành phố--</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -121,11 +133,11 @@
                                         <div class="row">
                                             <label class="col-md-3 control-label">Quận/ Huyện: <span>(*)</span></label>
                                             <div class="col-lg-6 col-md-9">
-                                                <input type="text" id="district" name="district"
-                                                       value="${empty sessionScope.auth.district?"Quận/Huyện":sessionScope.auth.district}"
-                                                       placeholder="Quận/ Huyện"
-                                                       class="validate[required,custom[email]] form-control input-sm"
-                                                >
+                                                <input type="text" id="district" name="district" value="${sessionScope.auth.district}"
+                                                    placeholder="Quận/ Huyện" class="validate[required,custom[email]] form-control input-sm">
+                                                <select class="validate[required] form-control input-sm" id="quan" name="quan" title="Chọn Quận Huyện">
+                                                    <option value="0">--Chọn Quận/ Huyện--</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -133,11 +145,11 @@
                                         <div class="row">
                                             <label class="col-md-3 control-label">Xã/ Phường/ Thị trấn: <span>(*)</span></label>
                                             <div class="col-lg-6 col-md-9">
-                                                <input type="text" id="ward" name="ward"
-                                                       value="${empty sessionScope.auth.ward?"Xã/Phường/Thị trấn":sessionScope.auth.ward}"
-                                                       placeholder="Xã/ Phường/ Thị trấn"
-                                                       class="validate[required,custom[email]] form-control input-sm"
-                                                >
+                                                <input type="text" id="ward" name="ward" value="${sessionScope.auth.ward}"
+                                                    placeholder="Xã/ Phường/ Thị trấn" class="validate[required,custom[email]] form-control input-sm">
+                                                <select class="validate[required] form-control input-sm" id="phuong" name="phuong" title="Chọn Phường Xã">
+                                                    <option value="0">--Chọn Phường/ Xã/ Thị trấn--</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -147,17 +159,20 @@
                                                 <span>(*)</span></label>
                                             <div class="col-lg-6 col-md-9">
                                                 <input type="text" id="address" name="address"
-                                                       value="${empty sessionScope.auth.detail_address?"Địa chỉ chi tiết":sessionScope.auth.detail_address}"
+                                                       value="${sessionScope.auth.detail_address}"
                                                        placeholder="Địa chỉ chi tiết"
                                                        class="validate[required] form-control input-sm">
                                             </div>
                                         </div>
                                     </div>
+                                    <span style="color: red;" id="errorUpdate"></span>
+                                    <input type="hidden" id="action" name="action" value="update">
                                     <div class="form-group clearfix">
                                         <div class="row">
                                             <label class="col-md-3 control-label"></label>
+                                            <button id="btnHuy" class="btn-update" type="submit">CẬP NHẬT</button>
                                             <div class="col-lg-6 col-md-9">
-                                                <button class="btn-update">CẬP NHẬT</button>
+                                                <button id="btnUpdate" class="btn-update" type="submit">XÁC NHẬN</button>
                                             </div>
                                         </div>
                                     </div>
@@ -174,20 +189,13 @@
                                     <h1>THAY ĐỔI MẬT KHẨU</h1>
                                     <div class="content">Bạn nên cập nhật mật khẩu thường xuyên vì lí do bảo mật</div>
                                 </header>
-                                <form id="formAcount" class="formAcount validate clearfix" method="post"
-                                      action="resetpassword">
-                                    <% String error = (String) request.getAttribute("wrongInfor");%>
-                                    <% if (error != null) {%>
-                                    <p style="color: <%=error.equals("Mật khẩu đã được thay đổi") ? "#7cb342" : "red"%>; margin-bottom: 10px"><%=error%>
-                                    </p>
-                                    <% } %>
+                                <form id="formAcount" class="formAcount validate clearfix">
+                                    <span style="color: red;" id="errorReset"></span>
                                     <div class="form-group clearfix">
                                         <div class="row">
                                             <label class="col-md-3 control-label"> Mật khẩu cũ: </label>
                                             <div class="col-lg-6 col-md-9">
-                                                <input type="password" name="pass"
-                                                       class="validate[required,minSize[4],maxSize[32]] form-control input-sm"
-                                                       required>
+                                                <input type="password" id="old-pass" name="pass" class="validate[required,minSize[4],maxSize[32]] form-control input-sm">
                                             </div>
                                         </div>
                                     </div>
@@ -195,9 +203,13 @@
                                         <div class="row">
                                             <label class="col-md-3 control-label"> Mật khẩu mới: </label>
                                             <div class="col-lg-6 col-md-9">
-                                                <input type="password" name="newpass"
-                                                       class="validate[required,minSize[4],maxSize[32]] form-control input-sm"
-                                                       required>
+                                                <input type="password" id="password" name="newpass" class="validate[required,minSize[4],maxSize[32]] form-control input-sm"
+                                                oninput="getPower(this.value)">
+                                                <label for="password">Power password</label>
+                                                <div class="power-container">
+                                                    <div id="power-point"></div>
+                                                </div>
+                                                <span id="color-status"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -205,17 +217,16 @@
                                         <div class="row">
                                             <label class="col-md-3 control-label"> Xác nhận mật khẩu: </label>
                                             <div class="col-lg-6 col-md-9">
-                                                <input type="password" id="pass" name="renewpass"
-                                                       class="validate[required,minSize[4],maxSize[32]] form-control input-sm"
-                                                       required>
+                                                <input type="password" id="pass" name="renewpass" class="validate[required,minSize[4],maxSize[32]] form-control input-sm">
                                             </div>
                                         </div>
                                     </div>
+                                    <input type="hidden" id="act-reset" name="action" value="reset">
                                     <div class="form-group clearfix">
                                         <div class="row">
                                             <label class="col-md-3 control-label"></label>
                                             <div class="col-lg-6 col-md-9">
-                                                <button class="btn-update">LƯU</button>
+                                                <button id="btnReset" class="btn-update" type="submit">LƯU</button>
                                             </div>
                                         </div>
                                     </div>
@@ -300,59 +311,55 @@
 <script src="/assets/user/js/thuvien/bootstrap.min.js"></script>
 <script src="/assets/user/js/thuvien/main.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://esgoo.net/scripts/jquery.js"></script>
+<%--<script>--%>
+<%--    window.addEventListener('scroll', () => {--%>
+<%--        var header = document.querySelector('.container-2')--%>
+<%--        header.classList.toggle('sticky', window.scrollY > 100)--%>
+<%--    });--%>
+<%--</script>--%>
 <script>
-    window.addEventListener('scroll', () => {
-        var header = document.querySelector('.container-2')
-        header.classList.toggle('sticky', window.scrollY > 100)
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        $("#formAcount").validate({
-            rules: {
-                fullname: {
-                    required: true
-                },
-                email: {
-                    required: true,
-                    email: true
-                },
-                cityID: {
-                    required: true
-                },
-                district: {
-                    required: true
-                },
-                ward: {
-                    required: true
-                },
-                address: {
-                    required: true
-                }
-            },
-            messages: {
-                fullname: {
-                    required: "Xin vui lòng nhập tên"
-                },
-                email: {
-                    required: "Xin vui lòng nhập email",
-                    email: "Email không hợp lệ, xin vui lòng nhập lại"
-                },
-                cityID: {
-                    required: "Xin chọn tỉnh/thành phố"
-                },
-                district: {
-                    required: "Xin vui lòng nhập quận/huyện"
-                },
-                ward: {
-                    required: "Xin vui lòng nhập xã/ phường/ thị trấn"
-                },
-                address: {
-                    required: "Xin vui lòng nhập địa chỉ"
-                }
-            }
-        });
-    });
+    var hidden = true;
+    function toggleHidden(event) {
+        hidden = !hidden;
+        updateVisibility();
+    }
+    function handleCancel(event) {
+        event.preventDefault();  // Ngăn chặn hành vi mặc định, không gửi form
+        toggleHidden();          // Chạy hàm toggle để thay đổi trạng thái và cập nhật giao diện
+    }
+
+    function updateVisibility() {
+        var cityI = document.getElementById("city");
+        var districtI = document.getElementById("district");
+        var wardI = document.getElementById("ward");
+        var city = document.getElementById("tinh");
+        var district = document.getElementById("quan");
+        var ward = document.getElementById("phuong");
+        var update = document.getElementById("btnUpdate");
+        var huy = document.getElementById("btnHuy");
+        if (hidden) {
+            city.style.display = 'none';
+            district.style.display = 'none';
+            ward.style.display = 'none';
+            cityI.style.display = 'block';
+            districtI.style.display = 'block';
+            wardI.style.display = 'block';
+            update.style.display = 'none';
+        } else {
+            city.style.display = 'block';
+            district.style.display = 'block';
+            ward.style.display = 'block';
+            cityI.style.display = 'none';
+            districtI.style.display = 'none';
+            wardI.style.display = 'none';
+            update.style.display = 'block';
+            huy.style.background = 'silver';
+        }
+    }
+    // document.getElementById("btnUpdate").addEventListener("click", toggleHidden);
+    document.getElementById("btnHuy").addEventListener("click", handleCancel);
+    document.addEventListener("DOMContentLoaded", updateVisibility);
 </script>
 <script type="text/javascript">
     document.getElementById('file').onchange = function() {
@@ -368,15 +375,158 @@
                 processData: false,  // Báo cho jQuery không xử lý dữ liệu
                 contentType: false,  // Báo cho jQuery không thiết lập contentType
                 success: function (result) {
-                    console.log(result);
                     $('#avatar').attr("src", "/uploads/" + result.status);
                 },
-                error: function(xhr, status, error) {
-                    console.log("Error: " + error);
+                error: function() {
                 }
             });
         }
     };
+</script>
+<script>
+    $(document).ready(function () {
+        // Lấy tỉnh thành
+        $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
+            if (data_tinh.error == 0) {
+                $.each(data_tinh.data, function (key_tinh, val_tinh) {
+                    $("#tinh").append('<option value="' + val_tinh.id + '" data-full-name="' + val_tinh.full_name + '">' + val_tinh.full_name + '</option>');
+                });
+            }
+        });
+
+        $("#tinh").change(function (e) {
+            var idtinh = $(this).val(); // lấy ID của tỉnh
+            var fullNameTinh = $("#tinh option:selected").data('full-name'); // lấy full name của tỉnh đã chọn
+            // Lấy quận huyện
+            $.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
+                if (data_quan.error == 0) {
+                    $("#quan").empty().append('<option value="0">--Chọn Quận Huyện--</option>');
+                    $("#phuong").empty().append('<option value="0">--Chọn Phường/ Xã/ Thị trấn--</option>');
+                    $.each(data_quan.data, function (key_quan, val_quan) {
+                        $("#quan").append('<option value="' + val_quan.id + '" data-full-name="' + val_quan.full_name + '">' + val_quan.full_name + '</option>');
+                    });
+                }
+            });
+        });
+
+        $("#quan").change(function (e) {
+            var idquan = $(this).val(); // lấy ID của quận/huyện
+            var fullNameQuan = $("#quan option:selected").data('full-name'); // lấy full name của quận/huyện đã chọn
+            // Lấy phường xã
+            $.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
+                if (data_phuong.error == 0) {
+                    $("#phuong").empty().append('<option value="0">--Chọn Phường/ Xã/ Thị trấn--</option>');
+                    $.each(data_phuong.data, function (key_phuong, val_phuong) {
+                        $("#phuong").append('<option value="' + val_phuong.id + '" data-full-name="' + val_phuong.full_name + '">' + val_phuong.full_name + '</option>');
+                    });
+                }
+            });
+        });
+    });
+</script>
+<script>
+    var context = "${pageContext.request.contextPath}";
+    $(document).ready(function() {
+        $('#btnUpdate').click(function (event) {
+            if(!hidden) {
+                event.preventDefault();
+                var fullName = $('#fullName').val();
+                var birthday = $('#birthday').val();
+                var phone = $('#mobile').val();
+                var email = $('#email').val();
+                var fullNameTinh = $("#tinh option:selected").data('full-name');
+                var fullNameQuan = $("#quan option:selected").data('full-name');
+                var fullNamePhuong = $("#phuong option:selected").data('full-name');
+                var address = $('#address').val();
+                var action = $('#action').val();
+                $.ajax({
+                    type: 'POST',
+                    data: {
+                        fullName: fullName,
+                        birthday: birthday,
+                        phone: phone,
+                        email: email,
+                        tinh: fullNameTinh,
+                        quan: fullNameQuan,
+                        phuong: fullNamePhuong,
+                        address: address,
+                        action: action
+                    },
+                    url: 'updateinfouser',
+                    success: function (result) {
+                        try {
+                            if (result.status !== "success") {
+                                $('#errorUpdate').html(result.error);
+                            } else {
+                                window.location.href = context + "/user/updateinfouser";
+                            }
+                        } catch (e) {
+                            $('#errorUpdate').html("Error loading request, please try again!");
+                        }
+                    },
+                    error: function() {
+                        $('#errorUpdate').html("Connection errors. Please check your network and try again!");
+                    }
+                });
+            }
+        });
+    });
+</script>
+<script>
+    function getPower(password) {
+        let point = 0;
+        let colorPower = ['#D73F40', '#DC6551', '#F2B84F', '#BDE952', '#30CEC7'];
+        let stringColor = ['', 'weak', 'medium', 'strong', 'very strong'];
+        let power = document.getElementById('power-point');
+        let widthPower = ['1%', '25%', '50%', '75%', '100%'];
+        if (password.length >= 8) {
+            let arrayTest = [/[0-9]/, /[a-z]/, /[A-Z]/, /[^0-9a-zA-Z]/];
+            arrayTest.forEach(item => {
+                if(item.test(password)) {
+                    point += 1;
+                }
+            });
+        }
+        power.style.width = widthPower[point];
+        power.style.backgroundColor = colorPower[point];
+        document.getElementById('color-status').innerHTML = stringColor[point];
+    }
+</script>
+<script>
+    var context = "${pageContext.request.contextPath}";
+    $(document).ready(function() {
+        $('#btnReset').click(function (event) {
+            event.preventDefault();
+            var oldPass = $('#old-pass').val();
+            var password = $('#password').val();
+            var repass = $('#pass').val();
+            var action = $('#act-reset').val();
+            $.ajax({
+                type: 'POST',
+                data: {
+                    oldPass: oldPass,
+                    password: password,
+                    repass: repass,
+                    action: action
+                },
+                url: 'updateinfouser',
+                success: function (result) {
+                    try {
+                        if (result.status !== "success") {
+                            $('#errorReset').html(result.error);
+                        } else {
+                            window.location.href = context + "/user/updateinfouser";
+                        }
+                    } catch (e) {
+                        $('#errorReset').html("Error loading request, please try again!");
+                    }
+                },
+                error: function() {
+                    $('#errorReset').html("Connection errors. Please check your network and try again!");
+                }
+            });
+        });
+    });
 </script>
 </body>
 </html>

@@ -39,7 +39,7 @@ public class CategoryDAO extends AbsDAO<ProductCategories> implements ICategoryD
     public Map<ProductCategories, Integer> getQuantityCategories() {
         String sql = "SELECT pc.id AS cateId, COALESCE(COUNT(p.quantity), 0) AS total " +
                 "FROM product_categories pc " +
-                "LEFT JOIN products p ON pc.id = p.category_id " +
+                "LEFT JOIN products p ON pc.id = p.cate_id " +
                 "GROUP BY pc.id, pc.categoryName";
         RowMapper<Map.Entry<ProductCategories, Integer>> rowMapper = (rs, ctx) -> {
             Integer cateId = rs.getInt("cateId");

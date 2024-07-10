@@ -5,6 +5,15 @@ import vn.edu.hcmuaf.fit.model.SocialMedia;
 import vn.edu.hcmuaf.fit.service.ISocialMediaService;
 
 public class SocialMediaService implements ISocialMediaService {
+    private static ISocialMediaService instance;
+
+    public static ISocialMediaService getInstance() {
+        if (instance == null) {
+            instance = new SocialMediaService();
+        }
+        return instance;
+    }
+
     @Override
     public SocialMedia load() {
         return SocialMediaDAO.getInstance().load().get(0);

@@ -1,6 +1,7 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.jdbi.v3.core.mapper.Nested;
 
 import java.io.Serializable;
@@ -8,15 +9,18 @@ import java.sql.Timestamp;
 
 @Table(name = "log")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Log implements Serializable {
-    private Integer id;
-    @Nested("level")
-    private Level level;
-    private String ip;
-    private String address;
-    private String preValue;
-    private String postValue;
-    private Timestamp createdAt;
+     Integer id;
+     @Nested("level")
+     Level level;
+     String ip;
+     String address;
+     String preValue;
+     String postValue;
+     Timestamp createdAt;
 
     @Nested("level")
     public Level getLevel() {

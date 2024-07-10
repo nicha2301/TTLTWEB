@@ -2,7 +2,9 @@ package vn.edu.hcmuaf.fit.dao.impl;
 
 import vn.edu.hcmuaf.fit.dao.IProductDAO;
 import vn.edu.hcmuaf.fit.model.Product;
+import vn.edu.hcmuaf.fit.model.ProductTypes;
 import vn.edu.hcmuaf.fit.model.Supplier;
+import vn.edu.hcmuaf.fit.service.impl.ProductTypeService;
 import vn.edu.hcmuaf.fit.service.impl.SupplierService;
 
 import java.util.List;
@@ -83,7 +85,7 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
     public Map<String, Integer> getListObject() {
         String sql = "SELECT pc.categoryName AS cateName, COUNT(p.id) AS total " +
                 "FROM product_categories pc " +
-                "LEFT JOIN products p ON pc.id = p.category_id " +
+                "LEFT JOIN products p ON pc.id = p.cate_id " +
                 "GROUP BY pc.id, pc.categoryName";
         Mapper<String, Integer> mapper = new Mapper<String, Integer>(rs -> RSHandler.getString(rs, "cateName"),
                                                                      rs -> RSHandler.getInt(rs, "total"));
@@ -97,7 +99,7 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
     @Override
     public Map<Product, List<String>> getProductByCategory(String categoryName, Integer start, Integer pageSize) {
         String sql = "SELECT p.*, i.url AS image_url FROM (" +
-                "SELECT pr.* FROM product_categories pc JOIN products pr ON pr.category_id = pc.id WHERE pc.categoryName = ? LIMIT ?, ?" +
+                "SELECT pr.* FROM product_categories pc JOIN products pr ON pr.cate_id = pc.id WHERE pc.categoryName = ? LIMIT ?, ?" +
                 ") AS p LEFT JOIN images i ON p.id = i.product_id";
         ProductImageMapper mapper = new ProductImageMapper(rs -> RSHandler.getString(rs, "image_url"));
         return queryForMap(sql, mapper, true, categoryName, start, pageSize);
@@ -124,7 +126,7 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
     public Map<String, Integer> getGroupListObject() {
         String sql = "SELECT pg.groupName AS groupName, COUNT(p.id) AS productCount " +
                 "FROM product_groups pg LEFT JOIN product_categories pc ON pg.id = pc.group_id " +
-                "LEFT JOIN products p ON pc.id = p.category_id GROUP BY pg.id, pg.groupName";
+                "LEFT JOIN products p ON pc.id = p.cate_id GROUP BY pg.id, pg.groupName";
         Mapper<String, Integer> mapper = new Mapper<String, Integer>(rs -> RSHandler.getString(rs, "groupName"),
                                                                      rs -> RSHandler.getInt(rs, "productCount"));
         return queryForMap(sql, mapper, false);
@@ -152,7 +154,7 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
     @Override
     public Map<Product, List<String>> getProductByGroup(String groupName, Integer start, Integer pageSize) {
         String sql = "SELECT p.*, i.url AS image_url FROM (" +
-                "SELECT pr.* FROM products pr JOIN product_categories pc ON pr.category_id = pc.id " +
+                "SELECT pr.* FROM products pr JOIN product_categories pc ON pr.cate_id = pc.id " +
                 "JOIN product_groups pg ON pc.group_id = pg.id WHERE pg.groupName = ? LIMIT ?, ?" +
                 ") AS p LEFT JOIN images i ON p.id = i.product_id";
         ProductImageMapper mapper = new ProductImageMapper(rs -> RSHandler.getString(rs, "image_url"));
@@ -174,7 +176,9 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
             if(map.size()==1) {
                 for(Product product : map.keySet()) {
                     Supplier supplier = SupplierService.getInstance().getSupplierById(product.getSupplier().getId());
+                    ProductTypes type = ProductTypeService.getInstance().getProductTypeById(product.getType().getId());
                     product.setSupplier(supplier);
+                    product.setType(type);
                     return map;
                 }
             }
@@ -192,7 +196,7 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
                                  Integer price, Integer quantity, String purpose, String contraindications,
                                  String ingredients, String dosage, String instructions, String warrantyPeriod,
                                  String storageCondition, Integer typeId, Integer supplierId) {
-        String sql = "UPDATE `products` SET productName =?, category_id =?, sale_percent =?, price =?, quantity =?, purpose =?, contraindications =?, ingredients =?, dosage =?, instructions =?, warrantyPeriod =?, storageCondition =?, type_id =?, supplier_id =? WHERE id =?";
+        String sql = "UPDATE `products` SET productName =?, cate_id =?, sale_percent =?, price =?, quantity =?, purpose =?, contraindications =?, ingredients =?, dosage =?, instructions =?, warrantyPeriod =?, storageCondition =?, type_id =?, supplier_id =? WHERE id =?";
         return update(sql, productName, categoryId, percent, price, quantity, purpose, contraindications, ingredients, dosage, instructions, warrantyPeriod, storageCondition, typeId, supplierId, id);
     }
 
@@ -213,7 +217,7 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
                               Integer price, Integer quantity, String purpose, String contraindications,
                               String ingredients, String dosage, String instructions, String warrantyPeriod,
                               String storageCondition, Integer typeId, Integer supplierId, Boolean active) {
-        String sql = "INSERT INTO `products`(`productName`, `category_id`, `sale_percent`, `price`, `quantity`, `purpose`, `contraindications`, `ingredients`, `dosage`, `instructions`, `warrantyPeriod`, `storageCondition`, `type_id`, `supplier_id`, `active`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO `products`(`productName`, `cate_id`, `sale_percent`, `price`, `quantity`, `purpose`, `contraindications`, `ingredients`, `dosage`, `instructions`, `warrantyPeriod`, `storageCondition`, `type_id`, `supplier_id`, `active`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         return insert(sql, Product.class, productName, categoryId, percent, price, quantity, purpose, contraindications, ingredients, dosage, instructions, warrantyPeriod, storageCondition, typeId, supplierId, active ? 1 : 0);
     }
 

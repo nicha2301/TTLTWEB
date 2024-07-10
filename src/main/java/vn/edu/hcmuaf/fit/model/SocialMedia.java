@@ -1,18 +1,22 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 
 @Table(name = "social_media")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SocialMedia implements Serializable {
-    private Integer id;
-    private String facebook;
-    private String instagram;
-    private String twitter;
-    private String pinterest;
-    private String youtube;
-    private String linkedin;
+     Integer id;
+     String facebook;
+     String instagram;
+     String twitter;
+     String pinterest;
+     String youtube;
+     String linkedin;
 
 }

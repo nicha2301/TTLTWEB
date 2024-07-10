@@ -1,10 +1,14 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AbsModel {
-    private String beforeData;
-    private String afterData;
+    String beforeData;
+    String afterData;
 
 }

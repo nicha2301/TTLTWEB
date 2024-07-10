@@ -11,15 +11,14 @@ import vn.edu.hcmuaf.fit.service.IOrderService;
 import java.util.List;
 
 public class AddressService extends LogDAO<Address> implements IAddressService {
-    private static IOrderService instance;
+    private static IAddressService instance;
 
-    public static IOrderService getInstance() {
+    public static IAddressService getInstance() {
         if (instance == null) {
-            instance = new OrderService();
+            instance = new AddressService();
         }
         return instance;
     }
-
 
     @Override
     public List<Address> loadAddress() {

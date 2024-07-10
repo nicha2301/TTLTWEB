@@ -229,7 +229,7 @@
                                     </div>
                                     <div class="wd-buttons wd-pos-r-t">
                                         <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
-                                            <a href="${request.servletContext.contextPath}/user/addtocart?id=${p.id}" class="button product_type_simple add-to-cart-loop">
+                                            <a href="javascript:void(0)" data-id="${p.id}" onclick="addCart(this, '${p.id}')" class="button product_type_simple add-to-cart-loop">
                                                 <span><i class="fa-solid fa-cart-shopping"></i></span>
                                             </a>
                                         </div>
@@ -297,7 +297,7 @@
                                     </div>
                                     <div class="wd-buttons wd-pos-r-t">
                                         <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
-                                            <a href="${request.servletContext.contextPath}/user/addtocart?id=${prod.id}" class="button product_type_simple add-to-cart-loop">
+                                            <a href="javascript:void(0)" onclick="addCart(this, '${prod.id}')" class="button product_type_simple add-to-cart-loop">
                                             <span>
                                                 <i class="fa-solid fa-cart-shopping"></i>
                                             </span>
@@ -367,7 +367,7 @@
                                     </div>
                                     <div class="wd-buttons wd-pos-r-t">
                                         <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
-                                            <a href="${request.servletContext.contextPath}/user/addtocart?id=${otherProd.id}" class="button product_type_simple add-to-cart-loop">
+                                            <a href="javascript:void(0)" onclick="addCart(this, '${otherProd.id}')" class="button product_type_simple add-to-cart-loop">
                                                 <span>
                                                     <i class="fa-solid fa-cart-shopping"></i>
                                                 </span>
@@ -495,5 +495,32 @@
         integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="/assets/user/js/home/scripts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function addCart(btn, id) {
+        $.ajax({
+            url: "cart",
+            method: "POST",
+            data: {
+                id: id,
+                action: "add",
+                type: 0
+            },
+            success: function (response) {
+                var res = JSON.parse(response);
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Thêm Sản Phẩm Vào Giỏ Hàng Thành Công!",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                const badge = document.getElementById("badge");
+                badge.innerHTML = res.totalItems;
+            }
+        });
+    }
+</script>
 </body>
 </html>

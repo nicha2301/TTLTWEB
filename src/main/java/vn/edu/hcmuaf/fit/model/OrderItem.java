@@ -1,21 +1,24 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.jdbi.v3.core.mapper.Nested;
 
 import java.io.Serializable;
 
 @Table(name = "order_items")
-@Data
 @EqualsAndHashCode(callSuper = true)
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderItem extends AbsModel implements Serializable {
-    @Nested("order")
-    private Order order;
-    @Nested("product")
-    private Product product;
-    private Integer quantity;
-    private Integer orderPrice;
+     @Nested("order")
+     Order order;
+     @Nested("product")
+     Product product;
+     Integer quantity;
+     Integer orderPrice;
 
     @Nested("order")
     public Order getOrder() {

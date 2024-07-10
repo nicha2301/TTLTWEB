@@ -1,18 +1,21 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 
 @Table(name = "shipping_info")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ShippingInfo implements Serializable {
-    private Integer id;
-    private String shippingName;
-    private String phone;
-    private Integer pricePerKg;
-    private Integer pricePerSize;
-    private Integer pricePerKm;
+     Integer id;
+     String shippingName;
+     String phone;
+     Integer pricePerKg;
+     Integer pricePerSize;
+     Integer pricePerKm;
 
 }

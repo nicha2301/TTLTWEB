@@ -11,6 +11,19 @@
                 <img src="https://tienthangvet.vn/wp-content/uploads/logo-tien-thang-vet.jpg" alt=""/>
             </a>
         </div>
+        <c:choose>
+            <c:when test="${not empty sessionScope.cart}">
+                <c:when test="${empty sessionScope.totalItems}">
+                    <c:set var="total" value="0" />
+                </c:when>
+                <c:otherwise>
+                    <c:set var="total" value="${sessionScope.totalItems}" />
+                </c:otherwise>
+            <c:otherwise>
+                <c:set var="total" value="0" />
+            </c:otherwise>
+            </c:when>
+        </c:choose>
         <div class="header-center">
             <div class="header-nav" role="navigation" aria-label="Main navigation">
                 <ul class="menu">
@@ -18,7 +31,7 @@
                         <a href="${request.servletContext.contextPath}/user/home"><span class="nav-link-text">Thuốc Y The Pet</span></a>
                     </li>
                     <li class="menu-item">
-                        <a href="${request.servletContext.contextPath}/user/introduce.jsp"><span class="nav-link-text">Giới thiệu</span></a>
+                        <a href="${request.servletContext.contextPath}/user/introduce"><span class="nav-link-text">Giới thiệu</span></a>
                     </li>
                     <li class="menu-item">
                         <a href="${request.servletContext.contextPath}/user/products"><span class="nav-link-text">Sản phẩm</span></a>
@@ -67,8 +80,9 @@
 <%--                    %>--%>
 <%--                    <span class="count"><%=cart.getTotalQuantity()%></span>--%>
 <%--                    <%}%>--%>
-                    <a href="${request.servletContext.contextPath}/user/cart">
+                    <a href="${request.servletContext.contextPath}/user/cart?action=get">
                         <i class="fa-solid fa-cart-shopping material-icons"></i>
+                        <span id="badge" class="cart-count"></span>
                     </a>
                 </div>
                 <c:choose>
@@ -95,4 +109,12 @@
             </div>
         </div>
     </div>
+    <script>
+        const badge = document.getElementById('badge');
+        const totalItems = '${total}';
+
+        if (badge.innerHTML === '') {
+            badge.innerHTML = totalItems;
+        }
+    </script>
 </header>

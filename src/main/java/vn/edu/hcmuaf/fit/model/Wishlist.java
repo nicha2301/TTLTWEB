@@ -1,7 +1,7 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.jdbi.v3.core.mapper.Nested;
 
 import java.io.Serializable;
@@ -9,11 +9,14 @@ import java.io.Serializable;
 @Table(name = "wishlists")
 @EqualsAndHashCode(callSuper = true)
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Wishlist extends AbsModel implements Serializable {
-    @Nested("user")
-    private User user;
-    @Nested("product")
-    private Product product;
+     @Nested("user")
+     User user;
+     @Nested("product")
+     Product product;
 
     @Nested("user")
     public User getUser() {

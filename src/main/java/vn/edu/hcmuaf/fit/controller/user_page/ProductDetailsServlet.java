@@ -1,83 +1,61 @@
-//package vn.edu.hcmuaf.fit.controller.user_page;
-//
-//import vn.edu.hcmuaf.fit.controller.user_page.ImageService.Token;
-//import vn.edu.hcmuaf.fit.dao.ProductDAO;
-//import vn.edu.hcmuaf.fit.model.Product;
-//import jakarta.servlet.*;
-//import jakarta.servlet.http.*;
-//import jakarta.servlet.annotation.*;
-//
-//import java.io.IOException;
-//import java.util.List;
-//
-//@WebServlet("/user/product")
-//public class ProductDetailsServlet extends HttpServlet {
-//    private static final long serialVersionUID = 1L;
-//
-//    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException {
-//        // Lấy ID sản phẩm từ request
-//        String idParameter = request.getParameter("id");
-//
-//        if (idParameter != null && !idParameter.isEmpty()) {
-//            try {
-//                int productId = Integer.parseInt(idParameter);
-//
-//                // Tạo một đối tượng ProductDAO
-//                ProductDAO productDAO = new ProductDAO();
-//
-//                // Gọi phương thức getProductById để lấy chi tiết sản phẩm
-//                Product product = productDAO.getProductById(productId);
-//
-//                // Sản phẩm tương tự
-//                List<Product> products = productDAO.getAllProductsLimited(0, 4);
-//
-//                // Hình ảnh sản phẩm
-//                String folderUrl = getServletContext().getRealPath("data\\sp_") + idParameter;
-//                List<String> imgUrl = Token.getImgUrlById(folderUrl);
-//                // Hình ảnh của nhà cung cấp
-//                String supplierImgUrl = ""; // Khởi tạo một biến chuỗi để lưu trữ URL của nhà cung cấp
-//
-//                // Lấy thông tin sản phẩm với thông tin nhà cung cấp
-//                Product productWithSupplierInfo = productDAO.getProductByIdWithSupplierInfo(productId);
-//
-//                if (productWithSupplierInfo != null) {
-//                    // Lấy URL của nhà cung cấp từ đối tượng Product
-//                    supplierImgUrl = productWithSupplierInfo.getSupplierImageUrl();
-//                }
-//
-//
-//                if (product != null) {
-//                    // Đặt đối tượng Product vào request để hiển thị trên trang JSP
-//                    request.setAttribute("product", product);
-//                    request.setAttribute("products", products);
-//                    request.setAttribute("listImg", imgUrl);
-//                    request.setAttribute("supplierImgUrl", supplierImgUrl);
-//
-//
-//                    // Chuyển hướng đến trang product-detail.jsp
-//                    RequestDispatcher dispatcher = request.getRequestDispatcher("./product_detail.jsp");
-//                    dispatcher.forward(request, response);
-//                } else {
-//                    // Nếu không tìm thấy sản phẩm, hiển thị thông báo
-//                    response.getWriter().println("Product not found");
-//                }
-//            } catch (NumberFormatException e) {
-//                // Xử lý khi giá trị id không hợp lệ hoặc không thể chuyển đổi thành số nguyên
-//                response.getWriter().println("Invalid product ID");
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            // Xử lý khi giá trị id là null hoặc rỗng
-//            response.getWriter().println("Product ID is missing");
-//        }
-//    }
-//
-//    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException {
-//        // Do nothing or add POST-specific logic if needed
-//        response.getWriter().println("POST method not allowed for this servlet");
-//    }
-//
-//}
+package vn.edu.hcmuaf.fit.controller.user_page;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import vn.edu.hcmuaf.fit.model.Product;
+import vn.edu.hcmuaf.fit.service.impl.ProductService;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+import java.util.Map;
+
+@WebServlet("/user/product")
+public class ProductDetailsServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+
+        String id = request.getParameter("id");
+        if (id != null && !id.isEmpty()) {
+            try {
+                String ip = request.getHeader("X-FORWARDED-FOR");
+                if (ip == null) ip = request.getRemoteAddr();
+
+                Product p = new Product();
+                p.setId(Integer.parseInt(id));
+                Map<Product, List<String>> product = ProductService.getInstance().getProductByIdWithSupplierInfo(p, ip, "/user/product");
+
+                Map<Product, List<String>> similar = ProductService.getInstance().getAllProductsLimited(0, 4);
+                if (product != null && product.size()==1) {
+                    request.setAttribute("product", product);
+                    request.setAttribute("products", similar);
+                    request.getRequestDispatcher("/WEB-INF/user/product_detail.jsp").forward(request, response);
+                    return;
+                } else out.println("Product not found");
+            } catch (Exception e) {
+                out.println(e.getLocalizedMessage());
+            }
+        } else {
+            out.println("Product ID is missing");
+        }
+        out.flush();
+        out.close();
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        PrintWriter out = response.getWriter();
+        out.println("POST method not allowed for this servlet");
+        out.flush();
+        out.close();
+    }
+}

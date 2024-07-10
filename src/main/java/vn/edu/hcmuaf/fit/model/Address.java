@@ -1,20 +1,23 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 
 @Table(name = "address")
 @EqualsAndHashCode(callSuper = true)
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Address extends AbsModel implements Serializable {
-    private Integer id;
-    private String address;
-    private String phone;
-    private String hotline;
-    private String email;
-    private String timeOpen;
-    private String map;
+    Integer id;
+    String address;
+    String phone;
+    String hotline;
+    String email;
+    String timeOpen;
+    String map;
 
 }

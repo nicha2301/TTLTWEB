@@ -1,43 +1,46 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.jdbi.v3.core.mapper.Nested;
 
 import java.io.Serializable;
 
 @Table(name = "products")
-@Data
 @EqualsAndHashCode(callSuper = true)
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Product extends AbsModel implements Serializable {
-    private Integer id;
-    private String productName;
-    @Nested("categories")
-    private ProductCategories categories;
-    private Double salePercent;
-    private Integer price;
-    private Integer quantity;
-    private String purpose;
-    private String contraindications;
-    private String ingredients;
-    private String dosage;
-    private String instructions;
-    private String warrantyPeriod;
-    private String storageCondition;
-    @Nested("type")
-    private ProductTypes type;
-    @Nested("supplier")
-    private Supplier supplier;
-    private Boolean active;
+     Integer id;
+     String productName;
+     Double salePercent;
+     Integer price;
+     Integer quantity;
+     String purpose;
+     String contraindications;
+     String ingredients;
+     String dosage;
+     String instructions;
+     String warrantyPeriod;
+     String storageCondition;
+     @Nested("cate")
+     ProductCategories cate;
+     @Nested("type")
+     ProductTypes type;
+     @Nested("supplier")
+     Supplier supplier;
+     Boolean active;
 
-    @Nested("categories")
-    public ProductCategories getCategories() {
-        return categories;
+    @Nested("cate")
+    public ProductCategories getCate() {
+        return cate;
     }
 
-    @Nested("categories")
-    public void setCategories(ProductCategories categories) {
-        this.categories = categories;
+    @Nested("cate")
+    public void setCate(ProductCategories cate) {
+        this.cate = cate;
     }
 
     @Nested("type")
@@ -58,10 +61,5 @@ public class Product extends AbsModel implements Serializable {
     @Nested("supplier")
     public void setSupplier(Supplier supplier) {
         this.supplier = supplier;
-    }
-
-    @Override
-    public String toString() {
-        return "Product{id=" + id + ", productName=" + productName + "}";
     }
 }

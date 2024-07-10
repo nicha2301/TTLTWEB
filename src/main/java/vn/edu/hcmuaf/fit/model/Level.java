@@ -1,14 +1,18 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 
 @Table(name = "level")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Level implements Serializable {
-    private Integer id;
-    private String level;
-    private String description;
+     Integer id;
+     String level;
+     String description;
 
 }

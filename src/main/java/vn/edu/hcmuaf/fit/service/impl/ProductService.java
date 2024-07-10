@@ -103,7 +103,7 @@ public class ProductService extends LogDAO<Product> implements IProductService {
         try {
             Level level;
             p.setBeforeData("Old info of ID=" + p.getId() + " is " + p);
-            boolean success = ProductDAO.getInstance().updateProduct(p.getId(), p.getProductName(), p.getCategories().getId(), p.getSalePercent(), p.getPrice(), p.getQuantity(),
+            boolean success = ProductDAO.getInstance().updateProduct(p.getId(), p.getProductName(), p.getCate().getId(), p.getSalePercent(), p.getPrice(), p.getQuantity(),
                                                                         p.getPurpose(), p.getContraindications(), p.getIngredients(), p.getDosage(), p.getInstructions(), p.getWarrantyPeriod(), p.getStorageCondition(),
                                                                     p.getType().getId(), p.getSupplier().getId());
             if(success) {
@@ -150,7 +150,7 @@ public class ProductService extends LogDAO<Product> implements IProductService {
     public Product addProduct(Product p, String ip, String address) {
         try {
             Level level;
-            Product success = ProductDAO.getInstance().addProduct(p.getProductName(), p.getCategories().getId(), p.getSalePercent(), p.getPrice(), p.getQuantity(),
+            Product success = ProductDAO.getInstance().addProduct(p.getProductName(), p.getCate().getId(), p.getSalePercent(), p.getPrice(), p.getQuantity(),
                                 p.getPurpose(), p.getContraindications(), p.getIngredients(), p.getDosage(), p.getInstructions(), p.getWarrantyPeriod(), p.getStorageCondition(),
                         p.getType().getId(), p.getSupplier().getId(), p.getActive());
             if(success != null) {

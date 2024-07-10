@@ -1,26 +1,29 @@
 package vn.edu.hcmuaf.fit.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.jdbi.v3.core.mapper.Nested;
 
 import java.io.Serializable;
 
 @Table(name = "delivery_address")
-@Data
 @EqualsAndHashCode(callSuper = true)
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class DeliveryAddress extends AbsModel implements Serializable {
-    private Integer id;
-    @Nested("user")
-    private User user;
-    private String fullName;
-    private String phone;
-    private String province;
-    private String district;
-    private String ward;
-    private String detailAddress;
-    private Boolean atHome;
-    private Boolean isPrimary;
+     Integer id;
+     @Nested("user")
+     User user;
+     String fullName;
+     String phone;
+     String province;
+     String district;
+     String ward;
+     String detailAddress;
+     Boolean atHome;
+     Boolean isPrimary;
 
     @Nested("user")
     public User getUser() {

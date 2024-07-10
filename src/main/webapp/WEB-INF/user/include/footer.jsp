@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<%@include file="/WEB-INF/common/taglib.jsp"%>
 <head>
     <link rel="stylesheet" href="/assets/user/css/header&footer.css">
 </head>
@@ -31,7 +31,7 @@
                       <span class="elementor-icon-list-icon">
                         <i aria-hidden="true" class="fas fa-phone-volume"></i>
                       </span>
-                                    <span class="elementor-icon-list-text"> NVKD SP gia súc - gia cầm: 0${applicationScope.address.get(0).phone}</span>
+                                    <span class="elementor-icon-list-text"> NVKD SP gia súc - gia cầm: ${applicationScope.address.get(0).phone}</span>
                                 </a>
                             </li>
                             <li class="elementor-icon-list-item">
@@ -39,7 +39,7 @@
                       <span class="elementor-icon-list-icon">
                         <i aria-hidden="true" class="fas fa-headphones-alt"></i>
                       </span>
-                                    <span class="elementor-icon-list-text">Hotline: 0${applicationScope.address.get(0).hotline}</span>
+                                    <span class="elementor-icon-list-text">Hotline: ${applicationScope.address.get(0).hotline}</span>
                                 </a>
                             </li>
                             <li class="elementor-icon-list-item">
@@ -48,6 +48,14 @@
                         <i aria-hidden="true" class="far fa-envelope"></i>
                       </span>
                                     <span class="elementor-icon-list-text"> Email: ${applicationScope.address.get(0).email}</span>
+                                </a>
+                            </li>
+                            <li class="elementor-icon-list-item">
+                                <a href="${request.servletContext.contextPath}/user/mailto:tienthangvet@gmail.com">
+                      <span class="elementor-icon-list-icon">
+                        <i aria-hidden="true" class="fas fa-map-marker-alt"></i>
+                      </span>
+                                    <span class="elementor-icon-list-text"> Time Open: ${applicationScope.address.get(0).timeOpen}</span>
                                 </a>
                             </li>
                         </ul>

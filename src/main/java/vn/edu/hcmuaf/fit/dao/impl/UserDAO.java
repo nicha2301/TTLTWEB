@@ -75,7 +75,7 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
      */
     @Override
     public boolean updateUserInfo(String fullName, String birthday, String city, String district, String ward, String detailAddress, String phone, Integer id) {
-        String sql = "UPDATE users SET fullName = ?, dateOfBirth = DATE(?), city = ?, district = ?, ward = ?, detail_address = ?, phone = ? WHERE id = ?";
+        String sql = "UPDATE users SET fullName = ?, dateOfBirth = ?, city = ?, district = ?, ward = ?, detail_address = ?, phone = ? WHERE id = ?";
         return update(sql, fullName, birthday, city, district, ward, detailAddress, phone, id);
     }
 
