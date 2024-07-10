@@ -1,6 +1,5 @@
 package vn.edu.hcmuaf.fit.controller.user_page;
 
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -34,10 +33,7 @@ public class ProductDetailsServlet extends HttpServlet {
                 Product p = new Product();
                 p.setId(Integer.parseInt(id));
                 Map<Product, List<String>> product = ProductService.getInstance().getProductByIdWithSupplierInfo(p, ip, "/user/product");
-                for (Map.Entry<Product, List<String>> productEntry : product.entrySet()) {
-                    System.out.println(productEntry.getKey());
-                    System.out.println(productEntry.getValue());
-                }
+
                 Map<Product, List<String>> similar = ProductService.getInstance().getAllProductsLimited(0, 4);
                 if (product != null && product.size()==1) {
                     request.setAttribute("product", product);

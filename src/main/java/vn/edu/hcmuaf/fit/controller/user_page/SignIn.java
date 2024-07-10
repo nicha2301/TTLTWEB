@@ -5,12 +5,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import vn.edu.hcmuaf.fit.controller.user_page.APIService.OAuth2Callback;
 import vn.edu.hcmuaf.fit.controller.user_page.APIService.OAuth2Service;
+import vn.edu.hcmuaf.fit.model.CartItem;
 import vn.edu.hcmuaf.fit.model.User;
 import vn.edu.hcmuaf.fit.service.impl.UserService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet("/user/signin")
 public class SignIn extends HttpServlet {
@@ -91,6 +94,7 @@ public class SignIn extends HttpServlet {
                         UserService.getInstance().resetLoginTimes(user, "", "", ip, "/user/signin");
                         HttpSession session = request.getSession(true);
                         session.setAttribute("auth", user);
+                        session.setAttribute("cart", new ArrayList<>());
                         Cookie uc = new Cookie("userC", email);
                         Cookie pc = new Cookie("passC", password);
                         uc.setMaxAge(30 * 24 * 60 * 60);

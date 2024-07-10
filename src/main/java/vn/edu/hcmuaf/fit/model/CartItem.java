@@ -7,13 +7,12 @@ import org.jdbi.v3.core.mapper.Nested;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-@Table(name = "cart")
-@EqualsAndHashCode(callSuper = true)
+@Table(name = "cart_items")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Cart extends AbsModel implements Serializable {
+public class CartItem implements Serializable {
     @Nested("user")
     User user;
     @Nested("product")
