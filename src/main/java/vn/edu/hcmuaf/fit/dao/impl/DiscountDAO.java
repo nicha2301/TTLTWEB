@@ -3,7 +3,7 @@ package vn.edu.hcmuaf.fit.dao.impl;
 import vn.edu.hcmuaf.fit.dao.IDiscountDAO;
 import vn.edu.hcmuaf.fit.model.Discount;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 import java.util.List;
 
 public class DiscountDAO extends AbsDAO<Discount> implements IDiscountDAO {
@@ -52,7 +52,7 @@ public class DiscountDAO extends AbsDAO<Discount> implements IDiscountDAO {
      * Adds a new coupon to the database.
      */
     @Override
-    public Discount addCoupon(String name, String des, Double percent, Integer quantity, Timestamp startDate, Timestamp dateEnd) {
+    public Discount addCoupon(String name, String des, Double percent, Integer quantity, Date startDate, Date dateEnd) {
         String sql = "INSERT INTO `discounts`(`discountName`, `description`, `sale_percent`, `quantity`, `startDate`, `expirationDate`) VALUES(?,?,?,?,?,?)";
         return insert(sql, Discount.class, name, des, percent, quantity, startDate, dateEnd);
     }
@@ -72,7 +72,7 @@ public class DiscountDAO extends AbsDAO<Discount> implements IDiscountDAO {
      * Edits a coupon in the database by its id.
      */
     @Override
-    public boolean editCoupon(Integer id, String name, String des, Double percent, Integer quantity, Timestamp startDate, Timestamp dateEnd) {
+    public boolean editCoupon(Integer id, String name, String des, Double percent, Integer quantity, Date startDate, Date dateEnd) {
         String sql = "UPDATE `discounts` SET `discountName`=?, `description`=?, `sale_percent`=?, `quantity`=?, `startDate`=?, `expirationDate`=? WHERE id =?";
         return update(sql, name, des, percent, quantity, startDate, dateEnd, id);
     }

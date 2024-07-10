@@ -1,6 +1,7 @@
 package vn.edu.hcmuaf.fit.service;
 
 import vn.edu.hcmuaf.fit.model.ProductCategories;
+import vn.edu.hcmuaf.fit.model.ProductGroups;
 
 import java.util.List;
 import java.util.Map;
@@ -19,4 +20,9 @@ public interface ICategoryService {
 
     ProductCategories addCategory(ProductCategories cate, String ip, String address);
 
+    List<ProductGroups> getCategoriesGroups();
+
+    ProductGroups getCategoriesGroupById(Integer id);
+
+    boolean checkExistCate(String cate);
 }

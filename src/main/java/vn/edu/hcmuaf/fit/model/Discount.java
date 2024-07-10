@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 @Table(name = "discounts")
@@ -18,6 +19,6 @@ public class Discount extends AbsModel implements Serializable {
      String description;
      Double salePercent;
      Integer quantity;
-     Timestamp startDate;
-     Timestamp expirationDate;
+     Date startDate;
+     Date expirationDate;
 }

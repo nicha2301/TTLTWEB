@@ -6,11 +6,20 @@ import vn.edu.hcmuaf.fit.dao.impl.LogDAO;
 import vn.edu.hcmuaf.fit.model.Discount;
 import vn.edu.hcmuaf.fit.model.Level;
 import vn.edu.hcmuaf.fit.service.IDiscountService;
+import vn.edu.hcmuaf.fit.service.IOrderService;
 
 import java.sql.Timestamp;
 import java.util.List;
 
 public class DiscountService extends LogDAO<Discount> implements IDiscountService {
+    private static IDiscountService instance;
+
+    public static IDiscountService getInstance() {
+        if (instance == null) {
+            instance = new DiscountService();
+        }
+        return instance;
+    }
 
     @Override
     public List<Discount> getAllCoupons() {

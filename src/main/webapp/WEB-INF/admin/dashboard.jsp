@@ -3,29 +3,30 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@include file="/WEB-INF/common/taglib.jsp" %>
 <!DOCTYPE html>
 <html lang="vi-VN">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
     <title>${title}</title>
-    <link href="assets/img/icon/icon-logo.png" rel="shortcut icon">
+    <link href="/assets/admin/img/icon/icon-logo.png" rel="shortcut icon">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/admin/plugins/bootstrap/css/bootstrap.min.css">
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
-    <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/admin/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/assets/admin/plugins/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/assets/admin/css/font-awesome.min.css">
     <!-- Animate CSS -->
-    <link rel="stylesheet" href="assets/css/animate.min.css">
+    <link rel="stylesheet" href="/assets/admin/css/animate.min.css">
     <!-- Main CSS -->
-    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="/assets/admin/css/admin.css">
 
 </head>
 
 <body>
 <div class="main-wrapper">
-    <jsp:include page="include/menu.jsp"></jsp:include>
+    <%@include file="/WEB-INF/admin/include/menu.jsp" %>
 
     <div class="page-wrapper">
         <div class="content container-fluid">
@@ -105,24 +106,25 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <c:forEach items="${orderlist}" var="ol">
-                                        <c:set var="totalPay" value="${ol.totalPay}"></c:set>
-                                        <tr>
-                                            <td>${ol.username}</td>
-                                            <td class="text-nowrap">${Util.formatTimestamp(ol.dateCreated)}</td>
-                                           <td>
-                                               <c:if test="${ol.status eq 'Đang giao hàng'}"><span class="badge badge-info">Đang giao hàng</span></c:if>
-                                               <c:if test="${ol.status eq 'Đã hủy'}"><span class="badge badge-danger">Đã hủy</span></c:if>
-                                               <c:if test="${ol.status eq 'Bị từ chối'}"><span class="badge badge-warning">Bị từ chối</span></c:if>
-                                               <c:if test="${ol.status eq 'Chờ xử lý'}"><span class="badge badge-dark"> Chờ xử lý</span></c:if>
-                                               <c:if test="${ol.status eq 'Giao hàng thành công'}"><span class="badge badge-success"> Giao hàng thành công</span></c:if>
-                                           </td>
-                                            <td>
-                                                <div class="font-weight-600"><%= Utils.formatCurrency((double)pageContext.getAttribute("totalPay")) %>VND</div>
-                                            </td>
+<%--                                    <c:forEach items="${orderlist}" var="ol">--%>
+<%--&lt;%&ndash;                                        <c:set var="totalPay" value="${ol.totalPay}"></c:set>&ndash;%&gt;--%>
+<%--                                        <tr>--%>
+<%--                                            <td>${ol.username}</td>--%>
+<%--                                            <td class="text-nowrap">${Util.formatTimestamp(ol.dateCreated)}</td>--%>
+<%--                                           <td>--%>
+<%--                                               <c:if test="${ol.status eq 1}"><span class="badge badge-info">Chờ Thanh Toán</span></c:if>--%>
+<%--                                               <c:if test="${ol.status eq 2}"><span class="badge badge-danger">Chờ vận chuyển</span></c:if>--%>
+<%--                                               <c:if test="${ol.status eq 3}"><span class="badge badge-warning">Chờ giao hàng</span></c:if>--%>
+<%--                                               <c:if test="${ol.status eq 4}"><span class="badge badge-dark"> Chờ đánh giá</span></c:if>--%>
+<%--                                               <c:if test="${ol.status eq 5}"><span class="badge badge-success">Đã huỷ</span></c:if>--%>
+<%--                                               <c:if test="${ol.status eq 6}"><span class="badge badge-success">Trả hàng/ Hoàn tiền</span></c:if>--%>
+<%--                                           </td>--%>
+<%--                                            <td>--%>
+<%--&lt;%&ndash;                                                <div class="font-weight-600"><%= Utils.formatCurrency((double)pageContext.getAttribute("totalPay")) %>VND</div>&ndash;%&gt;--%>
+<%--                                            </td>--%>
 
-                                        </tr>
-                                    </c:forEach>
+<%--                                        </tr>--%>
+<%--                                    </c:forEach>--%>
                                     </tbody>
                                 </table>
                             </div>
@@ -138,14 +140,14 @@
 </div>
 
 <!-- jQuery -->
-<script src="assets/js/jquery-3.5.0.min.js"></script>
+<script src="/assets/admin/js/jquery-3.5.0.min.js"></script>
 
 <!-- Bootstrap Core JS -->
-<script src="assets/js/popper.min.js"></script>
-<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assets/admin/js/popper.min.js"></script>
+<script src="/assets/admin/plugins/bootstrap/js/bootstrap.min.js"></script>
 
 <!-- Custom JS -->
-<script src="assets/js/admin.js"></script>
+<script src="/assets/admin/js/admin.js"></script>
 
 </body>
 

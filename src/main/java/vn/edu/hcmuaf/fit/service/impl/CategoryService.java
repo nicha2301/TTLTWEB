@@ -13,6 +13,14 @@ import java.util.Map;
 
 public class CategoryService extends LogDAO<ProductCategories> implements ICategoryService {
 
+    private static ICategoryService instance;
+
+    public static ICategoryService getInstance() {
+        if (instance == null) {
+            instance = new CategoryService();
+        }
+        return instance;
+    }
     @Override
     public List<ProductCategories> getCategories() {
         return CategoryDAO.getInstance().getCategories();
@@ -94,5 +102,20 @@ public class CategoryService extends LogDAO<ProductCategories> implements ICateg
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public List<ProductGroups> getCategoriesGroups() {
+        return CategoryDAO.getInstance().getCategoriesGroups();
+    }
+
+    @Override
+    public ProductGroups getCategoriesGroupById(Integer id) {
+        return CategoryDAO.getInstance().getCategoriesGroupById(id);
+    }
+
+    @Override
+    public boolean checkExistCate(String cateName) {
+        return CategoryDAO.getInstance().checkExistCate(cateName);
     }
 }
