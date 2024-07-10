@@ -3,13 +3,10 @@
 <%@include file="/WEB-INF/common/taglib.jsp" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8"/>
-
     <link rel="stylesheet" href="/assets/user/css/thuvien/font-awesome.min.css" type="text/css">
     <link rel="stylesheet" href="/assets/user/css/thuvien/elegant-icons.css" type="text/css">
     <link rel="stylesheet" href="/assets/user/css/thuvien/nice-select.css" type="text/css">
@@ -17,7 +14,6 @@
     <link rel="stylesheet" href="/assets/user/css/thuvien/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="/assets/user/css/thuvien/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="/assets/user/css/cart/cart.css">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
           integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
@@ -25,7 +21,6 @@
           sizes="192x192"/>
     <title>Giỏ hàng</title>
 </head>
-
 <body>
 <div class="website-wrapper">
     <%@include file="/WEB-INF/user/include/header.jsp" %>
@@ -116,7 +111,7 @@
                         <div class="shoping__continue">
                             <div class="shoping__discount">
                                 <h5>Mã giảm giá</h5>
-                                <form action="addtocart">
+                                <form>
                                     <input type="text" name="discount" placeholder="Nhập mã giãm giá mua hàng">
                                     <button class="site-btn">SỬ DỤNG MÃ</button>
                                 </form>

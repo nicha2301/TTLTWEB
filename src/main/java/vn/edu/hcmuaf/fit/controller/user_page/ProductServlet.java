@@ -226,7 +226,7 @@ public class ProductServlet extends HttpServlet {
                                 "       </div>\n" +
                                 "       <div class=\"wd-buttons wd-pos-r-t\">\n" +
                                 "           <div class=\"wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon\">\n" +
-                                "               <a href=\"" + request.getServletContext().getContextPath() + "/user/addtocart?id=" + entry.getKey().getId() + "\"\n" +
+                                "               <a href=\"javascript:void(0)\" onclick=\"addCart(this, '" + entry.getKey().getId() + "')\"\n" +
                                 "                   class=\"button product_type_simple add-to-cart-loop\" aria-label=\"\">\n" +
                                 "                       <span>\n" +
                                 "                           <i class=\"fa-solid fa-cart-shopping\"></i>\n" +

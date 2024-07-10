@@ -253,7 +253,8 @@
                                                 </div>
                                                 <div class="wd-buttons wd-pos-r-t">
                                                     <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
-                                                        <a href="" class="button product_type_simple add-to-cart-loop">
+                                                        <a href="javascript:void(0)" onclick="addCart(this, '${similar.id}')"
+                                                        class="button product_type_simple add-to-cart-loop">
                                                     <span>
                                                         <i class="fa-solid fa-cart-shopping"></i> </span></a>
                                                     </div>
@@ -285,10 +286,12 @@
 <script src="/assets/user/js/detailProduct/scripts.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
+    var context = "${pageContext.request.contextPath}";
     function addCart(btn, id) {
         $.ajax({
-            url: "cart",
+            url: "${request.servletContext.contextPath}/user/cart",
             method: "POST",
             data: {
                 id: id,
@@ -296,16 +299,19 @@
                 type: 0
             },
             success: function (response) {
-                var res = JSON.parse(response);
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "Thêm Sản Phẩm Vào Giỏ Hàng Thành Công!",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                const badge = document.getElementById("badge");
-                badge.innerHTML = res.totalItems;
+                if (response.status === "failed") {
+                    window.location.href = context + "/user/signin";
+                } else {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Thêm Sản Phẩm Vào Giỏ Hàng Thành Công!",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    const badge = document.getElementById("badge");
+                    badge.innerHTML = response.total;
+                }
             }
         });
     }

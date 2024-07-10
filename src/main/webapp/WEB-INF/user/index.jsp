@@ -521,7 +521,6 @@
                     });
                     const badge = document.getElementById("badge");
                     badge.innerHTML = response.total;
-                    console.log(badge.innerHTML);
                 }
             }
         });
