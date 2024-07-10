@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ICartService {
 
-    CartItem addIntoCart(User user, Product product, Integer quantity);
+    boolean addIntoCart(User user, Product product, Integer quantity);
 
     boolean updateItem(User user, Product product, Integer quantity);
 

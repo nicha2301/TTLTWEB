@@ -1,7 +1,6 @@
 package vn.edu.hcmuaf.fit.service.impl;
 
 import vn.edu.hcmuaf.fit.dao.impl.CartDAO;
-import vn.edu.hcmuaf.fit.dao.impl.SupplierDAO;
 import vn.edu.hcmuaf.fit.model.CartItem;
 import vn.edu.hcmuaf.fit.model.Product;
 import vn.edu.hcmuaf.fit.model.User;
@@ -20,11 +19,11 @@ public class CartService implements ICartService {
     }
 
     @Override
-    public CartItem addIntoCart(User user, Product product, Integer quantity) {
+    public boolean addIntoCart(User user, Product product, Integer quantity) {
         try {
             return CartDAO.getInstance().addIntoCart(user.getId(), product.getId(), quantity);
         } catch (Exception e) {
-            return null;
+            return false;
         }
     }
 
@@ -53,6 +52,12 @@ public class CartService implements ICartService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public static void main(String[] args) {
+        User user = new User();
+        user.setId(1);
+        System.out.println(CartService.getInstance().getCartByUser(user));
     }
 
     @Override

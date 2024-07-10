@@ -229,7 +229,7 @@
                                     </div>
                                     <div class="wd-buttons wd-pos-r-t">
                                         <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
-                                            <a href="javascript:void(0)" data-id="${p.id}" onclick="addCart(this, '${p.id}')" class="button product_type_simple add-to-cart-loop">
+                                            <a href="javascript:void(0)" onclick="addCart(this, '${p.id}')" class="button product_type_simple add-to-cart-loop">
                                                 <span><i class="fa-solid fa-cart-shopping"></i></span>
                                             </a>
                                         </div>
@@ -488,19 +488,20 @@
     </section>
 </div>
 <%@include file="/WEB-INF/user/include/footer.jsp" %>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
         integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="/assets/user/js/home/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    var context = "${pageContext.request.contextPath}";
     function addCart(btn, id) {
         $.ajax({
-            url: "cart",
+            url: "${request.servletContext.contextPath}/user/cart",
             method: "POST",
             data: {
                 id: id,
@@ -508,16 +509,20 @@
                 type: 0
             },
             success: function (response) {
-                var res = JSON.parse(response);
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "Thêm Sản Phẩm Vào Giỏ Hàng Thành Công!",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                const badge = document.getElementById("badge");
-                badge.innerHTML = res.totalItems;
+                if (response.status === "failed") {
+                    window.location.href = context + "/user/signin";
+                } else {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Thêm Sản Phẩm Vào Giỏ Hàng Thành Công!",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    const badge = document.getElementById("badge");
+                    badge.innerHTML = response.total;
+                    console.log(badge.innerHTML);
+                }
             }
         });
     }

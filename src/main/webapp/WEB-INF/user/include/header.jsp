@@ -1,3 +1,5 @@
+<%@ page import="java.util.List" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.CartItem" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/common/taglib.jsp" %>
 <head>
@@ -11,19 +13,15 @@
                 <img src="https://tienthangvet.vn/wp-content/uploads/logo-tien-thang-vet.jpg" alt=""/>
             </a>
         </div>
-        <c:choose>
-            <c:when test="${not empty sessionScope.cart}">
-                <c:when test="${empty sessionScope.totalItems}">
-                    <c:set var="total" value="0" />
-                </c:when>
-                <c:otherwise>
-                    <c:set var="total" value="${sessionScope.totalItems}" />
-                </c:otherwise>
-            <c:otherwise>
-                <c:set var="total" value="0" />
-            </c:otherwise>
-            </c:when>
-        </c:choose>
+        <%
+            Integer totalItems = (Integer) session.getAttribute("total");
+            List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+            if (!cart.isEmpty()) {
+                if(totalItems == null) totalItems = 0;
+            } else {
+                totalItems = 0;
+            }
+        %>
         <div class="header-center">
             <div class="header-nav" role="navigation" aria-label="Main navigation">
                 <ul class="menu">
@@ -74,15 +72,9 @@
             </form>
             <div class="action">
                 <div class="cart" style="margin: 0 30px 0 30px;">
-<%--                    <%--%>
-<%--                        ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");--%>
-<%--                        if (cart != null) {--%>
-<%--                    %>--%>
-<%--                    <span class="count"><%=cart.getTotalQuantity()%></span>--%>
-<%--                    <%}%>--%>
-                    <a href="${request.servletContext.contextPath}/user/cart?action=get">
+                    <span id="badge" class="count"></span>
+                    <a href="${request.servletContext.contextPath}/user/cart">
                         <i class="fa-solid fa-cart-shopping material-icons"></i>
-                        <span id="badge" class="cart-count"></span>
                     </a>
                 </div>
                 <c:choose>
@@ -111,10 +103,6 @@
     </div>
     <script>
         const badge = document.getElementById('badge');
-        const totalItems = '${total}';
-
-        if (badge.innerHTML === '') {
-            badge.innerHTML = totalItems;
-        }
+        if (badge.innerHTML === '') badge.innerHTML = '<%=totalItems%>';
     </script>
 </header>

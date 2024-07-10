@@ -28,9 +28,13 @@ public class CartDAO extends AbsDAO<CartItem> implements ICartDAO {
     }
 
     @Override
-    public CartItem addIntoCart(Integer userId, Integer proId, Integer quantity) {
+    public boolean addIntoCart(Integer userId, Integer proId, Integer quantity) {
         String sql = "INSERT INTO cart_items (user_id, product_id, quantity) VALUES (?, ?, ?)";
-        return insert(sql, CartItem.class, userId, proId, quantity);
+        return update(sql, userId, proId, quantity);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(CartDAO.getInstance().addIntoCart(82, 1, 1));
     }
 
     @Override

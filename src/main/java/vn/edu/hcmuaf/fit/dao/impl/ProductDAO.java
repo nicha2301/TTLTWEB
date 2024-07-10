@@ -232,27 +232,4 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
         ProductImageMapper mapper = new ProductImageMapper(rs -> RSHandler.getString(rs, "image_url"));
         return queryForMap(sql, mapper, true, type_id, limit);
     }
-
-    /**
-     *  Test
-     */
-    public static void main(String[] args) {
-        Map<Product, List<String>> re = ProductDAO.getInstance().getProductsLimit(4, 3);
-        for (Map.Entry<Product, List<String>> entry : re.entrySet()) {
-            Product product = entry.getKey();
-            List<String> images = entry.getValue();
-            System.out.println("Product ID: " + product.getId());
-
-            // Kiểm tra và in danh sách hình ảnh
-            if (images.isEmpty()) {
-                System.out.println("No images available for this product.");
-            } else {
-                System.out.println("Images URLs:");
-                for (String url : images) {
-                    System.out.println(url);
-                }
-            }
-            System.out.println("--------------------------------------");
-        }
-    }
 }

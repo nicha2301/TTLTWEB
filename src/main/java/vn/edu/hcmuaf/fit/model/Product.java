@@ -33,6 +33,10 @@ public class Product extends AbsModel implements Serializable {
      Supplier supplier;
      Boolean active;
 
+    public Product(Integer id) {
+        this.id = id;
+    }
+
     @Nested("cate")
     public ProductCategories getCate() {
         return cate;

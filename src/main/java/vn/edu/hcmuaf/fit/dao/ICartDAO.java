@@ -10,7 +10,7 @@ public interface ICartDAO extends GenericDAO<CartItem> {
 
     List<CartItem> getItem(Integer userId, Integer proId);
 
-    CartItem addIntoCart(Integer userId, Integer proId, Integer quantity);
+    boolean addIntoCart(Integer userId, Integer proId, Integer quantity);
 
     boolean updateItem(Integer userId, Integer proId, Integer quantity);
 
