@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CartItem implements Serializable {
+    Integer id;
     @Nested("user")
     User user;
     @Nested("product")

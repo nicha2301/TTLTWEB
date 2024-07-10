@@ -1,5 +1,6 @@
 package vn.edu.hcmuaf.fit.controller.user_page;
 
+import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,6 +14,8 @@ import vn.edu.hcmuaf.fit.service.impl.CartService;
 import vn.edu.hcmuaf.fit.service.impl.ProductService;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +55,18 @@ public class ShoppingCartCL extends HttpServlet {
                 success = this.add(request, response, user, cart);
                 break;
         }
+        PrintWriter out = response.getWriter();
+        if(success) {
+            Map<String, Object> responseData = new HashMap<>();
+
+            responseData.put("totalItems", cart.size());
+            responseData.put("items", cart);
+            String jsonResponse = new Gson().toJson(responseData);
+            out.write(jsonResponse);
+            session.setAttribute("totalItems", cart.size());
+        }
+        out.flush();
+        out.close();
     }
 
     private boolean add(HttpServletRequest request, HttpServletResponse response, User user, List<CartItem> cart) {
@@ -79,10 +94,10 @@ public class ShoppingCartCL extends HttpServlet {
                     }
                 }
             } else cart.add(CartService.getInstance().addIntoCart(user, product, quantity));
+            return true;
         } catch (Exception e) {
             return false;
         }
-        return true;
     }
 
     private boolean update(HttpServletRequest request, HttpServletResponse response) {

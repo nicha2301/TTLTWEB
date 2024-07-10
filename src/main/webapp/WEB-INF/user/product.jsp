@@ -12,6 +12,13 @@
     <link rel="icon" href="https://tienthangvet.vn/wp-content/uploads/cropped-favicon-Tien-Thang-Vet-192x192.png"
           sizes="192x192"/>
     <title>Sản phẩm</title>
+    <style>
+        span.page-link.ellipsis {
+            text-decoration: none;
+            border: 1px solid #dee2e6;
+            padding: 6px 12px;
+        }
+    </style>
 </head>
 <body>
 <div class="website-wrapper">
@@ -166,7 +173,7 @@
                                             </div>
                                             <div class="wd-buttons wd-pos-r-t">
                                                 <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
-                                                    <a href="${request.servletContext.contextPath}/user/addtocart?id=${product.id}"
+                                                    <a href="javascript:void(0)" onclick="addCart(this, '${product.id}')"
                                                        class="button product_type_simple add-to-cart-loop" aria-label="">
                                                         <span>
                                                             <i class="fa-solid fa-cart-shopping"></i>
@@ -267,12 +274,32 @@
             });
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function addCart(btn, id) {
+            $.ajax({
+                url: "cart",
+                method: "POST",
+                data: {
+                    id: id,
+                    action: "add",
+                    type: 0
+                },
+                success: function (response) {
+                    var res = JSON.parse(response);
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Thêm Sản Phẩm Vào Giỏ Hàng Thành Công!",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    const badge = document.getElementById("badge");
+                    badge.innerHTML = res.totalItems;
+                }
+            });
+        }
+    </script>
 </body>
-<style>
-    span.page-link.ellipsis {
-        text-decoration: none;
-        border: 1px solid #dee2e6;
-        padding: 6px 12px;
-    }
-</style>
 </html>

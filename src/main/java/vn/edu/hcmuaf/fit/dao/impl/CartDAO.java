@@ -17,43 +17,43 @@ public class CartDAO extends AbsDAO<CartItem> implements ICartDAO {
 
     @Override
     public List<CartItem> getCartByUser(Integer userId) {
-        String sql = "SELECT * FROM cart_items WHERE id = ?";
+        String sql = "SELECT * FROM cart_items WHERE user_id = ?";
         return query(sql, CartItem.class, userId);
     }
 
     @Override
     public List<CartItem> getItem(Integer userId, Integer proId) {
-        String sql = "SELECT * FROM cart_items WHERE id = ? AND product_id = ?";
+        String sql = "SELECT * FROM cart_items WHERE user_id = ? AND product_id = ?";
         return query(sql, CartItem.class, userId, proId);
     }
 
     @Override
     public CartItem addIntoCart(Integer userId, Integer proId, Integer quantity) {
-        String sql = "INSERT INTO cart_items (id, product_id, quantity) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO cart_items (user_id, product_id, quantity) VALUES (?, ?, ?)";
         return insert(sql, CartItem.class, userId, proId, quantity);
     }
 
     @Override
     public boolean updateItem(Integer userId, Integer proId, Integer quantity) {
-        String sql = "UPDATE cart_items SET quantity =? WHERE id =? AND product_id =?";
+        String sql = "UPDATE cart_items SET quantity = ? WHERE user_id = ? AND product_id = ?";
         return update(sql, quantity, userId, proId);
     }
 
     @Override
     public boolean deleteItem(Integer userId, Integer proId) {
-        String sql = "DELETE FROM cart_items WHERE id =? AND product_id =?";
+        String sql = "DELETE FROM cart_items WHERE user_id = ? AND product_id = ?";
         return update(sql, userId, proId);
     }
 
     @Override
     public boolean removeCart(Integer userId) {
-        String sql = "DELETE FROM cart_items WHERE id =?";
+        String sql = "DELETE FROM cart_items WHERE user_id = ?";
         return update(sql, userId);
     }
 
     @Override
     public Integer getTotalPrice(Integer userId) {
-        String sql = "SELECT SUM(products.price * cart_items.quantity) FROM cart_items JOIN products ON cart_items.product_id = products.id WHERE cart_items.id =?";
+        String sql = "SELECT SUM(p.price * c.quantity) FROM cart_items c JOIN products p ON c.product_id = p.id WHERE c.user_id = ?";
         return count(sql, userId);
     }
 }
