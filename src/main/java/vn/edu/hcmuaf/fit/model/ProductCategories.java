@@ -23,9 +23,6 @@ public class ProductCategories extends AbsModel implements Serializable {
         this.id = id;
     }
 
-
-
-
     @Nested("group")
     public ProductGroups getGroup() {
         return group;

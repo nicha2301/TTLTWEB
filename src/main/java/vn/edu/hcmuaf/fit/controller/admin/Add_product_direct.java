@@ -88,6 +88,9 @@ public class Add_product_direct extends HttpServlet {
         }
     }
 
+
+
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher("/WEB-INF/admin/add-product.jsp").forward(request, response);
     }
