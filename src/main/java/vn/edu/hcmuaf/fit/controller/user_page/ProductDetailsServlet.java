@@ -25,6 +25,7 @@ public class ProductDetailsServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
+
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession(true);
 
@@ -41,19 +42,23 @@ public class ProductDetailsServlet extends HttpServlet {
                 for (Product p1 : product.keySet()) {
                     prod = p1;
                 }
-//                List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-//                User user = (User) session.getAttribute("user");
-//                int remain = prod.getQuantity();
-//                    if (cart != null && !cart.isEmpty() && user != null) {
-//                        for (CartItem item : carts) {
-//                            if (item.getProduct().getId() == prod.getId() && item.getUser().getId() == user.getId()) {
-//                                remain = prod.getQuantity() - item.getQuantity();
-//                                break;
-//                            }
-//                        }
-//                    }
+                List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+                User user = (User) session.getAttribute("auth");
+                int remain = prod.getQuantity();
+                if (cart != null && !cart.isEmpty() && user != null) {
+                    for (CartItem item : cart) {
+                        if (item.getProduct().getId() == prod.getId() && item.getUser().getId() == user.getId()) {
+                            remain = prod.getQuantity() - item.getQuantity();
+                            break;
+                        }
+                    }
+                }
                 request.setAttribute("product", product);
-                request.setAttribute("productOnly", prod);
+                if (remain > 0) {
+                    request.setAttribute("remain", remain);
+                } else {
+                    request.setAttribute("error", "Bạn đã thêm số lượng sản phẩm tối đa vào giỏ!");
+                }
                 Map<Product, List<String>> similar = ProductService.getInstance().getAllProductsLimited(0, 4);
                 request.setAttribute("products", similar);
                 request.getRequestDispatcher("/WEB-INF/user/product_detail.jsp").forward(request, response);

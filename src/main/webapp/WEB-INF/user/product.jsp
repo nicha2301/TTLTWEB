@@ -1,3 +1,6 @@
+<%@ page import="vn.edu.hcmuaf.fit.model.Product" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/common/taglib.jsp" %>
 <html>
@@ -146,57 +149,70 @@
                                     </div>
                                 </c:when>
                                 <c:otherwise>
-                                    <c:forEach var="entry" items="${product}">
-                                        <c:set var="product" value="${entry.key}" />
-                                        <c:set var="first" value="${entry.value[0]}" />
-                                        <div class="item">
-                                            <!-- Hiển thị thông tin sản phẩm -->
-                                            <div>
-                                                <div class="product-element-top">
-                                                    <a href="${pageContext.request.contextPath}/user/product?id=${product.id}">
-                                                        <img src="${pageContext.request.contextPath}${first}" alt="">
-                                                    </a>
-                                                </div>
-                                                <div class="product-element-bottom">
-                                                    <a href="${pageContext.request.contextPath}/user/product?id=${product.id}">
-                                                            ${product.productName}
-                                                    </a>
-                                                </div>
-                                                <div class="product-element">
-                                                    <div class="price-wrap">
-                                                        <div class="price">
-                                                            <c:set var="unit" value="VND"/>
-                                                            <fmt:formatNumber value="${product.price}" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}
-                                                        </div>
+                                    <%
+                                        Map<Product, List<String>> products = (Map<Product, List<String>>) request.getAttribute("products");
+                                        User user = (User) session.getAttribute("auth");
+                                        if (products != null && !products.isEmpty()) {
+                                            for (Map.Entry<Product, List<String>> entry : products.entrySet()) {
+                                                int remain = entry.getKey().getQuantity();
+                                                if (user != null && cart != null && !cart.isEmpty()) {
+                                                    for (CartItem item : cart) {
+                                                        if (item.getProduct().getId()==entry.getKey().getId() && item.getUser().getId()==user.getId()) {
+                                                            remain = entry.getKey().getQuantity() - item.getQuantity();
+                                                        }
+                                                    }
+                                                }
+                                    %>
+                                    <div class="item">
+                                        <div>
+                                            <div class="product-element-top">
+                                                <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
+                                                    <img src="${pageContext.request.contextPath}<%=entry.getValue().get(0)%>" alt="">
+                                                </a>
+                                            </div>
+                                            <div class="product-element-bottom">
+                                                <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
+                                                    <%=entry.getKey().getProductName()%>
+                                                </a>
+                                            </div>
+                                            <div class="product-element">
+                                                <div class="price-wrap">
+                                                    <div class="price">
+                                                        <c:set var="unit" value="VND"/>
+                                                        <fmt:formatNumber value="<%=entry.getKey().getPrice()%>" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="wd-buttons wd-pos-r-t">
-                                                <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
-                                                    <a href="javascript:void(0)" onclick="addCart(this, '${product.id}')"
-                                                       class="button product_type_simple add-to-cart-loop" aria-label="">
+                                        </div>
+                                        <div class="wd-buttons wd-pos-r-t">
+                                            <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
+                                                <a href="javascript:void(0)" onclick="addCart(this, '<%=entry.getKey().getId()%>', '<%=remain%>')"
+                                                   class="button product_type_simple add-to-cart-loop" aria-label="">
                                                         <span>
                                                             <i class="fa-solid fa-cart-shopping"></i>
                                                         </span>
-                                                    </a>
-                                                </div>
-                                                <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
-                                                    <a href="" class="open-quick-view quick-view-button">
+                                                </a>
+                                            </div>
+                                            <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
+                                                <a href="" class="open-quick-view quick-view-button">
                                                         <span>
                                                             <i class="fa-solid fa-magnifying-glass"></i>
                                                         </span>
-                                                    </a>
-                                                </div>
-                                                <div class="wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon">
-                                                    <a class="wd-tltp wd-tooltip-inited" href="" data-added-text="Browse Wishlist">
+                                                </a>
+                                            </div>
+                                            <div class="wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon">
+                                                <a class="wd-tltp wd-tooltip-inited" href="" data-added-text="Browse Wishlist">
                                                         <span class="wd-tooltip-label">
                                                             <i class="fa-regular fa-heart"></i>
                                                         </span>
-                                                    </a>
-                                                </div>
+                                                </a>
                                             </div>
                                         </div>
-                                    </c:forEach>
+                                    </div>
+                                    <%
+                                            }
+                                        }
+                                    %>
                                 </c:otherwise>
                             </c:choose>
                         </div>
@@ -277,18 +293,22 @@
     </script>
     <script>
         var context = "${pageContext.request.contextPath}";
-        function addCart(btn, id) {
+        function addCart(btn, id, remain) {
+            console.log(remain)
             $.ajax({
                 url: "${request.servletContext.contextPath}/user/cart",
                 method: "POST",
                 data: {
                     id: id,
                     action: "add",
-                    type: 0
+                    type: 0,
+                    contain: remain
                 },
                 success: function (response) {
                     if (response.status === "failed") {
                         window.location.href = context + "/user/signin";
+                    } else if(response.status === "stock") {
+                        alert(response.error)
                     } else {
                         Swal.fire({
                             position: "center",

@@ -1,5 +1,6 @@
-<%@ page import="vn.edu.hcmuaf.fit.model.User" %>
 <%@ page import="vn.edu.hcmuaf.fit.model.Product" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/common/taglib.jsp" %>
 <!DOCTYPE html>
@@ -47,20 +48,6 @@
                             </c:forEach>
                         </c:when>
                     </c:choose>
-                    <%
-                        User user = (User) session.getAttribute("user");
-                        Product prod = (Product) request.getAttribute("productOnly");
-                        List<CartItem> carts = (List<CartItem>) session.getAttribute("cart");
-                        int remain = prod.getQuantity();
-                        if (carts != null && !carts.isEmpty() && user != null) {
-                            for (CartItem item : carts) {
-                                if (item.getProduct().getId() == prod.getId() && item.getUser().getId() == user.getId()) {
-                                    remain = prod.getQuantity() - item.getQuantity();
-                                    break;
-                                }
-                            }
-                        }
-                    %>
                     <div class="container">
                         <div class="wd-breadcrumbs">
                             <nav class="woocommerce-breadcrumb">
@@ -142,38 +129,45 @@
                                 <a href="${request.servletContext.contextPath}/user/products?category=${category.categoryName}" rel="tag">${category.categoryName}</a></span>
                             </div>
                             <div class="container">
-                                <button class="btn-decrease">-</button>
-                                <input type="number" id="quantity" class="input-number" value="1" min="1" max="<%=remain%>" required>
-                                <button class="btn-increase">+</button>
-                                <span style="color: red; margin: 10px" id="error"></span>
-                                <a style="color: #FFF;" href="javascript:void(0)" onclick="addCart(this, '${prod.id}')">
-                                    <button class="add-to-cart-button">
-                                        <svg class="add-to-cart-box box-1" width="24" height="24" viewBox="0 0 24 24"
-                                             fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <rect width="24" height="24" rx="2" fill="#ffffff"/>
-                                        </svg>
-                                        <svg class="add-to-cart-box box-2" width="24" height="24" viewBox="0 0 24 24"
-                                             fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <rect width="24" height="24" rx="2" fill="#ffffff" />
-                                        </svg>
-                                        <svg class="cart-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                             viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
-                                             stroke-linecap="round" stroke-linejoin="round">
-                                            <circle cx="9" cy="21" r="1"></circle>
-                                            <circle cx="20" cy="21" r="1"></circle>
-                                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6">
-                                            </path>
-                                        </svg>
-                                        <svg class="tick" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                             viewBox="0 0 24 24">
-                                            <path fill="none" d="M0 0h24v24H0V0z"/>
-                                            <path fill="#ffffff"
-                                                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM9.29 16.29L5.7 12.7c-.39-.39-.39-1.02 0-1.41.39-.39 1.02-.39 1.41 0L10 14.17l6.88-6.88c.39-.39 1.02-.39 1.41 0 .39.39.39 1.02 0 1.41l-7.59 7.59c-.38.39-1.02.39-1.41 0z"/>
-                                        </svg>
-                                        <span class="add-to-cart">Thêm vào giỏ hàng</span>
-                                        <span class="added-to-cart">Đã thêm</span>
-                                    </button>
-                                </a>
+                                <c:choose>
+                                    <c:when test="${not empty requestScope.remain}">
+                                        <button id="increase" class="btn-decrease">-</button>
+                                        <input type="number" id="quantity" class="input-number" value="1" min="1" max="${requestScope.remain}">
+                                        <button id="decrease" class="btn-increase">+</button>
+                                        <span style="color: red; margin: 10px" id="error"></span>
+                                        <a id="add_cart" style="color: #FFF;" href="javascript:void(0)" onclick="addCart(this, '${prod.id}')">
+                                            <button class="add-to-cart-button">
+                                                <svg class="add-to-cart-box box-1" width="24" height="24" viewBox="0 0 24 24"
+                                                     fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <rect width="24" height="24" rx="2" fill="#ffffff"/>
+                                                </svg>
+                                                <svg class="add-to-cart-box box-2" width="24" height="24" viewBox="0 0 24 24"
+                                                     fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <rect width="24" height="24" rx="2" fill="#ffffff" />
+                                                </svg>
+                                                <svg class="cart-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                     viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
+                                                     stroke-linecap="round" stroke-linejoin="round">
+                                                    <circle cx="9" cy="21" r="1"></circle>
+                                                    <circle cx="20" cy="21" r="1"></circle>
+                                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6">
+                                                    </path>
+                                                </svg>
+                                                <svg class="tick" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                     viewBox="0 0 24 24">
+                                                    <path fill="none" d="M0 0h24v24H0V0z"/>
+                                                    <path fill="#ffffff"
+                                                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM9.29 16.29L5.7 12.7c-.39-.39-.39-1.02 0-1.41.39-.39 1.02-.39 1.41 0L10 14.17l6.88-6.88c.39-.39 1.02-.39 1.41 0 .39.39.39 1.02 0 1.41l-7.59 7.59c-.38.39-1.02.39-1.41 0z"/>
+                                                </svg>
+                                                <span class="add-to-cart">Thêm vào giỏ hàng</span>
+                                                <span class="added-to-cart"></span>
+                                            </button>
+                                        </a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span style="color: red; margin: 10px" id="error">${requestScope.error}</span>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                         </div>
                     </div>
@@ -253,7 +247,6 @@
                 </div>
             </div>
         </div>
-
         <div class="wrapper-content">
             <div class="container related-and-upsells">
                 <div class="related-products">
@@ -261,55 +254,64 @@
                     <div class="products">
                         <div class="wrapper-container">
                             <div class="container">
-                                <c:choose>
-                                    <c:when test="${not empty requestScope.products}">
-                                        <c:forEach var="item" items="${requestScope.products}" >
-                                            <c:set var="similar" value="${item.key}" />
-                                            <c:set var="first" value="${item.value[0]}" />
-                                            <c:set var="listImages" value="${item.value}" />
-                                            <div class="item">
-                                                <div>
-                                                    <div class="product-element-top">
-                                                        <a href="${pageContext.request.contextPath}/user/product?id=${similar.id}">
-                                                            <img src="${pageContext.request.contextPath}${first}" alt="">
-                                                        </a>
-                                                    </div>
-                                                    <div class="product-element-bottom">
-                                                        <a href="${pageContext.request.contextPath}/user/product?id=${similar.id}">
-                                                                ${similar.productName}
-                                                        </a>
-                                                    </div>
-                                                    <div class="product-element">
-                                                        <div class="price-wrap">
-                                                            <div class="price">
-                                                                <fmt:formatNumber value="${similar.price}" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="wd-buttons wd-pos-r-t">
-                                                    <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
-                                                        <a href="javascript:void(0)" onclick="addCartSimilar(this, '${similar.id}')"
-                                                        class="button product_type_simple add-to-cart-loop">
-                                                    <span>
-                                                        <i class="fa-solid fa-cart-shopping"></i> </span></a>
-                                                    </div>
-                                                    <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
-                                                        <a href="" class="open-quick-view quick-view-button">
-                                                    <span>
-                                                        <i class="fa-solid fa-magnifying-glass"></i> </span></a>
-                                                    </div>
-                                                    <div class="wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon">
-                                                        <a class="wd-tltp wd-tooltip-inited" href=""
-                                                           data-added-text="Browse Wishlist">
-                                                    <span class="wd-tooltip-label">
-                                                        <i class="fa-regular fa-heart"></i> </span></a>
-                                                    </div>
+                                <%
+                                    Map<Product, List<String>> products = (Map<Product, List<String>>) request.getAttribute("products");
+                                    User user = (User) session.getAttribute("auth");
+                                    if (products != null && !products.isEmpty()) {
+                                        for (Map.Entry<Product, List<String>> entry : products.entrySet()) {
+                                            int remain = entry.getKey().getQuantity();
+                                            if (user != null && cart != null && !cart.isEmpty()) {
+                                                for (CartItem item : cart) {
+                                                    if (item.getProduct().getId()==entry.getKey().getId() && item.getUser().getId()==user.getId()) {
+                                                        remain = entry.getKey().getQuantity() - item.getQuantity();
+                                                    }
+                                                }
+                                            }
+                                %>
+                                <div class="item">
+                                    <div>
+                                        <div class="product-element-top">
+                                            <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
+                                                <img src="${pageContext.request.contextPath}<%=entry.getValue().get(0)%>" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="product-element-bottom">
+                                            <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
+                                                <%=entry.getKey().getProductName()%>
+                                            </a>
+                                        </div>
+                                        <div class="product-element">
+                                            <div class="price-wrap">
+                                                <div class="price">
+                                                    <fmt:formatNumber value="<%=entry.getKey().getPrice()%>" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}
                                                 </div>
                                             </div>
-                                        </c:forEach>
-                                    </c:when>
-                                </c:choose>
+                                        </div>
+                                    </div>
+                                    <div class="wd-buttons wd-pos-r-t">
+                                        <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
+                                            <a href="javascript:void(0)" onclick="addCartRemain(this, '<%=entry.getKey().getId()%>', '<%=remain%>')"
+                                               class="button product_type_simple add-to-cart-loop">
+                                                    <span>
+                                                        <i class="fa-solid fa-cart-shopping"></i> </span></a>
+                                        </div>
+                                        <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
+                                            <a href="" class="open-quick-view quick-view-button">
+                                                    <span>
+                                                        <i class="fa-solid fa-magnifying-glass"></i> </span></a>
+                                        </div>
+                                        <div class="wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon">
+                                            <a class="wd-tltp wd-tooltip-inited" href=""
+                                               data-added-text="Browse Wishlist">
+                                                    <span class="wd-tooltip-label">
+                                                        <i class="fa-regular fa-heart"></i> </span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <%
+                                        }
+                                    }
+                                %>
                             </div>
                         </div>
                     </div>
@@ -325,8 +327,15 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
     var context = "${pageContext.request.contextPath}";
+    let quantityInput = document.getElementById("quantity");
+    let btnAddCart = document.getElementById("add_cart");
+    let increase = document.getElementById("increase");
+    let decrease = document.getElementById("decrease");
     function addCart(btn, id) {
         var quantity = $('#quantity').val();
+        const input = document.getElementById('quantity');
+        const max = parseInt(input.max, 10);
+        console.log("max = " + max);
         $.ajax({
             url: "${request.servletContext.contextPath}/user/cart",
             method: "POST",
@@ -334,13 +343,20 @@
                 id: id,
                 action: "add",
                 type: 1,
-                quantity: quantity
+                quantity: quantity,
+                contain: max
             },
             success: function (response) {
                 if (response.status === "failed") {
                     window.location.href = context + "/user/signin";
-                } else if (response.status === "empty" || response.status === "stock") {
+                } else if (response.status === "empty" || response.status === "out") {
                     $('#error').html(response.error);
+                } else if (response.status === "stock") {
+                    $('#error').html(response.error);
+                    quantityInput.style.display = "none";
+                    btnAddCart.style.display = "none";
+                    increase.style.display = "none";
+                    decrease.style.display = "none";
                 } else {
                     Swal.fire({
                         position: "center",
@@ -352,7 +368,7 @@
                     const badge = document.getElementById("badge");
                     badge.innerHTML = response.total;
                     $('#quantity').attr('max', response.prefix);
-                    console.log(response.prefix)
+                    $('#error').html("");
                 }
             }
         });
@@ -389,8 +405,7 @@
     });
 </script>
 <script>
-    var context = "${pageContext.request.contextPath}";
-    function addCartSimilar(btn, id) {
+    function addCartRemain(btn, id, remain) {
         $.ajax({
             url: "${request.servletContext.contextPath}/user/cart",
             method: "POST",
@@ -398,10 +413,13 @@
                 id: id,
                 action: "add",
                 type: 0,
+                contain: remain
             },
             success: function (response) {
                 if (response.status === "failed") {
                     window.location.href = context + "/user/signin";
+                } else if(response.status === "stock") {
+                    alert(response.error)
                 } else {
                     Swal.fire({
                         position: "center",

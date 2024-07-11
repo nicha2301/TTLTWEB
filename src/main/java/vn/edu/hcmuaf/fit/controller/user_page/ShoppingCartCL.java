@@ -33,7 +33,7 @@ public class ShoppingCartCL extends HttpServlet {
         if (user == null) request.getRequestDispatcher("/WEB-INF/user/signIn.jsp").forward(request, response);
         else request.getRequestDispatcher("/WEB-INF/user/cart.jsp").forward(request, response);
     }
-//    ipAddress = request.getHeader("HTTP_CLIENT_IP");
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
@@ -99,12 +99,15 @@ public class ShoppingCartCL extends HttpServlet {
                 }
             }
             if (count == 0) remain = product.getQuantity() - cartItem.getQuantity();
+            int contain = Integer.parseInt(request.getParameter("contain"));
             if (remain < 0) {
-                out.write("{\"status\": \"stock\", \"error\": \"The product is out of stock!\"}");
+                if (contain > 0) {
+                    out.write("{\"status\": \"out\", \"error\": \"Số lượng thêm không được lớn hơn số lượng còn lại!\"}");
+                } else {
+                    out.write("{\"status\": \"stock\", \"error\": \"Bạn đã thêm số lượng sản phẩm tối đa vào giỏ!\"}");
+                }
                 out.close();
                 return;
-            } else if (remain == 0) {
-
             }
             shoppingCart.add(cartItem);
             session.setAttribute("cart", cart);
@@ -113,7 +116,6 @@ public class ShoppingCartCL extends HttpServlet {
             responseData.put("total", cart.size());
             responseData.put("items", cart);
             responseData.put("prefix", remain);
-            System.out.println(remain);
 
             String jsonResponse = new Gson().toJson(responseData);
             out.write(jsonResponse);
