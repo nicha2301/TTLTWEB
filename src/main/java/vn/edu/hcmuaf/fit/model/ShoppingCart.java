@@ -18,8 +18,7 @@ public class ShoppingCart {
 
     public void add(CartItem cartItem) {
         for(CartItem i : items){
-            if (cartItem.getProduct().getId() == i.getProduct().getId()
-                    && cartItem.getUser().getId() == i.getUser().getId()) {
+            if (cartItem.getProduct().getId() == i.getProduct().getId() && cartItem.getUser().getId() == i.getUser().getId()) {
                 int quantity = i.getQuantity() + cartItem.getQuantity();
                 CartService.getInstance().updateItem(cartItem.getUser(), cartItem.getProduct(), quantity);
                 i.setQuantity(quantity);

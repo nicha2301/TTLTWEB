@@ -5,7 +5,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import vn.edu.hcmuaf.fit.model.CartItem;
 import vn.edu.hcmuaf.fit.model.Product;
+import vn.edu.hcmuaf.fit.model.User;
 import vn.edu.hcmuaf.fit.service.impl.ProductService;
 
 import java.io.IOException;
@@ -23,6 +26,7 @@ public class ProductDetailsServlet extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
+        HttpSession session = request.getSession(true);
 
         String id = request.getParameter("id");
         if (id != null && !id.isEmpty()) {
@@ -33,14 +37,26 @@ public class ProductDetailsServlet extends HttpServlet {
                 Product p = new Product();
                 p.setId(Integer.parseInt(id));
                 Map<Product, List<String>> product = ProductService.getInstance().getProductByIdWithSupplierInfo(p, ip, "/user/product");
-
+                Product prod = null;
+                for (Product p1 : product.keySet()) {
+                    prod = p1;
+                }
+//                List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+//                User user = (User) session.getAttribute("user");
+//                int remain = prod.getQuantity();
+//                    if (cart != null && !cart.isEmpty() && user != null) {
+//                        for (CartItem item : carts) {
+//                            if (item.getProduct().getId() == prod.getId() && item.getUser().getId() == user.getId()) {
+//                                remain = prod.getQuantity() - item.getQuantity();
+//                                break;
+//                            }
+//                        }
+//                    }
+                request.setAttribute("product", product);
+                request.setAttribute("productOnly", prod);
                 Map<Product, List<String>> similar = ProductService.getInstance().getAllProductsLimited(0, 4);
-                if (product != null && product.size()==1) {
-                    request.setAttribute("product", product);
-                    request.setAttribute("products", similar);
-                    request.getRequestDispatcher("/WEB-INF/user/product_detail.jsp").forward(request, response);
-                    return;
-                } else out.println("Product not found");
+                request.setAttribute("products", similar);
+                request.getRequestDispatcher("/WEB-INF/user/product_detail.jsp").forward(request, response);
             } catch (Exception e) {
                 out.println(e.getLocalizedMessage());
             }

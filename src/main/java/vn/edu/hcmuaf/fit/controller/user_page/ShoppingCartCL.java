@@ -16,6 +16,7 @@ import vn.edu.hcmuaf.fit.service.impl.ProductService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class ShoppingCartCL extends HttpServlet {
         if (user == null) request.getRequestDispatcher("/WEB-INF/user/signIn.jsp").forward(request, response);
         else request.getRequestDispatcher("/WEB-INF/user/cart.jsp").forward(request, response);
     }
-
+//    ipAddress = request.getHeader("HTTP_CLIENT_IP");
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
@@ -75,8 +76,35 @@ public class ShoppingCartCL extends HttpServlet {
             if (type == 0) {
                 cartItem = new CartItem(user, product, 1);
             } else if (type == 1) {
-                int quantity = Integer.parseInt(request.getParameter("quantity"));
+                String input = request.getParameter("quantity");
+                if (input == null || input.isEmpty()) {
+                    out.write("{\"status\": \"empty\", \"error\": \"The input do not empty!\"}");
+                    out.close();
+                    return;
+                }
+                int quantity = Integer.parseInt(input);
                 cartItem = new CartItem(user, product, quantity);
+            }
+            int remain = product.getQuantity();
+            int count = 0;
+            if (shoppingCart.getItems().isEmpty()) {
+                remain = product.getQuantity() - cartItem.getQuantity();
+            } else {
+                for (CartItem item : shoppingCart.getItems()) {
+                    if (item.getProduct().getId() == product.getId() && item.getUser().getId() == user.getId()) {
+                        remain = product.getQuantity() - item.getQuantity() - cartItem.getQuantity();
+                        count++;
+                        break;
+                    }
+                }
+            }
+            if (count == 0) remain = product.getQuantity() - cartItem.getQuantity();
+            if (remain < 0) {
+                out.write("{\"status\": \"stock\", \"error\": \"The product is out of stock!\"}");
+                out.close();
+                return;
+            } else if (remain == 0) {
+
             }
             shoppingCart.add(cartItem);
             session.setAttribute("cart", cart);
@@ -84,6 +112,8 @@ public class ShoppingCartCL extends HttpServlet {
             Map<String, Object> responseData = new HashMap<>();
             responseData.put("total", cart.size());
             responseData.put("items", cart);
+            responseData.put("prefix", remain);
+            System.out.println(remain);
 
             String jsonResponse = new Gson().toJson(responseData);
             out.write(jsonResponse);

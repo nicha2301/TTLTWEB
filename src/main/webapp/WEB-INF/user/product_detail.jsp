@@ -1,3 +1,5 @@
+<%@ page import="vn.edu.hcmuaf.fit.model.User" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.Product" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/common/taglib.jsp" %>
 <!DOCTYPE html>
@@ -11,6 +13,21 @@
           integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <title>Chi tiết sản phẩm</title>
+    <style>
+        .input-number {
+            text-align: center;
+            width: 60px;
+            margin: 0 5px;
+            padding: 6px;
+        }
+        .btn-increase, .btn-decrease {
+            cursor: pointer;
+            padding: 5px 10px;
+            font-size: 16px;
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+        }
+    </style>
 </head>
 <body>
 <div class="website-wrapper">
@@ -24,11 +41,26 @@
                             <c:forEach var="entry" items="${requestScope.product}" >
                                 <c:set var="prod" value="${entry.key}" />
                                 <c:set var="supplier" value="${prod.supplier}" />
+                                <c:set var="category" value="${prod.cate}" />
                                 <c:set var="firstImage" value="${entry.value[0]}" />
                                 <c:set var="listImg" value="${entry.value}" />
                             </c:forEach>
                         </c:when>
                     </c:choose>
+                    <%
+                        User user = (User) session.getAttribute("user");
+                        Product prod = (Product) request.getAttribute("productOnly");
+                        List<CartItem> carts = (List<CartItem>) session.getAttribute("cart");
+                        int remain = prod.getQuantity();
+                        if (carts != null && !carts.isEmpty() && user != null) {
+                            for (CartItem item : carts) {
+                                if (item.getProduct().getId() == prod.getId() && item.getUser().getId() == user.getId()) {
+                                    remain = prod.getQuantity() - item.getQuantity();
+                                    break;
+                                }
+                            }
+                        }
+                    %>
                     <div class="container">
                         <div class="wd-breadcrumbs">
                             <nav class="woocommerce-breadcrumb">
@@ -106,11 +138,15 @@
                                 </a>
                             </div>
                             <div class="product_meta">
-                                    <span class="posted_in"><span class="meta-label">Danh mục:</span>
-                                        <a href="${pageContext.request.contextPath}/user/products?group=Thuốc%20thú%20y" rel="tag">Thuốc thú y</a></span>
+                                <span class="posted_in"><span class="meta-label">Danh mục:</span>
+                                <a href="${request.servletContext.contextPath}/user/products?category=${category.categoryName}" rel="tag">${category.categoryName}</a></span>
                             </div>
                             <div class="container">
-                                <a style="color: #fff;" href="javascript:void(0)" onclick="addCart(this, '${prod.id}')">
+                                <button class="btn-decrease">-</button>
+                                <input type="number" id="quantity" class="input-number" value="1" min="1" max="<%=remain%>" required>
+                                <button class="btn-increase">+</button>
+                                <span style="color: red; margin: 10px" id="error"></span>
+                                <a style="color: #FFF;" href="javascript:void(0)" onclick="addCart(this, '${prod.id}')">
                                     <button class="add-to-cart-button">
                                         <svg class="add-to-cart-box box-1" width="24" height="24" viewBox="0 0 24 24"
                                              fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -253,7 +289,7 @@
                                                 </div>
                                                 <div class="wd-buttons wd-pos-r-t">
                                                     <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
-                                                        <a href="javascript:void(0)" onclick="addCart(this, '${similar.id}')"
+                                                        <a href="javascript:void(0)" onclick="addCartSimilar(this, '${similar.id}')"
                                                         class="button product_type_simple add-to-cart-loop">
                                                     <span>
                                                         <i class="fa-solid fa-cart-shopping"></i> </span></a>
@@ -290,13 +326,78 @@
 <script>
     var context = "${pageContext.request.contextPath}";
     function addCart(btn, id) {
+        var quantity = $('#quantity').val();
         $.ajax({
             url: "${request.servletContext.contextPath}/user/cart",
             method: "POST",
             data: {
                 id: id,
                 action: "add",
-                type: 0
+                type: 1,
+                quantity: quantity
+            },
+            success: function (response) {
+                if (response.status === "failed") {
+                    window.location.href = context + "/user/signin";
+                } else if (response.status === "empty" || response.status === "stock") {
+                    $('#error').html(response.error);
+                } else {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Thêm Sản Phẩm Vào Giỏ Hàng Thành Công!",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    const badge = document.getElementById("badge");
+                    badge.innerHTML = response.total;
+                    $('#quantity').attr('max', response.prefix);
+                    console.log(response.prefix)
+                }
+            }
+        });
+    }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const input = document.getElementById('quantity');
+        input.addEventListener('input', function() {
+            const min = parseInt(input.min, 10);
+            const max = parseInt(input.max, 10);
+            let value = parseInt(input.value, 10);
+
+            if (value > max) {
+                input.value = max;
+            } else if (value < min) {
+                input.value = min;
+            }
+        });
+        document.querySelector('.btn-increase').addEventListener('click', function() {
+            const max = parseInt(input.max, 10);
+            let value = parseInt(input.value, 10);
+            if (value < max) {
+                input.value = value + 1;
+            }
+        });
+        document.querySelector('.btn-decrease').addEventListener('click', function() {
+            const min = parseInt(input.min, 10);
+            let value = parseInt(input.value, 10);
+            if (value > min) {
+                input.value = value - 1;
+            }
+        });
+    });
+</script>
+<script>
+    var context = "${pageContext.request.contextPath}";
+    function addCartSimilar(btn, id) {
+        $.ajax({
+            url: "${request.servletContext.contextPath}/user/cart",
+            method: "POST",
+            data: {
+                id: id,
+                action: "add",
+                type: 0,
             },
             success: function (response) {
                 if (response.status === "failed") {

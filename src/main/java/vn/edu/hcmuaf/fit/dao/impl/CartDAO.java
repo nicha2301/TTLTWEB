@@ -33,10 +33,6 @@ public class CartDAO extends AbsDAO<CartItem> implements ICartDAO {
         return update(sql, userId, proId, quantity);
     }
 
-    public static void main(String[] args) {
-        System.out.println(CartDAO.getInstance().addIntoCart(82, 1, 1));
-    }
-
     @Override
     public boolean updateItem(Integer userId, Integer proId, Integer quantity) {
         String sql = "UPDATE cart_items SET quantity = ? WHERE user_id = ? AND product_id = ?";
