@@ -119,24 +119,24 @@
     </div>
 </div>
 <!-- jQuery -->
-<script src="assets/js/jquery-3.5.0.min.js"></script>
+<script src="/assets/admin/js/jquery-3.5.0.min.js"></script>
 
 <!-- Bootstrap Core JS -->
-<script src="assets/js/popper.min.js"></script>
-<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assets/admin/js/popper.min.js"></script>
+<script src="/assets/admin/plugins/bootstrap/js/bootstrap.min.js"></script>
 
 <!-- Datepicker Core JS -->
-<script src="assets/js/moment.min.js"></script>
-<script src="assets/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/assets/admin/js/moment.min.js"></script>
+<script src="/assets/admin/js/bootstrap-datetimepicker.min.js"></script>
 
 <!-- Datatables JS -->
-<script src="assets/plugins/datatables/datatables.min.js"></script>
+<script src="/assets/admin/plugins/datatables/datatables.min.js"></script>
 
 <!-- Select2 JS -->
-<script src="assets/js/select2.min.js"></script>
+<script src="/assets/admin/js/select2.min.js"></script>
 
 <!-- Custom JS -->
-<script src="assets/js/admin.js"></script>
+<script src="/assets/admin/js/admin.js"></script>
 <script>
     function confirmDeleteProduct(productId) {
         if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) {

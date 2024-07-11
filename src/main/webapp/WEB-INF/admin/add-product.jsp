@@ -13,21 +13,21 @@
           sizes="192x192"/>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/admin/plugins/bootstrap/css/bootstrap.min.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
-    <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/admin/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/assets/admin/plugins/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/assets/admin/css/font-awesome.min.css">
 
     <!-- Animate CSS -->
-    <link rel="stylesheet" href="assets/css/animate.min.css">
+    <link rel="stylesheet" href="/assets/admin/css/animate.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="/assets/admin/css/admin.css">
 
     <!-- Select CSS -->
-    <link rel="stylesheet" href="assets/css/select2.min.css">
+    <link rel="stylesheet" href="/assets/admin/css/select2.min.css">
 </head>
 
 <body>
@@ -46,7 +46,7 @@
                             <div class="col">
                                 <h3 class="page-title">Thêm sản phẩm</h3>
                                 <ul class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="product.jsp">Sản phẩm</a></li>
+                                    <li class="breadcrumb-item"><a href="/admin/product">Sản phẩm</a></li>
                                     <li class="breadcrumb-item active">Thêm sản phẩm</li>
                                 </ul>
                             </div>
@@ -62,7 +62,7 @@
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Tên sản phẩm</label>
                                     <div class="col-md-10">
-                                        <input name="name" type="text" class="form-control">
+                                        <input name="productName" type="text" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -74,11 +74,11 @@
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Danh mục</label>
                                     <div class="col-md-10">
-                                        <input name="cate" type="text" class="form-control">
+                                        <input name="categoryId" type="text" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-form-label col-md-2">Số Lượng</label>
+                                    <label class="col-form-label col-md-2">Số lượng</label>
                                     <div class="col-md-10">
                                         <input name="quantity" type="text" class="form-control">
                                     </div>
@@ -93,19 +93,14 @@
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Chỉ định</label>
                                     <div class="col-md-10">
-                                        <input name="contrain" type="text" class="form-control">
+                                        <input name="contraindications" type="text" class="form-control">
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-form-label col-md-2">Tồn</label>
-                                    <div class="col-md-10">
-                                        <input name="stock" type="text" class="form-control">
-                                    </div>
-                                </div>
+
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Thành phần</label>
                                     <div class="col-md-10">
-                                        <input name="ingre" type="text" class="form-control">
+                                        <input name="ingredients" type="text" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -117,31 +112,43 @@
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Hướng dẫn</label>
                                     <div class="col-md-10">
-                                        <input name="instruc" type="text" class="form-control">
+                                        <input name="instructions" type="text" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Thời hạn sử dụng</label>
                                     <div class="col-md-10">
-                                        <input name="period" type="text" class="form-control">
+                                        <input name="warrantyPeriod" type="text" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-form-label col-md-2">Loại sản phẩm</label>
+                                    <label class="col-form-label col-md-2">Điều kiện bảo quản</label>
                                     <div class="col-md-10">
-                                        <input name="type" type="text" class="form-control">
+                                        <input name="storageCondition" type="text" class="form-control">
                                     </div>
                                 </div>
+
                                 <div class="form-group row">
-                                    <label class="col-form-label col-md-2">Bảo quản</label>
+                                    <label class="col-form-label col-md-2">ID loại sản phẩm</label>
                                     <div class="col-md-10">
-                                        <input name="store" type="text" class="form-control">
+                                        <input name="typeId" type="text" class="form-control">
                                     </div>
                                 </div>
+
                                 <div class="form-group row">
-                                    <label class="col-form-label col-md-2">ID NCC</label>
+                                    <label class="col-form-label col-md-2">ID nhà cung cấp</label>
                                     <div class="col-md-10">
-                                        <input name="idsup" type="text" class="form-control">
+                                        <input name="supplierId" type="text" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-md-2">Hoạt động</label>
+                                    <div class="col-md-10">
+                                        <select class="form-control" id="active" name="active" required>
+                                            <option value="true">Có</option>
+                                            <option value="false">Không</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="mt-4">
@@ -160,18 +167,17 @@
 </div>
 
 <!-- jQuery -->
-<script src="assets/js/jquery-3.5.0.min.js"></script>
+<script src="/assets/admin/js/jquery-3.5.0.min.js"></script>
 
 <!-- Bootstrap Core JS -->
-<script src="assets/js/popper.min.js"></script>
-<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assets/admin/js/popper.min.js"></script>
+<script src="/assets/admin/plugins/bootstrap/js/bootstrap.min.js"></script>
 
 <!-- Select2 JS -->
-<script src="assets/js/select2.min.js"></script>
+<script src="/assets/admin/js/select2.min.js"></script>
 
 <!-- Custom JS -->
-<script src="assets/js/admin.js"></script>
+<script src="/assets/admin/js/admin.js"></script>
 
 </body>
-
 </html>
