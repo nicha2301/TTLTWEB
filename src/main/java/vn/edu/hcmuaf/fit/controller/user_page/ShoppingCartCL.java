@@ -11,12 +11,10 @@ import vn.edu.hcmuaf.fit.model.CartItem;
 import vn.edu.hcmuaf.fit.model.Product;
 import vn.edu.hcmuaf.fit.model.ShoppingCart;
 import vn.edu.hcmuaf.fit.model.User;
-import vn.edu.hcmuaf.fit.service.impl.CartService;
 import vn.edu.hcmuaf.fit.service.impl.ProductService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,23 +53,48 @@ public class ShoppingCartCL extends HttpServlet {
         ShoppingCart shoppingCart = new ShoppingCart(cart);
         Product product = null;
         CartItem cartItem = null;
+        int id;
+        Map<Product, List<String>> products;
+        int quantity;
+        Map<String, Object> responseData;
+        String jsonResponse;
+
+        String ip = request.getHeader("X-FORWARDED-FOR");
+        if (ip == null) ip = request.getRemoteAddr();
 
         String action = request.getParameter("action");
         switch (action) {
         case "delete":
             this.delete(request, response);
             break;
-        case "update":
-            this.update(request, response);
+        case "put":
+            id = Integer.parseInt(request.getParameter("id"));
+            quantity = Integer.parseInt(request.getParameter("quantity"));
+            products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(id), ip, "/user/cart");
+            for (Product p: products.keySet()) {
+                product = p;
+            }
+            if (quantity > 0) {
+                shoppingCart.update(new CartItem(user, product, quantity));
+            } else if (quantity == 0) {
+                shoppingCart.remove(user, product);
+            }
+            session.setAttribute("cart", cart);
+
+            responseData = new HashMap<>();
+            responseData.put("total", cart.size());
+            responseData.put("items", cart);
+
+            jsonResponse = new Gson().toJson(responseData);
+            out.write(jsonResponse);
+            session.setAttribute("total", cart.size());
+            out.close();
             break;
         case "add":
-            int id = Integer.parseInt(request.getParameter("id"));
+            id = Integer.parseInt(request.getParameter("id"));
             int type = Integer.parseInt(request.getParameter("type"));
 
-            String ip = request.getHeader("X-FORWARDED-FOR");
-            if (ip == null) ip = request.getRemoteAddr();
-
-            Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(id), ip, "/user/cart");
+            products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(id), ip, "/user/cart");
             for (Product prod : products.keySet()) {
                 product = prod;
             }
@@ -84,7 +107,7 @@ public class ShoppingCartCL extends HttpServlet {
                     out.close();
                     return;
                 }
-                int quantity = Integer.parseInt(input);
+                quantity = Integer.parseInt(input);
                 cartItem = new CartItem(user, product, quantity);
             }
             int remain = product.getQuantity();
@@ -114,12 +137,12 @@ public class ShoppingCartCL extends HttpServlet {
             shoppingCart.add(cartItem);
             session.setAttribute("cart", cart);
 
-            Map<String, Object> responseData = new HashMap<>();
+            responseData = new HashMap<>();
             responseData.put("total", cart.size());
             responseData.put("items", cart);
             responseData.put("prefix", remain);
 
-            String jsonResponse = new Gson().toJson(responseData);
+            jsonResponse = new Gson().toJson(responseData);
             out.write(jsonResponse);
             session.setAttribute("total", cart.size());
             out.close();
@@ -127,11 +150,11 @@ public class ShoppingCartCL extends HttpServlet {
         }
     }
 
-    private void update(HttpServletRequest request, HttpServletResponse response) {
+    private void update(HttpServletRequest request, HttpServletResponse response, ShoppingCart shoppingCart, User user, String ip, HttpSession session) throws ServletException, IOException {
 
     }
 
-    private void delete(HttpServletRequest request, HttpServletResponse response) {
+    private void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
 }

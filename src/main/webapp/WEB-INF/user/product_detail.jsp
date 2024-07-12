@@ -131,9 +131,9 @@
                             <div class="container">
                                 <c:choose>
                                     <c:when test="${not empty requestScope.remain}">
-                                        <button id="increase" class="btn-decrease">-</button>
+                                        <button id="decrease" class="btn-decrease">-</button>
                                         <input type="number" id="quantity" class="input-number" value="1" min="1" max="${requestScope.remain}">
-                                        <button id="decrease" class="btn-increase">+</button>
+                                        <button id="increase" class="btn-increase">+</button>
                                         <span style="color: red; margin: 10px" id="error"></span>
                                         <a id="add_cart" style="color: #FFF;" href="javascript:void(0)" onclick="addCart(this, '${prod.id}')">
                                             <button class="add-to-cart-button">

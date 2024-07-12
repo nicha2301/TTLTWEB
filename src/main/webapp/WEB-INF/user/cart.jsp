@@ -22,6 +22,21 @@
     <link rel="icon" href="https://tienthangvet.vn/wp-content/uploads/cropped-favicon-Tien-Thang-Vet-192x192.png"
           sizes="192x192"/>
     <title>Giỏ hàng</title>
+    <style>
+        .input-number {
+            text-align: center;
+            width: 60px;
+            margin: 0 5px;
+            padding: 6px;
+        }
+        .btn-increase, .btn-decrease {
+            cursor: pointer;
+            padding: 5px 10px;
+            font-size: 16px;
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+        }
+    </style>
 </head>
 <body>
 <div class="website-wrapper">
@@ -71,32 +86,26 @@
                                     <h5><%=entry.getKey().getProductName()%>
                                     </h5>
                                 </td>
-                                <td class="shoping__cart__price">
-                                    <c:set var="unit" value="VND"/>
+                                <c:set var="unit" value="VND"/>
+                                <td id="pr<%=entry.getKey().getId()%>" class="shoping__cart__price">
                                     <fmt:formatNumber value="<%=entry.getKey().getPrice()%>" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}
                                 </td>
                                 <td class="shoping__cart__quantity">
-                                    <div class="quantity"
-                                         style="align-items: center;display: flex;justify-content: center;">
-                                        <div class="pro-qty"
-                                             style="display: flex;justify-content: center;align-items: center;">
-                                            <a style="padding: 0 10px;"
-                                               href="${pageContext.request.contextPath}/user/updatecart?action=decrement&id=<%=entry.getKey().getId()%>">-</a>
-                                            <form action="${pageContext.request.contextPath}/user/updatecart?action=update&id=<%=entry.getKey().getId()%>"
-                                                  method="post">
-                                                <input type="text" name="amount" value="<%=item.getQuantity()%>">
-                                            </form>
-                                            <a style="padding: 0 10px;"
-                                               href="${pageContext.request.contextPath}/user/updatecart?action=increment&id=<%=entry.getKey().getId()%>">+</a>
+                                    <div class="quantity" style="align-items: center;display: flex;justify-content: center;">
+                                        <div class="pro-qty" style="display: flex;justify-content: center;align-items: center;">
+                                            <button id="decrease" class="btn-decrease">-</button>
+                                            <input type="number" id="p<%=entry.getKey().getId()%>" class="input-number"
+                                                   value="<%=item.getQuantity()%>" min="0" max="<%=entry.getKey().getQuantity()%>">
+                                            <button id="increase" class="btn-increase">+</button>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="shoping__cart__total">
+                                <td id="t<%=entry.getKey().getId()%>" class="shoping__cart__total">
                                     <fmt:formatNumber value="<%=total%>" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}
                                 </td>
                                 <td class="shoping__cart__item__close">
-                                    <a style="font-size: 18px;background-color: white"
-                                       href="${pageContext.request.contextPath}/user/updatecart?action=delete&id=<%=entry.getKey().getId()%>">X</a>
+                                    <button style="font-size: 18px;background-color: white"
+                                       onClick="changeStatus('<%=entry.getKey().getId()%>', 0, 'delete')">X</button>
                                 </td>
                             </tr>
                             <%
@@ -146,11 +155,91 @@
     </section>
     <%@include file="/WEB-INF/user/include/footer.jsp" %>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
     window.addEventListener('scroll', () => {
         var header = document.querySelector('.container')
         header.classList.toggle('sticky', window.scrollY > 100)
     })
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.pro-qty').forEach(function(proQty) {
+            const input = proQty.querySelector('.input-number');
+            const btnIncrease = proQty.querySelector('.btn-increase');
+            const btnDecrease = proQty.querySelector('.btn-decrease');
+
+            input.addEventListener('input', function() {
+                const min = parseInt(input.min, 10);
+                const max = parseInt(input.max, 10);
+                let value = parseInt(input.value, 10);
+
+                if (value > max) {
+                    input.value = max;
+                } else if (value < min) {
+                    input.value = min;
+                }
+            });
+
+            btnIncrease.addEventListener('click', function() {
+                const max = parseInt(input.max, 10);
+                let value = parseInt(input.value, 10);
+                if (value < max) {
+                    input.value = value + 1;
+                    changeStatus(input.id.slice(1), value + 1, 'put');
+                }
+            });
+
+            btnDecrease.addEventListener('click', function() {
+                const min = parseInt(input.min, 10);
+                let value = parseInt(input.value, 10);
+                if (value > min) {
+                    input.value = value - 1;
+                    changeStatus(input.id.slice(1), value - 1, 'put');
+                }
+            });
+        });
+    });
+</script>
+<script>
+    function changeStatus(pid, quantity, action) {
+        console.log(pid, quantity, action);
+        // Lấy giá tiền từng sản phẩm và loại bỏ các ký tự không phải số (VND và dấu phẩy)
+        const priceText = document.querySelector('#pr' + pid).textContent.replace(/[^0-9]/g, '');
+        const price = parseInt(priceText, 10);
+        // Tính toán tổng tiền mới
+        const total = price * quantity;
+        // Cập nhật DOM cho tổng tiền của sản phẩm
+        document.querySelector('#t' + pid).textContent = total.toLocaleString('vi-VN') + ' VND';
+        // Cập nhật số lượng trong DOM, nếu số lượng là 0, xóa hàng
+        if (quantity === 0) {
+            document.querySelector("#tr" + pid).remove();
+        } else {
+            document.querySelector('#p' + pid).textContent = quantity;
+        }
+        $.ajax({
+            url: "${request.servletContext.contextPath}/user/cart",
+            type: 'POST',
+            data: {
+                id: pid,
+                quantity: quantity,
+                action: action
+            },
+            success: function(response) {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Thay Đổi Giỏ Hàng Thành Công!",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                const badge = document.getElementById("badge");
+                badge.innerHTML = response.total;
+            }
+        });
+    }
 </script>
 </body>
 </html>
