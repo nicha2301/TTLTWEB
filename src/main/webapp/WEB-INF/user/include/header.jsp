@@ -1,5 +1,6 @@
 <%@ page import="java.util.List" %>
 <%@ page import="vn.edu.hcmuaf.fit.model.CartItem" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/common/taglib.jsp" %>
 <head>
@@ -16,10 +17,11 @@
         <%
             Integer totalItems = (Integer) session.getAttribute("total");
             List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-            if (!cart.isEmpty()) {
-                if(totalItems == null) totalItems = 0;
+            if (cart != null) {
+                if (cart.isEmpty()) totalItems = 0;
             } else {
-                totalItems = 0;
+                session.setAttribute("cart", new ArrayList<>());
+                if(totalItems == null) totalItems = 0;
             }
         %>
         <div class="header-center">

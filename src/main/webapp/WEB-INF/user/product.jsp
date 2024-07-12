@@ -150,7 +150,7 @@
                                 </c:when>
                                 <c:otherwise>
                                     <%
-                                        Map<Product, List<String>> products = (Map<Product, List<String>>) request.getAttribute("products");
+                                        Map<Product, List<String>> products = (Map<Product, List<String>>) request.getAttribute("product");
                                         User user = (User) session.getAttribute("auth");
                                         if (products != null && !products.isEmpty()) {
                                             for (Map.Entry<Product, List<String>> entry : products.entrySet()) {

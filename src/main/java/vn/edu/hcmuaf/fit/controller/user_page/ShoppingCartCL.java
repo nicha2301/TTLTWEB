@@ -31,7 +31,9 @@ public class ShoppingCartCL extends HttpServlet {
         HttpSession session = request.getSession(true);
         User user = (User) session.getAttribute("auth");
         if (user == null) request.getRequestDispatcher("/WEB-INF/user/signIn.jsp").forward(request, response);
-        else request.getRequestDispatcher("/WEB-INF/user/cart.jsp").forward(request, response);
+        else {
+            request.getRequestDispatcher("/WEB-INF/user/cart.jsp").forward(request, response);
+        }
     }
 
     @Override
