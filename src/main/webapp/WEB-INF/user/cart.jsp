@@ -25,7 +25,7 @@
     <style>
         .input-number {
             text-align: center;
-            width: 60px;
+            width: 10px;
             margin: 0 5px;
             padding: 6px;
         }
@@ -56,7 +56,8 @@
     <%
         } else {
     %>
-        <div class="container">
+        <h1 id="please" style="text-align: center">Vui lòng mua sắm</h1>
+        <div id="container1" class="container">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="shoping__cart__table">
@@ -80,7 +81,7 @@
                                     for (Map.Entry<Product, List<String>> entry : products.entrySet()) {
                                         int total = item.getQuantity()*entry.getKey().getPrice();
                             %>
-                            <tr>
+                            <tr id="tr<%=entry.getKey().getId()%>">
                                 <td class="shoping__cart__item">
                                     <img src="${pageContext.request.contextPath}<%=entry.getValue().get(0)%>" alt="">
                                     <h5><%=entry.getKey().getProductName()%>
@@ -139,9 +140,14 @@
                         <div class="shoping__checkout">
                             <h5>TỔNG TIỀN GIỎ HÀNG</h5>
                             <ul>
-                                <li>Giảm<span>${ Util.formatCurrency(cart.totalPrice - cart.priceSaled) } VND</span></li>
-                                <%  Integer totalPrice = CartService.getInstance().getTotalPrice(user);     %>
-                                <li>Tổng<span><fmt:formatNumber value="<%=totalPrice%>" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}</span></li>
+                                <li>Giảm: <span>0${ Util.formatCurrency(cart.totalPrice - cart.priceSaled) } VND</span></li>
+                                <%
+                                    Integer totalPrice = (Integer) session.getAttribute("result");
+                                    if (totalPrice == null) {
+                                        totalPrice = CartService.getInstance().getTotalPrice(user);
+                                    }
+                                %>
+                                <li>Tổng: <span id="all"><fmt:formatNumber value="<%=totalPrice%>" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}</span></li>
                             </ul>
                             <a href="${pageContext.request.contextPath}/user/checkout" class="primary-btn">TIẾN HÀNH THANH TOÁN</a>
                         </div>
@@ -236,7 +242,19 @@
                     timer: 1500
                 });
                 const badge = document.getElementById("badge");
+                const all = document.getElementById("all");
                 badge.innerHTML = response.total;
+                console.log(response.state)
+                let please = document.getElementById("please");
+                if (response.state === "zero") {
+                    let please = document.getElementById("please");
+                    let container = document.getElementById("container1");
+                    please.style.display = "block";
+                    container.style.display = "none";
+                } else {
+                    all.innerHTML = response.result + "VND";
+                    please.style.display = "none";
+                }
             }
         });
     }

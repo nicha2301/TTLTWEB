@@ -7,10 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import vn.edu.hcmuaf.fit.model.CartItem;
-import vn.edu.hcmuaf.fit.model.Product;
-import vn.edu.hcmuaf.fit.model.ShoppingCart;
-import vn.edu.hcmuaf.fit.model.User;
+import vn.edu.hcmuaf.fit.model.*;
 import vn.edu.hcmuaf.fit.service.impl.ProductService;
 
 import java.io.IOException;
@@ -53,9 +50,8 @@ public class ShoppingCartCL extends HttpServlet {
         ShoppingCart shoppingCart = new ShoppingCart(cart);
         Product product = null;
         CartItem cartItem = null;
-        int id;
         Map<Product, List<String>> products;
-        int quantity;
+        int quantity, re = 0, id;
         Map<String, Object> responseData;
         String jsonResponse;
 
@@ -65,7 +61,32 @@ public class ShoppingCartCL extends HttpServlet {
         String action = request.getParameter("action");
         switch (action) {
         case "delete":
-            this.delete(request, response);
+            id = Integer.parseInt(request.getParameter("id"));
+            products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(id), ip, "/user/cart");
+            for (Product p: products.keySet()) {
+                product = p;
+            }
+            shoppingCart.remove(user, product);
+            session.setAttribute("cart", cart);
+
+            for(CartItem i: cart) {
+                products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(i.getProduct().getId()), ip, "/user/cart");
+                for (Product p: products.keySet()) {
+                    re += i.getQuantity()*p.getPrice();
+                }
+            }
+
+            responseData = new HashMap<>();
+            if (re==0) responseData.put("state", "zero");
+            responseData.put("total", cart.size());
+            responseData.put("items", cart);
+            responseData.put("result", Utils.formatCurrency(re));
+
+            jsonResponse = new Gson().toJson(responseData);
+            out.write(jsonResponse);
+            session.setAttribute("total", cart.size());
+            session.setAttribute("result", re);
+            out.close();
             break;
         case "put":
             id = Integer.parseInt(request.getParameter("id"));
@@ -81,13 +102,22 @@ public class ShoppingCartCL extends HttpServlet {
             }
             session.setAttribute("cart", cart);
 
+            for(CartItem i: cart) {
+                products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(i.getProduct().getId()), ip, "/user/cart");
+                for (Product p: products.keySet()) {
+                    re += i.getQuantity()*p.getPrice();
+                }
+            }
             responseData = new HashMap<>();
+            if (re==0) responseData.put("state", "zero");
             responseData.put("total", cart.size());
             responseData.put("items", cart);
+            responseData.put("result", Utils.formatCurrency(re));
 
             jsonResponse = new Gson().toJson(responseData);
             out.write(jsonResponse);
             session.setAttribute("total", cart.size());
+            session.setAttribute("result", re);
             out.close();
             break;
         case "add":
@@ -137,6 +167,13 @@ public class ShoppingCartCL extends HttpServlet {
             shoppingCart.add(cartItem);
             session.setAttribute("cart", cart);
 
+            for(CartItem i: cart) {
+                products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(i.getProduct().getId()), ip, "/user/cart");
+                for (Product p: products.keySet()) {
+                    re += i.getQuantity()*p.getPrice();
+                }
+            }
+
             responseData = new HashMap<>();
             responseData.put("total", cart.size());
             responseData.put("items", cart);
@@ -145,16 +182,9 @@ public class ShoppingCartCL extends HttpServlet {
             jsonResponse = new Gson().toJson(responseData);
             out.write(jsonResponse);
             session.setAttribute("total", cart.size());
+            session.setAttribute("result", re);
             out.close();
             break;
         }
-    }
-
-    private void update(HttpServletRequest request, HttpServletResponse response, ShoppingCart shoppingCart, User user, String ip, HttpSession session) throws ServletException, IOException {
-
-    }
-
-    private void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
     }
 }

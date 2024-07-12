@@ -50,35 +50,4 @@ public class ShoppingCart {
             }
         }
     }
-//
-//    public int getSize(){
-//        int re=0;
-//        for(CartItem c:cartItemList){
-//            re +=c.getQuantity();
-//        }
-//        return re;
-//    }
-//    public List<CartItem> getCartItemList(){
-//        return this.cartItemList;
-//    }
-//
-////    public double getTotalPrice() {
-////        double re=0;
-////        for(CartItem c: cartItemList){
-////            re+=c.getTotalPrice();
-////        }
-////        return re;
-////    }
-//
-//    public String getHello() {
-//        return null;
-//    }
-//
-//    public double getTotalPrice() {
-//        double re=0;
-//        for(CartItem c: cartItemList){
-//            re+=c.getTotalPrice();
-//        }
-//        return re;
-//    }
 }
