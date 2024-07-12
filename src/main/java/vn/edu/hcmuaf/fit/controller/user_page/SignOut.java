@@ -23,6 +23,6 @@ public class SignOut extends HttpServlet {
         session.invalidate();
         getServletContext().removeAttribute("email");
         getServletContext().removeAttribute("action");
-        response.sendRedirect("signin");
+        response.sendRedirect("home");
     }
 }

@@ -5,7 +5,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import vn.edu.hcmuaf.fit.model.CartItem;
 import vn.edu.hcmuaf.fit.model.Product;
+import vn.edu.hcmuaf.fit.model.User;
 import vn.edu.hcmuaf.fit.model.Utils;
 import vn.edu.hcmuaf.fit.service.impl.ProductService;
 
@@ -203,52 +206,65 @@ public class ProductServlet extends HttpServlet {
                             "       <p>Xin lỗi, không tìm thấy sản phẩm nào có tên này.</p>\n" +
                             "           </div>\n";
                 } else {
-                    for (Map.Entry<Product, List<String>> entry : products.entrySet()) {
-                        data += "<div class=\"item\">\n" +
-                                "       <div>\n" +
-                                "           <div class=\"product-element-top\">\n" +
-                                "               <a href=\"" + request.getServletContext().getContextPath() + "/user/product?id=" + entry.getKey().getId() + "\">\n" +
-                                "                   <img src=\"" + request.getServletContext().getContextPath() + entry.getValue().get(0) + "\" alt=\"\">\n" +
-                                "               </a>\n" +
-                                "           </div>\n" +
-                                "           <div class=\"product-element-bottom\">\n" +
-                                "               <a href=\"" + request.getServletContext().getContextPath() + "/user/product?id=" + entry.getKey().getId() + "\">\n" +
-                                                    entry.getKey().getProductName() +
-                                "               </a>\n" +
-                                "           </div>\n" +
-                                "           <div class=\"product-element\">\n" +
-                                "               <div class=\"price-wrap\">\n" +
-                                "                   <div class=\"price\">\n" +
-                                                        Utils.formatCurrency(entry.getKey().getPrice()) + " VND\n" +
-                                "                   </div>\n" +
-                                "               </div>\n" +
-                                "           </div>\n" +
-                                "       </div>\n" +
-                                "       <div class=\"wd-buttons wd-pos-r-t\">\n" +
-                                "           <div class=\"wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon\">\n" +
-                                "               <a href=\"" + request.getServletContext().getContextPath() + "/user/addtocart?id=" + entry.getKey().getId() + "\"\n" +
-                                "                   class=\"button product_type_simple add-to-cart-loop\" aria-label=\"\">\n" +
-                                "                       <span>\n" +
-                                "                           <i class=\"fa-solid fa-cart-shopping\"></i>\n" +
-                                "                       </span>\n" +
-                                "               </a>\n" +
-                                "           </div>\n" +
-                                "           <div class=\"quick-view wd-action-btn wd-style-icon wd-quick-view-icon\">\n" +
-                                "               <a href=\"\" class=\"open-quick-view quick-view-button\">\n" +
-                                "                   <span>\n" +
-                                "                       <i class=\"fa-solid fa-magnifying-glass\"></i>\n" +
-                                "                   </span>\n" +
-                                "               </a>\n" +
-                                "           </div>\n" +
-                                "           <div class=\"wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon\">\n" +
-                                "               <a class=\"wd-tltp wd-tooltip-inited\" href=\"\" data-added-text=\"Browse Wishlist\">\n" +
-                                "                   <span class=\"wd-tooltip-label\">\n" +
-                                "                       <i class=\"fa-regular fa-heart\"></i>\n" +
-                                "                   </span>\n" +
-                                "               </a>\n" +
-                                "           </div>\n" +
-                                "       </div>\n" +
-                                "   </div>";
+                    HttpSession session = request.getSession(true);
+                    User user = (User) session.getAttribute("auth");
+                    List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+                    if (products != null && !products.isEmpty()) {
+                        for (Map.Entry<Product, List<String>> entry : products.entrySet()) {
+                            int remain = entry.getKey().getQuantity();
+                            if (user != null && cart != null && !cart.isEmpty()) {
+                                for (CartItem item : cart) {
+                                    if (item.getProduct().getId()==entry.getKey().getId() && item.getUser().getId()==user.getId()) {
+                                        remain = entry.getKey().getQuantity() - item.getQuantity();
+                                    }
+                                }
+                            }
+                            data += "<div class=\"item\">\n" +
+                                    "       <div>\n" +
+                                    "           <div class=\"product-element-top\">\n" +
+                                    "               <a href=\"" + request.getServletContext().getContextPath() + "/user/product?id=" + entry.getKey().getId() + "\">\n" +
+                                    "                   <img src=\"" + request.getServletContext().getContextPath() + entry.getValue().get(0) + "\" alt=\"\">\n" +
+                                    "               </a>\n" +
+                                    "           </div>\n" +
+                                    "           <div class=\"product-element-bottom\">\n" +
+                                    "               <a href=\"" + request.getServletContext().getContextPath() + "/user/product?id=" + entry.getKey().getId() + "\">\n" +
+                                    entry.getKey().getProductName() +
+                                    "               </a>\n" +
+                                    "           </div>\n" +
+                                    "           <div class=\"product-element\">\n" +
+                                    "               <div class=\"price-wrap\">\n" +
+                                    "                   <div class=\"price\">\n" +
+                                    Utils.formatCurrency(entry.getKey().getPrice()) + " VND\n" +
+                                    "                   </div>\n" +
+                                    "               </div>\n" +
+                                    "           </div>\n" +
+                                    "       </div>\n" +
+                                    "       <div class=\"wd-buttons wd-pos-r-t\">\n" +
+                                    "           <div class=\"wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon\">\n" +
+                                    "               <a href=\"javascript:void(0)\" onclick=\"addCart(this, '" + entry.getKey().getId() + "', '" + remain + "')\"\n" +
+                                    "                   class=\"button product_type_simple add-to-cart-loop\" aria-label=\"\">\n" +
+                                    "                       <span>\n" +
+                                    "                           <i class=\"fa-solid fa-cart-shopping\"></i>\n" +
+                                    "                       </span>\n" +
+                                    "               </a>\n" +
+                                    "           </div>\n" +
+                                    "           <div class=\"quick-view wd-action-btn wd-style-icon wd-quick-view-icon\">\n" +
+                                    "               <a href=\"\" class=\"open-quick-view quick-view-button\">\n" +
+                                    "                   <span>\n" +
+                                    "                       <i class=\"fa-solid fa-magnifying-glass\"></i>\n" +
+                                    "                   </span>\n" +
+                                    "               </a>\n" +
+                                    "           </div>\n" +
+                                    "           <div class=\"wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon\">\n" +
+                                    "               <a class=\"wd-tltp wd-tooltip-inited\" href=\"\" data-added-text=\"Browse Wishlist\">\n" +
+                                    "                   <span class=\"wd-tooltip-label\">\n" +
+                                    "                       <i class=\"fa-regular fa-heart\"></i>\n" +
+                                    "                   </span>\n" +
+                                    "               </a>\n" +
+                                    "           </div>\n" +
+                                    "       </div>\n" +
+                                    "   </div>";
+                        }
                     }
                 }
                 data += "       </div>\n" +

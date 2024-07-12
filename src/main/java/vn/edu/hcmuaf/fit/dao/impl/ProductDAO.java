@@ -2,8 +2,10 @@ package vn.edu.hcmuaf.fit.dao.impl;
 
 import vn.edu.hcmuaf.fit.dao.IProductDAO;
 import vn.edu.hcmuaf.fit.model.Product;
+import vn.edu.hcmuaf.fit.model.ProductCategories;
 import vn.edu.hcmuaf.fit.model.ProductTypes;
 import vn.edu.hcmuaf.fit.model.Supplier;
+import vn.edu.hcmuaf.fit.service.impl.CategoryService;
 import vn.edu.hcmuaf.fit.service.impl.ProductTypeService;
 import vn.edu.hcmuaf.fit.service.impl.SupplierService;
 
@@ -177,8 +179,10 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
                 for(Product product : map.keySet()) {
                     Supplier supplier = SupplierService.getInstance().getSupplierById(product.getSupplier().getId());
                     ProductTypes type = ProductTypeService.getInstance().getProductTypeById(product.getType().getId());
+                    ProductCategories cate = CategoryService.getInstance().getCategoryById(product.getCate().getId());
                     product.setSupplier(supplier);
                     product.setType(type);
+                    product.setCate(cate);
                     return map;
                 }
             }
@@ -231,28 +235,5 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
                 ") AS p LEFT JOIN images i ON p.id = i.product_id";
         ProductImageMapper mapper = new ProductImageMapper(rs -> RSHandler.getString(rs, "image_url"));
         return queryForMap(sql, mapper, true, type_id, limit);
-    }
-
-    /**
-     *  Test
-     */
-    public static void main(String[] args) {
-        Map<Product, List<String>> re = ProductDAO.getInstance().getProductsLimit(4, 3);
-        for (Map.Entry<Product, List<String>> entry : re.entrySet()) {
-            Product product = entry.getKey();
-            List<String> images = entry.getValue();
-            System.out.println("Product ID: " + product.getId());
-
-            // Kiểm tra và in danh sách hình ảnh
-            if (images.isEmpty()) {
-                System.out.println("No images available for this product.");
-            } else {
-                System.out.println("Images URLs:");
-                for (String url : images) {
-                    System.out.println(url);
-                }
-            }
-            System.out.println("--------------------------------------");
-        }
     }
 }

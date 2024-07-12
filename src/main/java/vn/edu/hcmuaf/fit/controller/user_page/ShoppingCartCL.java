@@ -7,10 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import vn.edu.hcmuaf.fit.model.CartItem;
-import vn.edu.hcmuaf.fit.model.Product;
-import vn.edu.hcmuaf.fit.model.User;
-import vn.edu.hcmuaf.fit.service.impl.CartService;
+import vn.edu.hcmuaf.fit.model.*;
 import vn.edu.hcmuaf.fit.service.impl.ProductService;
 
 import java.io.IOException;
@@ -26,87 +23,168 @@ public class ShoppingCartCL extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
-        this.doPost(request, response);
+        HttpSession session = request.getSession(true);
+        User user = (User) session.getAttribute("auth");
+        if (user == null) request.getRequestDispatcher("/WEB-INF/user/signIn.jsp").forward(request, response);
+        else {
+            request.getRequestDispatcher("/WEB-INF/user/cart.jsp").forward(request, response);
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+
         HttpSession session = request.getSession(true);
         User user = (User) session.getAttribute("auth");
         if (user == null) {
-            request.getRequestDispatcher("/WEB-INF/user/signIn.jsp").forward(request, response);
+            out.write("{\"status\": \"failed\"}");
+            out.close();
             return;
         }
+
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-        boolean success = false;
+        ShoppingCart shoppingCart = new ShoppingCart(cart);
+        Product product = null;
+        CartItem cartItem = null;
+        Map<Product, List<String>> products;
+        int quantity, re = 0, id;
+        Map<String, Object> responseData;
+        String jsonResponse;
+
+        String ip = request.getHeader("X-FORWARDED-FOR");
+        if (ip == null) ip = request.getRemoteAddr();
+
         String action = request.getParameter("action");
         switch (action) {
-            case "get":
-                request.getRequestDispatcher("/WEB-INF/user/cart.jsp").forward(request, response);
-                break;
-            case "delete":
-                success = this.delete(request, response);
-                break;
-            case "update":
-                success = this.update(request, response);
-                break;
-            case "add":
-                success = this.add(request, response, user, cart);
-                break;
-        }
-        PrintWriter out = response.getWriter();
-        if(success) {
-            Map<String, Object> responseData = new HashMap<>();
+        case "delete":
+            id = Integer.parseInt(request.getParameter("id"));
+            products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(id), ip, "/user/cart");
+            for (Product p: products.keySet()) {
+                product = p;
+            }
+            shoppingCart.remove(user, product);
+            session.setAttribute("cart", cart);
 
-            responseData.put("totalItems", cart.size());
+            for(CartItem i: cart) {
+                products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(i.getProduct().getId()), ip, "/user/cart");
+                for (Product p: products.keySet()) {
+                    re += i.getQuantity()*p.getPrice();
+                }
+            }
+
+            responseData = new HashMap<>();
+            if (re==0) responseData.put("state", "zero");
+            responseData.put("total", cart.size());
             responseData.put("items", cart);
-            String jsonResponse = new Gson().toJson(responseData);
-            out.write(jsonResponse);
-            session.setAttribute("totalItems", cart.size());
-        }
-        out.flush();
-        out.close();
-    }
+            responseData.put("result", Utils.formatCurrency(re));
 
-    private boolean add(HttpServletRequest request, HttpServletResponse response, User user, List<CartItem> cart) {
-        try {
-            int id = Integer.parseInt(request.getParameter("id"));
+            jsonResponse = new Gson().toJson(responseData);
+            out.write(jsonResponse);
+            session.setAttribute("total", cart.size());
+            session.setAttribute("result", re);
+            out.close();
+            break;
+        case "put":
+            id = Integer.parseInt(request.getParameter("id"));
+            quantity = Integer.parseInt(request.getParameter("quantity"));
+            products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(id), ip, "/user/cart");
+            for (Product p: products.keySet()) {
+                product = p;
+            }
+            if (quantity > 0) {
+                shoppingCart.update(new CartItem(user, product, quantity));
+            } else if (quantity == 0) {
+                shoppingCart.remove(user, product);
+            }
+            session.setAttribute("cart", cart);
+
+            for(CartItem i: cart) {
+                products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(i.getProduct().getId()), ip, "/user/cart");
+                for (Product p: products.keySet()) {
+                    re += i.getQuantity()*p.getPrice();
+                }
+            }
+            responseData = new HashMap<>();
+            if (re==0) responseData.put("state", "zero");
+            responseData.put("total", cart.size());
+            responseData.put("items", cart);
+            responseData.put("result", Utils.formatCurrency(re));
+
+            jsonResponse = new Gson().toJson(responseData);
+            out.write(jsonResponse);
+            session.setAttribute("total", cart.size());
+            session.setAttribute("result", re);
+            out.close();
+            break;
+        case "add":
+            id = Integer.parseInt(request.getParameter("id"));
             int type = Integer.parseInt(request.getParameter("type"));
 
-            String ip = request.getHeader("X-FORWARDED-FOR");
-            if (ip == null) ip = request.getRemoteAddr();
-
-            Product product = new Product();
-            product.setId(id);
-            Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(product, ip, "/user/cart");
-            for (Map.Entry<Product, List<String>> entry : products.entrySet()) {
-                product = entry.getKey();
+            products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(id), ip, "/user/cart");
+            for (Product prod : products.keySet()) {
+                product = prod;
             }
-            int quantity = 1;
-            if (type == 1) quantity = Integer.parseInt(request.getParameter("quantity"));
-            if (cart != null && !cart.isEmpty()) {
-                for (CartItem item : cart) {
-                    if (item.getProduct().getId() == id && item.getUser().getId() == user.getId()) {
-                        item.setQuantity(item.getQuantity() + quantity);
-                        if (!CartService.getInstance().updateItem(user, product, item.getQuantity())) return false;
+            if (type == 0) {
+                cartItem = new CartItem(user, product, 1);
+            } else if (type == 1) {
+                String input = request.getParameter("quantity");
+                if (input == null || input.isEmpty()) {
+                    out.write("{\"status\": \"empty\", \"error\": \"The input do not empty!\"}");
+                    out.close();
+                    return;
+                }
+                quantity = Integer.parseInt(input);
+                cartItem = new CartItem(user, product, quantity);
+            }
+            int remain = product.getQuantity();
+            int count = 0;
+            if (shoppingCart.getItems().isEmpty()) {
+                remain = product.getQuantity() - cartItem.getQuantity();
+            } else {
+                for (CartItem item : shoppingCart.getItems()) {
+                    if (item.getProduct().getId() == product.getId() && item.getUser().getId() == user.getId()) {
+                        remain = product.getQuantity() - item.getQuantity() - cartItem.getQuantity();
+                        count++;
                         break;
                     }
                 }
-            } else cart.add(CartService.getInstance().addIntoCart(user, product, quantity));
-            return true;
-        } catch (Exception e) {
-            return false;
+            }
+            if (count == 0) remain = product.getQuantity() - cartItem.getQuantity();
+            int contain = Integer.parseInt(request.getParameter("contain"));
+            if (remain < 0) {
+                if (contain > 0) {
+                    out.write("{\"status\": \"out\", \"error\": \"Số lượng thêm không được lớn hơn số lượng còn lại!\"}");
+                } else {
+                    out.write("{\"status\": \"stock\", \"error\": \"Bạn đã thêm số lượng sản phẩm tối đa vào giỏ!\"}");
+                }
+                out.close();
+                return;
+            }
+            shoppingCart.add(cartItem);
+            session.setAttribute("cart", cart);
+
+            for(CartItem i: cart) {
+                products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(i.getProduct().getId()), ip, "/user/cart");
+                for (Product p: products.keySet()) {
+                    re += i.getQuantity()*p.getPrice();
+                }
+            }
+
+            responseData = new HashMap<>();
+            responseData.put("total", cart.size());
+            responseData.put("items", cart);
+            responseData.put("prefix", remain);
+
+            jsonResponse = new Gson().toJson(responseData);
+            out.write(jsonResponse);
+            session.setAttribute("total", cart.size());
+            session.setAttribute("result", re);
+            out.close();
+            break;
         }
-    }
-
-    private boolean update(HttpServletRequest request, HttpServletResponse response) {
-
-        return false;
-    }
-
-    private boolean delete(HttpServletRequest request, HttpServletResponse response) {
-
-        return false;
     }
 }

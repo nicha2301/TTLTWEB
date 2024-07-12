@@ -10,6 +10,7 @@ import vn.edu.hcmuaf.fit.model.CartItem;
 import vn.edu.hcmuaf.fit.model.Product;
 import vn.edu.hcmuaf.fit.model.ProductTypes;
 import vn.edu.hcmuaf.fit.model.User;
+import vn.edu.hcmuaf.fit.service.impl.CartService;
 import vn.edu.hcmuaf.fit.service.impl.ProductService;
 
 import java.io.IOException;
@@ -30,6 +31,14 @@ public class Home extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
+        HttpSession session = request.getSession(true);
+        User user = (User) session.getAttribute("auth");
+        if (user == null) session.setAttribute("cart", new ArrayList<>());
+        else {
+            List<CartItem> cart = CartService.getInstance().getCartByUser(user);
+            session.setAttribute("cart", cart);
+            session.setAttribute("total", cart.size());
+        }
         Map<Product, List<String>> products = ProductService.getInstance().getAllProductsLimited(0, 3);
         ProductTypes type = new ProductTypes();
         type.setId(4);

@@ -1,3 +1,6 @@
+<%@ page import="vn.edu.hcmuaf.fit.model.User" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.Product" %>
+<%@ page import="java.util.Map" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/common/taglib.jsp" %>
 <html>
@@ -207,51 +210,61 @@
                             <img src="https://tienthangvet.vn/wp-content/uploads/nokodemaseb-tri-nam-dang-xit.jpg"
                                  alt=""/>
                         </div>
-                        <a href="${pageContext.request.contextPath}/user/product?id=1" class="button">Xem ngay</a>
+                        <a href="${pageContext.request.contextPath}/user/product?id=14" class="button">Xem ngay</a>
                     </div>
-                    <c:choose>
-                        <c:when test="${not empty products}">
-                            <c:forEach var="entry" items="${products}">
-                                <c:set var="p" value="${entry.key}" />
-                                <c:set var="firstImage" value="${entry.value[0]}" />
-                                <div class="item">
-                                    <div>
-                                        <div class="product-element-top">
-                                            <a href="${pageContext.request.contextPath}/user/product?id=${p.id}">
-                                                <img src="${pageContext.request.contextPath}${firstImage}" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="product-element-bottom">
-                                            <a href="${pageContext.request.contextPath}/user/product?id=${p.id}">
-                                                ${p.productName}
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="wd-buttons wd-pos-r-t">
-                                        <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
-                                            <a href="javascript:void(0)" data-id="${p.id}" onclick="addCart(this, '${p.id}')" class="button product_type_simple add-to-cart-loop">
-                                                <span><i class="fa-solid fa-cart-shopping"></i></span>
-                                            </a>
-                                        </div>
-                                        <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
-                                            <a href="" class="open-quick-view quick-view-button">
+                    <%
+                        Map<Product, List<String>> products = (Map<Product, List<String>>) request.getAttribute("products");
+                        User user = (User) session.getAttribute("auth");
+                        if (products != null && !products.isEmpty()) {
+                            for (Map.Entry<Product, List<String>> entry : products.entrySet()) {
+                                int remain = entry.getKey().getQuantity();
+                                if (user != null && cart != null && !cart.isEmpty()) {
+                                    for (CartItem item : cart) {
+                                        if (item.getProduct().getId()==entry.getKey().getId() && item.getUser().getId()==user.getId()) {
+                                            remain = entry.getKey().getQuantity() - item.getQuantity();
+                                        }
+                                    }
+                                }
+                    %>
+                    <div class="item">
+                        <div>
+                            <div class="product-element-top">
+                                <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
+                                    <img src="${pageContext.request.contextPath}<%=entry.getValue().get(0)%>" alt="">
+                                </a>
+                            </div>
+                            <div class="product-element-bottom">
+                                <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
+                                    <%=entry.getKey().getProductName()%>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="wd-buttons wd-pos-r-t">
+                            <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
+                                <a href="javascript:void(0)" onclick="addCart(this, '<%=entry.getKey().getId()%>', '<%=remain%>')" class="button product_type_simple add-to-cart-loop">
+                                    <span><i class="fa-solid fa-cart-shopping"></i></span>
+                                </a>
+                            </div>
+                            <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
+                                <a href="" class="open-quick-view quick-view-button">
                                                 <span>
                                                     <i class="fa-solid fa-magnifying-glass"></i>
                                                 </span>
-                                            </a>
-                                        </div>
-                                        <div class="wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon">
-                                            <a class="wd-tltp wd-tooltip-inited" href="" data-added-text="Browse Wishlist">
+                                </a>
+                            </div>
+                            <div class="wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon">
+                                <a class="wd-tltp wd-tooltip-inited" href="" data-added-text="Browse Wishlist">
                                                 <span class="wd-tooltip-label">
                                                     <i class="fa-regular fa-heart"></i>
                                                 </span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </c:forEach>
-                        </c:when>
-                    </c:choose>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <%
+                            }
+                        }
+                    %>
                 </div>
             </div>
         </div>
@@ -277,51 +290,60 @@
                             </c:choose>
                         </div>
                     </div>
-                    <c:choose>
-                        <c:when test="${not empty pro}">
-                            <c:forEach var="item" items="${pro}">
-                                <c:set var="prod" value="${item.key}" />
-                                <c:set var="first" value="${item.value[0]}" />
-                                <div class="item">
-                                    <div>
-                                        <div class="product-element-top">
-                                            <a href="${pageContext.request.contextPath}/user/product?id=${prod.id}">
-                                                <img src="${pageContext.request.contextPath}${first}" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="product-element-bottom">
-                                            <a href="${pageContext.request.contextPath}/user/product?id=${prod.id}">
-                                                ${prod.productName}
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="wd-buttons wd-pos-r-t">
-                                        <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
-                                            <a href="javascript:void(0)" onclick="addCart(this, '${prod.id}')" class="button product_type_simple add-to-cart-loop">
+                    <%
+                        Map<Product, List<String>> pro = (Map<Product, List<String>>) request.getAttribute("pro");
+                        if (pro != null && !pro.isEmpty()) {
+                            for (Map.Entry<Product, List<String>> entry : pro.entrySet()) {
+                                int remain = entry.getKey().getQuantity();
+                                if (user != null && cart != null && !cart.isEmpty()) {
+                                    for (CartItem item : cart) {
+                                        if (item.getProduct().getId()==entry.getKey().getId() && item.getUser().getId()==user.getId()) {
+                                            remain = entry.getKey().getQuantity() - item.getQuantity();
+                                        }
+                                    }
+                                }
+                    %>
+                    <div class="item">
+                        <div>
+                            <div class="product-element-top">
+                                <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
+                                    <img src="${pageContext.request.contextPath}<%=entry.getValue().get(0)%>" alt="">
+                                </a>
+                            </div>
+                            <div class="product-element-bottom">
+                                <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
+                                    <%=entry.getKey().getProductName()%>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="wd-buttons wd-pos-r-t">
+                            <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
+                                <a href="javascript:void(0)" onclick="addCart(this, '<%=entry.getKey().getId()%>', '<%=remain%>')" class="button product_type_simple add-to-cart-loop">
                                             <span>
                                                 <i class="fa-solid fa-cart-shopping"></i>
                                             </span>
-                                            </a>
-                                        </div>
-                                        <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
-                                            <a href="" class="open-quick-view quick-view-button">
+                                </a>
+                            </div>
+                            <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
+                                <a href="" class="open-quick-view quick-view-button">
                                                 <span>
                                                     <i class="fa-solid fa-magnifying-glass"></i>
                                                 </span>
-                                            </a>
-                                        </div>
-                                        <div class="wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon">
-                                            <a class="wd-tltp wd-tooltip-inited" href="" data-added-text="Browse Wishlist">
+                                </a>
+                            </div>
+                            <div class="wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon">
+                                <a class="wd-tltp wd-tooltip-inited" href="" data-added-text="Browse Wishlist">
                                                 <span class="wd-tooltip-label">
                                                     <i class="fa-regular fa-heart"></i>
                                                 </span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </c:forEach>
-                        </c:when>
-                    </c:choose>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <%
+                            }
+                        }
+                    %>
                 </div>
             </div>
         </div>
@@ -347,51 +369,60 @@
                             </c:choose>
                         </div>
                     </div>
-                    <c:choose>
-                        <c:when test="${not empty pr}">
-                            <c:forEach var="pr_other" items="${pr}">
-                                <c:set var="otherProd" value="${pr_other.key}" />
-                                <c:set var="otherImage" value="${pr_other.value[0]}" />
-                                <div class="item">
-                                    <div>
-                                        <div class="product-element-top">
-                                            <a href="${pageContext.request.contextPath}/user/product?id=${otherProd.id}">
-                                                <img src="${pageContext.request.contextPath}${otherImage}" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="product-element-bottom">
-                                            <a href="${pageContext.request.contextPath}/user/product?id=${otherProd.id}">
-                                                ${otherProd.productName}
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="wd-buttons wd-pos-r-t">
-                                        <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
-                                            <a href="javascript:void(0)" onclick="addCart(this, '${otherProd.id}')" class="button product_type_simple add-to-cart-loop">
+                    <%
+                        Map<Product, List<String>> pr = (Map<Product, List<String>>) request.getAttribute("pr");
+                        if (pr != null && !pr.isEmpty()) {
+                            for (Map.Entry<Product, List<String>> entry : pr.entrySet()) {
+                                int remain = entry.getKey().getQuantity();
+                                if (user != null && cart != null && !cart.isEmpty()) {
+                                    for (CartItem item : cart) {
+                                        if (item.getProduct().getId()==entry.getKey().getId() && item.getUser().getId()==user.getId()) {
+                                            remain = entry.getKey().getQuantity() - item.getQuantity();
+                                        }
+                                    }
+                                }
+                    %>
+                    <div class="item">
+                        <div>
+                            <div class="product-element-top">
+                                <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
+                                    <img src="${pageContext.request.contextPath}<%=entry.getValue().get(0)%>" alt="">
+                                </a>
+                            </div>
+                            <div class="product-element-bottom">
+                                <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
+                                    <%=entry.getKey().getProductName()%>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="wd-buttons wd-pos-r-t">
+                            <div class="wd-add-btn wd-action-btn wd-style-icon wd-add-cart-icon">
+                                <a href="javascript:void(0)" onclick="addCart(this, '<%=entry.getKey().getId()%>', '<%=remain%>')" class="button product_type_simple add-to-cart-loop">
                                                 <span>
                                                     <i class="fa-solid fa-cart-shopping"></i>
                                                 </span>
-                                            </a>
-                                        </div>
-                                        <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
-                                             <a href="" class="open-quick-view quick-view-button">
+                                </a>
+                            </div>
+                            <div class="quick-view wd-action-btn wd-style-icon wd-quick-view-icon">
+                                <a href="" class="open-quick-view quick-view-button">
                                                 <span>
                                                     <i class="fa-solid fa-magnifying-glass"></i>
                                             </span>
-                                        </a>
-                                        </div>
-                                        <div class="wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon">
-                                            <a class="wd-tltp wd-tooltip-inited" href="" data-added-text="Browse Wishlist">
+                                </a>
+                            </div>
+                            <div class="wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon">
+                                <a class="wd-tltp wd-tooltip-inited" href="" data-added-text="Browse Wishlist">
                                                 <span class="wd-tooltip-label">
                                                     <i class="fa-regular fa-heart"></i>
                                                 </span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </c:forEach>
-                        </c:when>
-                    </c:choose>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <%
+                            }
+                        }
+                    %>
                 </div>
             </div>
         </div>
@@ -488,36 +519,44 @@
     </section>
 </div>
 <%@include file="/WEB-INF/user/include/footer.jsp" %>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
         integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="/assets/user/js/home/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    function addCart(btn, id) {
+    var context = "${pageContext.request.contextPath}";
+    function addCart(btn, id, remain) {
+        console.log(remain)
         $.ajax({
-            url: "cart",
+            url: "${request.servletContext.contextPath}/user/cart",
             method: "POST",
             data: {
                 id: id,
                 action: "add",
-                type: 0
+                type: 0,
+                contain: remain
             },
             success: function (response) {
-                var res = JSON.parse(response);
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "Thêm Sản Phẩm Vào Giỏ Hàng Thành Công!",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                const badge = document.getElementById("badge");
-                badge.innerHTML = res.totalItems;
+                if (response.status === "failed") {
+                    window.location.href = context + "/user/signin";
+                } else if(response.status === "stock") {
+                    alert(response.error)
+                } else {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Thêm Sản Phẩm Vào Giỏ Hàng Thành Công!",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    const badge = document.getElementById("badge");
+                    badge.innerHTML = response.total;
+                }
             }
         });
     }
