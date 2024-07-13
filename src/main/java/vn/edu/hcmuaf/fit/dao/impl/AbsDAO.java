@@ -5,8 +5,10 @@ import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.mapper.reflect.BeanMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.core.statement.Update;
-import vn.edu.hcmuaf.fit.db.JDBIConnector;
 import vn.edu.hcmuaf.fit.dao.GenericDAO;
+import vn.edu.hcmuaf.fit.db.JDBIConnector;
+import vn.edu.hcmuaf.fit.model.Order;
+import vn.edu.hcmuaf.fit.model.OrderItem;
 import vn.edu.hcmuaf.fit.model.Product;
 import vn.edu.hcmuaf.fit.model.Table;
 
@@ -125,6 +127,20 @@ public class AbsDAO<T> implements GenericDAO<T> {
                 images.add(imageUrl);
             }
             return new AbstractMap.SimpleEntry<>(product, images);
+        }
+    }
+
+    class OrderItemMapper implements RowMapper<Map.Entry<Order, List<OrderItem>>> {
+
+        @Override
+        public Map.Entry<Order, List<OrderItem>> map(ResultSet rs, StatementContext ctx) throws SQLException {
+            Order order = BeanMapper.of(Order.class).map(rs, ctx);
+            List<OrderItem> items = new ArrayList<>();
+            OrderItem orderItem = BeanMapper.of(OrderItem.class).map(rs, ctx);
+            if (orderItem != null) {
+                items.add(orderItem);
+            }
+            return new AbstractMap.SimpleEntry<>(order, items);
         }
     }
 
