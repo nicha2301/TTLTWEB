@@ -8,6 +8,10 @@ import java.util.Map;
 
 public interface IOrderDAO extends GenericDAO<Order> {
 
+    Map<Order, List<OrderItem>> loadAllOrders();
+
+    Map<Order, List<OrderItem>> loadOrdersByStatus(Integer status);
+
     Map<Order, List<OrderItem>> loadOrderProductByOrder(Integer orderId);
 
     Map<Order, List<OrderItem>> loadOrderProductByUser(Integer userId);
@@ -28,5 +32,7 @@ public interface IOrderDAO extends GenericDAO<Order> {
     boolean updatePayment(Integer orderId, Integer payment);
 
     boolean updateDelivery(Integer orderId, Integer delivery);
+
+    Integer getOrderPrice(Integer orderId);
 
 }

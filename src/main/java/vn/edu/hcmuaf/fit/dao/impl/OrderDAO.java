@@ -18,6 +18,28 @@ public class OrderDAO extends AbsDAO<Order> implements IOrderDAO {
     }
 
     @Override
+    public Map<Order, List<OrderItem>> loadAllOrders() {
+        String sql = "SELECT o.*, i.* FROM (" +
+                " SELECT * FROM orders" +
+                ") AS o LEFT JOIN order_items i ON o.id = i.order_id";
+        return queryForMap(sql, new OrderItemMapper(), true);
+    }
+
+    @Override
+    public Map<Order, List<OrderItem>> loadOrdersByStatus(Integer status) {
+        String sql = "SELECT o.*, i.* FROM (" +
+                " SELECT * FROM orders WHERE status_id = ?" +
+                ") AS o LEFT JOIN order_items i ON o.id = i.order_id";
+        return queryForMap(sql, new OrderItemMapper(), true, status);
+    }
+
+    @Override
+    public Integer getOrderPrice(Integer orderId) {
+        String sql = "SELECT SUM(quantity * order_price) FROM order_items WHERE order_id = ?";
+        return count(sql, orderId);
+    }
+
+    @Override
     public Map<Order, List<OrderItem>> loadOrderProductByOrder(Integer orderId) {
         String sql = "SELECT o.*, i.* FROM (" +
                 " SELECT * FROM orders WHERE id = ?" +
