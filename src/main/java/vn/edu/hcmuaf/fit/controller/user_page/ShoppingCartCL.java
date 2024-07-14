@@ -146,6 +146,11 @@ public class ShoppingCartCL extends HttpServlet {
                     return;
                 }
                 quantity = Integer.parseInt(input);
+                if (quantity==0) {
+                    out.write("{\"status\": \"bigger\", \"error\": \"Bạn chỉ được phép thêm số lượng sản phẩm khác 0!\"}");
+                    out.close();
+                    return;
+                }
                 cartItem = new CartItem(user, product, quantity);
             }
             int remain = product.getQuantity();

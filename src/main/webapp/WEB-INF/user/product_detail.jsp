@@ -335,7 +335,6 @@
         var quantity = $('#quantity').val();
         const input = document.getElementById('quantity');
         const max = parseInt(input.max, 10);
-        // console.log("max = " + max);
         $.ajax({
             url: "${request.servletContext.contextPath}/user/cart",
             method: "POST",
@@ -349,7 +348,8 @@
             success: function (response) {
                 if (response.status === "failed") {
                     window.location.href = context + "/user/signin";
-                } else if (response.status === "empty" || response.status === "out") {
+                } else if (response.status === "empty" || response.status === "out" || response.status === "bigger") {
+                    console.log(response.error);
                     $('#error').html(response.error);
                 } else if (response.status === "stock") {
                     $('#error').html(response.error);
@@ -406,37 +406,33 @@
 </script>
 <script>
     function addCartRemain(btn, id, remain) {
-        if (remain !== 0) {
-            $.ajax({
-                url: "${request.servletContext.contextPath}/user/cart",
-                method: "POST",
-                data: {
-                    id: id,
-                    action: "add",
-                    type: 0,
-                    contain: remain
-                },
-                success: function (response) {
-                    if (response.status === "failed") {
-                        window.location.href = context + "/user/signin";
-                    } else if(response.status === "stock") {
-                        alert(response.error)
-                    } else {
-                        Swal.fire({
-                            position: "center",
-                            icon: "success",
-                            title: "Thêm Sản Phẩm Vào Giỏ Hàng Thành Công!",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                        const badge = document.getElementById("badge");
-                        badge.innerHTML = response.total;
-                    }
+        $.ajax({
+            url: "${request.servletContext.contextPath}/user/cart",
+            method: "POST",
+            data: {
+                id: id,
+                action: "add",
+                type: 0,
+                contain: remain
+            },
+            success: function (response) {
+                if (response.status === "failed") {
+                    window.location.href = context + "/user/signin";
+                } else if(response.status === "stock") {
+                    alert(response.error)
+                } else {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Thêm Sản Phẩm Vào Giỏ Hàng Thành Công!",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    const badge = document.getElementById("badge");
+                    badge.innerHTML = response.total;
                 }
-            });
-        } else if (remain === 0) {
-            console.log(typeof remain, remain)
-        }
+            }
+        });
     }
 </script>
 </body>

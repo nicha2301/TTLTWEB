@@ -132,8 +132,8 @@
                             <div class="shoping__discount">
                                 <h5>Mã giảm giá</h5>
                                 <form>
-                                    <input type="text" name="discount" placeholder="Nhập mã giãm giá mua hàng">
-                                    <button class="site-btn">SỬ DỤNG MÃ</button>
+                                    <input type="text" id="discount" name="discount" placeholder="Nhập mã giãm giá mua hàng">
+                                    <button id="btnDiscount" class="site-btn">SỬ DỤNG MÃ</button>
                                 </form>
                             </div>
                         </div>
