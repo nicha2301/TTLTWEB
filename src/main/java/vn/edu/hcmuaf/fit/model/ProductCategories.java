@@ -19,6 +19,7 @@ public class ProductCategories extends AbsModel implements Serializable {
      ProductGroups group;
      Boolean active;
 
+
     @Nested("group")
     public ProductGroups getGroup() {
         return group;
@@ -27,5 +28,9 @@ public class ProductCategories extends AbsModel implements Serializable {
     @Nested("group")
     public void setGroup(ProductGroups group) {
         this.group = group;
+    }
+
+    public ProductCategories(Integer id) {
+        this.id = id;
     }
 }
