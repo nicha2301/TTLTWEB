@@ -131,6 +131,7 @@
                         <div class="shoping__continue">
                             <div class="shoping__discount">
                                 <h5>Mã giảm giá</h5>
+                                <span id="errorDiscount" style="color: red;"></span>
                                 <form>
                                     <input type="text" id="discount" name="discount" placeholder="Nhập mã giãm giá mua hàng"
                                     value="${sessionScope.discount.code}">
@@ -143,7 +144,7 @@
                         <div class="shoping__checkout">
                             <h5>TỔNG TIỀN GIỎ HÀNG</h5>
                             <ul>
-                                <li>Giảm: <span id="retain">${sessionScope.retain}${unit}</span></li>
+                                <li>Giảm: <span id="retain">${sessionScope.retain==null?"0 ":sessionScope.retain}${unit}</span></li>
                                 <li>Tổng: <span id="result">${sessionScope.result}${unit}</span></li>
                             </ul>
                             <a href="${pageContext.request.contextPath}/user/checkout" class="primary-btn">TIẾN HÀNH THANH TOÁN</a>
@@ -182,18 +183,22 @@
                 },
                 url: '${request.servletContext.contextPath}/user/cart',
                 success: function (response) {
-                    console.log(response.rect, response.result)
-                    const result = document.getElementById("result");
                     const retain = document.getElementById("retain");
-                    Swal.fire({
-                        position: "center",
-                        icon: "success",
-                        title: "Thêm Sản Phẩm Vào Giỏ Hàng Thành Công!",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    retain.innerHTML = response.rect + "VND"
+                    const result = document.getElementById("result");
+                    if (response.state === "notfound" || response.state === "notempty") {
+                        $('#errorDiscount').html(response.error);
+                    } else {
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Thêm Sản Phẩm Vào Giỏ Hàng Thành Công!",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        $('#errorDiscount').html("");
+                    }
                     result.innerHTML = response.result + "VND";
+                    retain.innerHTML = response.rect + "VND"
                 }
             });
         });
@@ -274,6 +279,7 @@
                 const result = document.getElementById("result");
                 const please = document.getElementById("please");
                 const container = document.getElementById("container1");
+                const retain = document.getElementById("retain");
                 badge.innerHTML = response.total;
                 if (response.state === "zero") {
                     please.style.display = "block";
@@ -281,6 +287,7 @@
                     container.style.display = "none";
                 } else {
                     result.innerHTML = response.result + "VND";
+                    retain.innerHTML = response.rect + "VND"
                     please.style.display = "none";
                 }
             }

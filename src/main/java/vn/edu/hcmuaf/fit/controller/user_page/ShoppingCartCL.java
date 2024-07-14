@@ -12,6 +12,9 @@ import vn.edu.hcmuaf.fit.service.impl.ProductService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -72,10 +75,14 @@ public class ShoppingCartCL extends HttpServlet {
         Product product = null;
         CartItem cartItem = null;
         Map<Product, List<String>> products;
-        int quantity, re = 0, id;
+        int quantity, id, re = 0;
         double retain;
-        Discount discount = new Discount();
-        discount.setSalePercent(0.0);
+
+        Discount discount = (Discount) session.getAttribute("discount");
+        if (discount == null) {
+            discount = new Discount();
+            discount.setSalePercent(0.0);
+        }
 
         String ip = request.getHeader("X-FORWARDED-FOR");
         if (ip == null) ip = request.getRemoteAddr();
@@ -84,22 +91,29 @@ public class ShoppingCartCL extends HttpServlet {
         switch (action) {
         case "check":
             String code = request.getParameter("discount");
-            if (code != null && !code.isEmpty()) {
-                discount = DiscountService.getInstance().getCouponByCode(code);
-                if (discount == null) {
-                    discount = new Discount();
-                    discount.setSalePercent(0.0);
-//                    out.write("{ \"state\": \"zero\", \"total\": \""+cart.size()+"\", \"items\": \""+cart+"\" , \"result\": \""+Utils.formatCurrency(retain)+"\" }");
-                }
-            }
-            session.setAttribute("discount", discount);
-
             for(CartItem i : cart) {
                 products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(i.getProduct().getId()), ip, "/user/cart");
                 for (Product p: products.keySet()) {
                     re += i.getQuantity() * p.getPrice();
                 }
             }
+            if (code != null && !code.isEmpty()) {
+                discount = DiscountService.getInstance().getCouponByCode(code);
+                if (discount == null) {
+                    out.write("{ \"state\": \"notfound\", \"error\": \"Mã giảm giá không tồn tại!\", \"rect\": \""+Utils.formatCurrency(0)+"\", \"result\": \""+Utils.formatCurrency(re)+"\" }");
+                    out.close();
+                    return;
+                }
+//                else if (discount.getStartDate()> Timestamp.valueOf(n))
+                // Kiem tra ma giam gia co het han khong, hay chua den han, hay het luot su dung, hay khong ap dung cho gio hang chua san pham do.
+            } else {
+                out.write("{ \"state\": \"notempty\", \"error\": \"\", \"rect\": \""+Utils.formatCurrency(0)+"\", \"result\": \""+Utils.formatCurrency(re)+"\" }");
+                session.removeAttribute("discount");
+                session.removeAttribute("retain");
+                out.close();
+                return;
+            }
+            session.setAttribute("discount", discount);
             retain = re - discount.getSalePercent() * re;
             session.setAttribute("result", Utils.formatCurrency(retain));
             session.setAttribute("retain", Utils.formatCurrency(re * discount.getSalePercent()));
