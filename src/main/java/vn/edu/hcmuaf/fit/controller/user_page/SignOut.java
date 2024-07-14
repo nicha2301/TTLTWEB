@@ -6,11 +6,16 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import vn.edu.hcmuaf.fit.model.CartItem;
+import vn.edu.hcmuaf.fit.model.User;
+import vn.edu.hcmuaf.fit.service.impl.CartService;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/user/signout")
 public class SignOut extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -20,6 +25,17 @@ public class SignOut extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        User user = (User) session.getAttribute("auth");
+        boolean success = CartService.getInstance().removeCart(user);
+        System.out.println(success + ": heelo");
+        if (!cart.isEmpty()) {
+            for (CartItem item : cart) {
+                CartService.getInstance().addIntoCart(item.getUser(), item.getProduct(), item.getQuantity());
+                System.out.println("vo day ha heelo" + cart.size());
+            }
+        }
+        System.out.println(CartService.getInstance().getCartByUser(user));
         session.invalidate();
         getServletContext().removeAttribute("email");
         getServletContext().removeAttribute("action");

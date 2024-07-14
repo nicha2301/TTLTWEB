@@ -305,6 +305,8 @@ public class ProductServlet extends HttpServlet {
                 data += "   </ul>\n" +
                         "</div>";
         out.print(data);
+        out.flush();
+        out.close();
     }
 
     private String buildQueryString(HttpServletRequest request, String object, String group, String type, String search) {

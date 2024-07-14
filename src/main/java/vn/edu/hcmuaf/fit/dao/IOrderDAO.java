@@ -12,6 +12,14 @@ public interface IOrderDAO extends GenericDAO<Order> {
 
     Map<Order, List<OrderItem>> loadOrdersByStatus(Integer status);
 
+    Integer getOrderPriceNotVoucher(Integer orderId);
+
+    Integer countSaleProducts(Integer productId);
+
+    Integer getProfitOfProduct(Integer productId);
+
+    Integer getOrderPriceHasVoucher(Integer orderId);
+
     Map<Order, List<OrderItem>> loadOrderProductByOrder(Integer orderId);
 
     Map<Order, List<OrderItem>> loadOrderProductByUser(Integer userId);
@@ -32,7 +40,5 @@ public interface IOrderDAO extends GenericDAO<Order> {
     boolean updatePayment(Integer orderId, Integer payment);
 
     boolean updateDelivery(Integer orderId, Integer delivery);
-
-    Integer getOrderPrice(Integer orderId);
 
 }

@@ -54,12 +54,6 @@ public class CartService implements ICartService {
         }
     }
 
-    public static void main(String[] args) {
-        User user = new User();
-        user.setId(1);
-        System.out.println(CartService.getInstance().getCartByUser(user));
-    }
-
     @Override
     public CartItem getItem(User user, Product product) {
         try {

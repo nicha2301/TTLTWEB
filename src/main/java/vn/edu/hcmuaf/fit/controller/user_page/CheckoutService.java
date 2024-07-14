@@ -1,7 +1,5 @@
 //package vn.edu.hcmuaf.fit.controller.user_page;
 //
-//import vn.edu.hcmuaf.fit.model.Cart;
-////
 //import jakarta.servlet.ServletException;
 //import jakarta.servlet.annotation.WebServlet;
 //import jakarta.servlet.http.HttpServlet;

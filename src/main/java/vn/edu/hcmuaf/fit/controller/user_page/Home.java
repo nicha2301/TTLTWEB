@@ -33,11 +33,18 @@ public class Home extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
         HttpSession session = request.getSession(true);
         User user = (User) session.getAttribute("auth");
-        if (user == null) session.setAttribute("cart", new ArrayList<>());
-        else {
-            List<CartItem> cart = CartService.getInstance().getCartByUser(user);
-            session.setAttribute("cart", cart);
-            session.setAttribute("total", cart.size());
+        if (user != null) {
+            Integer flag = (Integer) session.getAttribute("flag");
+            System.out.println("KT flag 1:" + flag);
+            List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+            if (flag == 0) {
+                cart = CartService.getInstance().getCartByUser(user);
+                flag++;
+                session.setAttribute("flag", flag);
+                session.setAttribute("cart", cart);
+                session.setAttribute("total", cart.size());
+            }
+            System.out.println("KT flag 2:" + flag);
         }
         Map<Product, List<String>> products = ProductService.getInstance().getAllProductsLimited(0, 3);
         ProductTypes type = new ProductTypes();

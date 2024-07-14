@@ -1,13 +1,23 @@
 package vn.edu.hcmuaf.fit.service;
 
-import vn.edu.hcmuaf.fit.model.Order;
-import vn.edu.hcmuaf.fit.model.OrderItem;
-import vn.edu.hcmuaf.fit.model.User;
+import vn.edu.hcmuaf.fit.model.*;
 
 import java.util.List;
 import java.util.Map;
 
 public interface IOrderService {
+
+    Map<Order, List<OrderItem>> loadAllOrders();
+
+    Map<Order, List<OrderItem>> loadOrdersByStatus(OrderStatus status);
+
+    Integer getOrderPriceNotVoucher(Order order);
+
+    Integer countSaleProducts(Product product);
+
+    Integer getProfitOfProduct(Product product);
+
+    Integer getOrderPriceHasVoucher(Order order);
 
     Map<Order, List<OrderItem>> loadOrderProductByOrder(Order order);
 

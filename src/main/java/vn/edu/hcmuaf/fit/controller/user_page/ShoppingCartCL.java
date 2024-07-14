@@ -1,6 +1,5 @@
 package vn.edu.hcmuaf.fit.controller.user_page;
 
-import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -12,7 +11,6 @@ import vn.edu.hcmuaf.fit.service.impl.ProductService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +25,20 @@ public class ShoppingCartCL extends HttpServlet {
         User user = (User) session.getAttribute("auth");
         if (user == null) request.getRequestDispatcher("/WEB-INF/user/signIn.jsp").forward(request, response);
         else {
+            String ip = request.getHeader("X-FORWARDED-FOR");
+            if (ip == null) ip = request.getRemoteAddr();
+
+            List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+            if (!cart.isEmpty()) {
+                int re = 0;
+                for(CartItem i : cart) {
+                    Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(i.getProduct().getId()), ip, "/user/cart");
+                    for (Product p: products.keySet()) {
+                        re += i.getQuantity() * p.getPrice();
+                    }
+                }
+                session.setAttribute("result", Utils.formatCurrency(re));
+            }
             request.getRequestDispatcher("/WEB-INF/user/cart.jsp").forward(request, response);
         }
     }
@@ -52,7 +64,6 @@ public class ShoppingCartCL extends HttpServlet {
         CartItem cartItem = null;
         Map<Product, List<String>> products;
         int quantity, re = 0, id;
-        Map<String, Object> responseData;
         String jsonResponse;
 
         String ip = request.getHeader("X-FORWARDED-FOR");
@@ -76,16 +87,14 @@ public class ShoppingCartCL extends HttpServlet {
                 }
             }
 
-            responseData = new HashMap<>();
-            if (re==0) responseData.put("state", "zero");
-            responseData.put("total", cart.size());
-            responseData.put("items", cart);
-            responseData.put("result", Utils.formatCurrency(re));
-
-            jsonResponse = new Gson().toJson(responseData);
-            out.write(jsonResponse);
+            if (re==0) {
+                out.write("{ \"state\": \"zero\", \"total\": \""+cart.size()+"\", \"items\": \""+cart+"\" , \"result\": \""+Utils.formatCurrency(re)+"\" }");
+            } else {
+                out.write("{ \"total\": \""+cart.size()+"\", \"items\": \""+cart+"\" , \"result\": \""+Utils.formatCurrency(re)+"\" }");
+            }
             session.setAttribute("total", cart.size());
-            session.setAttribute("result", re);
+            session.setAttribute("result", Utils.formatCurrency(re));
+            out.flush();
             out.close();
             break;
         case "put":
@@ -108,16 +117,15 @@ public class ShoppingCartCL extends HttpServlet {
                     re += i.getQuantity()*p.getPrice();
                 }
             }
-            responseData = new HashMap<>();
-            if (re==0) responseData.put("state", "zero");
-            responseData.put("total", cart.size());
-            responseData.put("items", cart);
-            responseData.put("result", Utils.formatCurrency(re));
 
-            jsonResponse = new Gson().toJson(responseData);
-            out.write(jsonResponse);
+            if (re==0) {
+                out.write("{ \"state\": \"zero\", \"total\": \""+cart.size()+"\", \"items\": \""+cart+"\" , \"result\": \""+Utils.formatCurrency(re)+"\" }");
+            } else {
+                out.write("{ \"total\": \""+cart.size()+"\", \"items\": \""+cart+"\" , \"result\": \""+Utils.formatCurrency(re)+"\" }");
+            }
             session.setAttribute("total", cart.size());
-            session.setAttribute("result", re);
+            session.setAttribute("result", Utils.formatCurrency(re));
+            out.flush();
             out.close();
             break;
         case "add":
@@ -173,16 +181,10 @@ public class ShoppingCartCL extends HttpServlet {
                     re += i.getQuantity()*p.getPrice();
                 }
             }
-
-            responseData = new HashMap<>();
-            responseData.put("total", cart.size());
-            responseData.put("items", cart);
-            responseData.put("prefix", remain);
-
-            jsonResponse = new Gson().toJson(responseData);
-            out.write(jsonResponse);
+            out.write("{ \"total\": \""+cart.size()+"\", \"items\": \""+cart+"\" , \"prefix\": \""+remain+"\" }");
             session.setAttribute("total", cart.size());
-            session.setAttribute("result", re);
+            session.setAttribute("result", Utils.formatCurrency(re));
+            out.flush();
             out.close();
             break;
         }
