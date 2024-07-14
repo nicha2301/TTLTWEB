@@ -285,6 +285,7 @@
                 success: function (data) {
                     var row = document.getElementById("content");
                     row.innerHTML = data;
+                    window.scrollTo(0, 0);
                 },
                 error: function (xhr) {
                 }

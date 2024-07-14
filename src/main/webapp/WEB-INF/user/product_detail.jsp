@@ -135,7 +135,7 @@
                                         <input type="number" id="quantity" class="input-number" value="1" min="1" max="${requestScope.remain}">
                                         <button id="increase" class="btn-increase">+</button>
                                         <span style="color: red; margin: 10px" id="error"></span>
-                                        <a id="add_cart" style="color: #FFF;" href="javascript:void(0)" onclick="addCart(this, '${prod.id}')">
+                                        <a id="add_cart" style="color: #000;" href="javascript:void(0)" onclick="addCart(this, '${prod.id}')">
                                             <button class="add-to-cart-button">
                                                 <svg class="add-to-cart-box box-1" width="24" height="24" viewBox="0 0 24 24"
                                                      fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -160,8 +160,8 @@
                                                           d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM9.29 16.29L5.7 12.7c-.39-.39-.39-1.02 0-1.41.39-.39 1.02-.39 1.41 0L10 14.17l6.88-6.88c.39-.39 1.02-.39 1.41 0 .39.39.39 1.02 0 1.41l-7.59 7.59c-.38.39-1.02.39-1.41 0z"/>
                                                 </svg>
                                                 <span class="add-to-cart">Thêm vào giỏ hàng</span>
-                                                <span class="added-to-cart"></span>
-                                            </button>
+                                                <span class="added-to-cart">Da them</span>
+                                           </button>
                                         </a>
                                     </c:when>
                                     <c:otherwise>
@@ -335,7 +335,7 @@
         var quantity = $('#quantity').val();
         const input = document.getElementById('quantity');
         const max = parseInt(input.max, 10);
-        console.log("max = " + max);
+        // console.log("max = " + max);
         $.ajax({
             url: "${request.servletContext.contextPath}/user/cart",
             method: "POST",
@@ -406,33 +406,37 @@
 </script>
 <script>
     function addCartRemain(btn, id, remain) {
-        $.ajax({
-            url: "${request.servletContext.contextPath}/user/cart",
-            method: "POST",
-            data: {
-                id: id,
-                action: "add",
-                type: 0,
-                contain: remain
-            },
-            success: function (response) {
-                if (response.status === "failed") {
-                    window.location.href = context + "/user/signin";
-                } else if(response.status === "stock") {
-                    alert(response.error)
-                } else {
-                    Swal.fire({
-                        position: "center",
-                        icon: "success",
-                        title: "Thêm Sản Phẩm Vào Giỏ Hàng Thành Công!",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    const badge = document.getElementById("badge");
-                    badge.innerHTML = response.total;
+        if (remain !== 0) {
+            $.ajax({
+                url: "${request.servletContext.contextPath}/user/cart",
+                method: "POST",
+                data: {
+                    id: id,
+                    action: "add",
+                    type: 0,
+                    contain: remain
+                },
+                success: function (response) {
+                    if (response.status === "failed") {
+                        window.location.href = context + "/user/signin";
+                    } else if(response.status === "stock") {
+                        alert(response.error)
+                    } else {
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Thêm Sản Phẩm Vào Giỏ Hàng Thành Công!",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        const badge = document.getElementById("badge");
+                        badge.innerHTML = response.total;
+                    }
                 }
-            }
-        });
+            });
+        } else if (remain === 0) {
+            console.log(typeof remain, remain)
+        }
     }
 </script>
 </body>

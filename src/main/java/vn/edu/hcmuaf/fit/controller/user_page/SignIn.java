@@ -94,6 +94,7 @@ public class SignIn extends HttpServlet {
                         UserService.getInstance().resetLoginTimes(user, "", "", ip, "/user/signin");
                         HttpSession session = request.getSession(true);
                         session.setAttribute("auth", user);
+                        session.setAttribute("flag", 0);
                         Cookie uc = new Cookie("userC", email);
                         Cookie pc = new Cookie("passC", password);
                         uc.setMaxAge(30 * 24 * 60 * 60);
@@ -154,6 +155,7 @@ public class SignIn extends HttpServlet {
         if (user != null) {
             HttpSession session = request.getSession();
             session.setAttribute("auth", user);
+            session.setAttribute("flag", 0);
             response.sendRedirect("./home");
             return;
         }

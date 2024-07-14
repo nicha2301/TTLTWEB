@@ -1,8 +1,6 @@
 <%@ page import="vn.edu.hcmuaf.fit.model.Product" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="vn.edu.hcmuaf.fit.service.impl.ProductService" %>
-<%@ page import="vn.edu.hcmuaf.fit.model.User" %>
-<%@ page import="vn.edu.hcmuaf.fit.service.impl.CartService" %>
 <%@include file="/WEB-INF/common/taglib.jsp" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
@@ -48,15 +46,19 @@
     </div>
     <section class="shoping-cart spad">
     <%
-        User user = (User) session.getAttribute("auth");
-        if (cart == null || cart.isEmpty()) {
-            session.setAttribute("cart", CartService.getInstance().getCartByUser(user));
+        if (cart.isEmpty()) {
     %>
         <h1 style="text-align: center">Vui lòng mua sắm</h1>
     <%
         } else {
+            String result = (String) session.getAttribute("result");
+            if(result.trim().equals("0")) {
     %>
         <h1 id="please" style="text-align: center">Vui lòng mua sắm</h1>
+        <%
+            }
+        %>
+        <h1 id="please" style="text-align: center"></h1>
         <div id="container1" class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -141,13 +143,7 @@
                             <h5>TỔNG TIỀN GIỎ HÀNG</h5>
                             <ul>
                                 <li>Giảm: <span>0${ Util.formatCurrency(cart.totalPrice - cart.priceSaled) } VND</span></li>
-                                <%
-                                    Integer totalPrice = (Integer) session.getAttribute("result");
-                                    if (totalPrice == null) {
-                                        totalPrice = CartService.getInstance().getTotalPrice(user);
-                                    }
-                                %>
-                                <li>Tổng: <span id="all"><fmt:formatNumber value="<%=totalPrice%>" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}</span></li>
+                                <li>Tổng: <span id="result">${sessionScope.result}${unit}</span></li>
                             </ul>
                             <a href="${pageContext.request.contextPath}/user/checkout" class="primary-btn">TIẾN HÀNH THANH TOÁN</a>
                         </div>
@@ -211,7 +207,6 @@
 </script>
 <script>
     function changeStatus(pid, quantity, action) {
-        console.log(pid, quantity, action);
         // Lấy giá tiền từng sản phẩm và loại bỏ các ký tự không phải số (VND và dấu phẩy)
         const priceText = document.querySelector('#pr' + pid).textContent.replace(/[^0-9]/g, '');
         const price = parseInt(priceText, 10);
@@ -234,6 +229,7 @@
                 action: action
             },
             success: function(response) {
+                console.log(response)
                 Swal.fire({
                     position: "center",
                     icon: "success",
@@ -242,17 +238,16 @@
                     timer: 1500
                 });
                 const badge = document.getElementById("badge");
-                const all = document.getElementById("all");
+                const result = document.getElementById("result");
+                const please = document.getElementById("please");
+                const container = document.getElementById("container1");
                 badge.innerHTML = response.total;
-                console.log(response.state)
-                let please = document.getElementById("please");
                 if (response.state === "zero") {
-                    let please = document.getElementById("please");
-                    let container = document.getElementById("container1");
                     please.style.display = "block";
+                    please.innerHTML = "Vui lòng mua sắm";
                     container.style.display = "none";
                 } else {
-                    all.innerHTML = response.result + "VND";
+                    result.innerHTML = response.result + "VND";
                     please.style.display = "none";
                 }
             }

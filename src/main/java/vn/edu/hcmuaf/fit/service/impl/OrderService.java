@@ -20,6 +20,60 @@ public class OrderService extends LogDAO<Order> implements IOrderService {
     }
 
     @Override
+    public Map<Order, List<OrderItem>> loadAllOrders() {
+        try {
+            return OrderDAO.getInstance().loadAllOrders();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Map<Order, List<OrderItem>> loadOrdersByStatus(OrderStatus status) {
+        try {
+            return OrderDAO.getInstance().loadOrdersByStatus(status.getId());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Integer getOrderPriceNotVoucher(Order order) {
+        try {
+            return OrderDAO.getInstance().getOrderPriceNotVoucher(order.getId());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Integer countSaleProducts(Product product) {
+        try {
+            return OrderDAO.getInstance().countSaleProducts(product.getId());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Integer getProfitOfProduct(Product product) {
+        try {
+            return OrderDAO.getInstance().getProfitOfProduct(product.getId());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Integer getOrderPriceHasVoucher(Order order) {
+        try {
+            return OrderDAO.getInstance().getOrderPriceHasVoucher(order.getId());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
     public Map<Order, List<OrderItem>> loadOrderProductByOrder(Order order) {
         try {
             return OrderDAO.getInstance().loadOrderProductByOrder(order.getId());
