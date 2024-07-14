@@ -2,7 +2,7 @@ package vn.edu.hcmuaf.fit.dao;
 
 import vn.edu.hcmuaf.fit.model.Discount;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface IDiscountDAO extends GenericDAO<Discount> {
@@ -13,9 +13,16 @@ public interface IDiscountDAO extends GenericDAO<Discount> {
 
     List<Discount> getCouponByName(String name);
 
-    Discount addCoupon(String name, String des, Double percent, Integer quantity, Date startDate, Date dateEnd);
+    List<Discount> getCouponByCode(String code);
+
+    Discount addCoupon(String name, String code, String des, Double percent, Integer quantity, Timestamp startTimestamp, Timestamp TimestampEnd);
 
     boolean delCoupon(Integer id);
 
-    boolean editCoupon(Integer id, String name, String des, Double percent, Integer quantity, Date startDate, Date dateEnd);
+    boolean delCouponByCode(String code);
+
+    boolean editCoupon(Integer id, String code, String name, String des, Double percent, Integer quantity, Timestamp startTimestamp, Timestamp TimestampEnd);
+
+    boolean editCouponByCode(String code, String name, String des, Double percent, Integer quantity, Timestamp startTimestamp, Timestamp TimestampEnd);
+
 }

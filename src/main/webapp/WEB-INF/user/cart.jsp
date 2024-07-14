@@ -132,7 +132,8 @@
                             <div class="shoping__discount">
                                 <h5>Mã giảm giá</h5>
                                 <form>
-                                    <input type="text" id="discount" name="discount" placeholder="Nhập mã giãm giá mua hàng">
+                                    <input type="text" id="discount" name="discount" placeholder="Nhập mã giãm giá mua hàng"
+                                    value="${sessionScope.discount.code}">
                                     <button id="btnDiscount" class="site-btn">SỬ DỤNG MÃ</button>
                                 </form>
                             </div>
@@ -142,7 +143,7 @@
                         <div class="shoping__checkout">
                             <h5>TỔNG TIỀN GIỎ HÀNG</h5>
                             <ul>
-                                <li>Giảm: <span>0${ Util.formatCurrency(cart.totalPrice - cart.priceSaled) } VND</span></li>
+                                <li>Giảm: <span id="retain">${sessionScope.retain}${unit}</span></li>
                                 <li>Tổng: <span id="result">${sessionScope.result}${unit}</span></li>
                             </ul>
                             <a href="${pageContext.request.contextPath}/user/checkout" class="primary-btn">TIẾN HÀNH THANH TOÁN</a>
@@ -165,6 +166,38 @@
         var header = document.querySelector('.container')
         header.classList.toggle('sticky', window.scrollY > 100)
     })
+</script>
+<script>
+    var context = "${pageContext.request.contextPath}";
+    $(document).ready(function() {
+        $('#btnDiscount').click(function (event) {
+            event.preventDefault();
+            var discountName = $('#discount').val();
+            console.log(discountName)
+            $.ajax({
+                type: 'POST',
+                data: {
+                    discount: discountName,
+                    action: "check"
+                },
+                url: '${request.servletContext.contextPath}/user/cart',
+                success: function (response) {
+                    console.log(response.rect, response.result)
+                    const result = document.getElementById("result");
+                    const retain = document.getElementById("retain");
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Thêm Sản Phẩm Vào Giỏ Hàng Thành Công!",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    retain.innerHTML = response.rect + "VND"
+                    result.innerHTML = response.result + "VND";
+                }
+            });
+        });
+    });
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {

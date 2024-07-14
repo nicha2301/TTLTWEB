@@ -26,19 +26,27 @@ public class DiscountService extends LogDAO<Discount> implements IDiscountServic
 
     @Override
     public Discount getCouponById(Integer id) {
-        return DiscountDAO.getInstance().getCouponById(id).get(0);
+        try {
+            return DiscountDAO.getInstance().getCouponById(id).get(0);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Discount getCouponByName(String name) {
-        return DiscountDAO.getInstance().getCouponByName(name).get(0);
+        try {
+            return DiscountDAO.getInstance().getCouponByName(name).get(0);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public Discount addCoupon(Discount coupon, String ip, String address) {
         try {
             Level level;
-            Discount success = DiscountDAO.getInstance().addCoupon(coupon.getDiscountName(), coupon.getDescription(), coupon.getSalePercent(), coupon.getQuantity(), coupon.getStartDate(), coupon.getExpirationDate());
+            Discount success = DiscountDAO.getInstance().addCoupon(coupon.getDiscountName(), coupon.getCode(), coupon.getDescription(), coupon.getSalePercent(), coupon.getQuantity(), coupon.getStartDate(), coupon.getExpirationDate());
             if(success != null) {
                 coupon.setAfterData("Add coupon successful with ID=" + success.getId());
                 level = LevelDAO.getInstance().getLevel(1).get(0);
@@ -82,9 +90,9 @@ public class DiscountService extends LogDAO<Discount> implements IDiscountServic
         try {
             Level level;
             coupon.setBeforeData("Old info coupon ID=" + coupon.getId() + " is " + coupon);
-            boolean success = DiscountDAO.getInstance().editCoupon(coupon.getId(), coupon.getDiscountName(), coupon.getDescription(), coupon.getSalePercent(), coupon.getQuantity(), coupon.getStartDate(), coupon.getExpirationDate());
+            boolean success = DiscountDAO.getInstance().editCoupon(coupon.getId(), coupon.getCode(), coupon.getDiscountName(), coupon.getDescription(), coupon.getSalePercent(), coupon.getQuantity(), coupon.getStartDate(), coupon.getExpirationDate());
             if(success) {
-                coupon.setAfterData("New info coupon ID=" + coupon.getId() + " is " + success);
+                coupon.setAfterData("New info coupon ID=" + coupon.getId() + " is updated!");
                 level = LevelDAO.getInstance().getLevel(1).get(0);
             } else {
                 coupon.setAfterData("New info coupon ID=" + coupon.getId() + " is the old info");
@@ -97,5 +105,64 @@ public class DiscountService extends LogDAO<Discount> implements IDiscountServic
             super.insert(coupon, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
             return false;
         }
+    }
+
+    @Override
+    public boolean editCouponByCode(Discount coupon, String ip, String address) {
+        try {
+            Level level;
+            coupon.setBeforeData("Old info coupon ID=" + coupon.getCode() + " is " + coupon);
+            boolean success = DiscountDAO.getInstance().editCouponByCode(coupon.getCode(), coupon.getDiscountName(), coupon.getDescription(), coupon.getSalePercent(), coupon.getQuantity(), coupon.getStartDate(), coupon.getExpirationDate());
+            if(success) {
+                coupon.setAfterData("New info coupon ID=" + coupon.getCode() + " is updated!");
+                level = LevelDAO.getInstance().getLevel(1).get(0);
+            } else {
+                coupon.setAfterData("New info coupon ID=" + coupon.getCode() + " is the old info");
+                level = LevelDAO.getInstance().getLevel(2).get(0);
+            }
+            super.insert(coupon, level, ip, address);
+            return success;
+        } catch (Exception e) {
+            coupon.setAfterData("New info coupon ID=" + coupon.getId() + " is " + coupon);
+            super.insert(coupon, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean delCouponByCode(Discount coupon, String ip, String address) {
+        try {
+            Level level;
+            coupon.setBeforeData("Coupon info of ID=" + coupon.getCode() + " is " + coupon + " before delete");
+            boolean success = DiscountDAO.getInstance().delCouponByCode(coupon.getCode());
+            if(success) {
+                level = LevelDAO.getInstance().getLevel(1).get(0);
+                coupon.setAfterData("Coupon with ID=" + coupon.getCode() + " has been deleted");
+            } else {
+                level = LevelDAO.getInstance().getLevel(2).get(0);
+                coupon.setAfterData("Delete coupon failed with ID=" + coupon.getCode());
+            }
+            super.insert(coupon, level, ip, address);
+            return success;
+        } catch (Exception e) {
+            List<Discount> list = DiscountDAO.getInstance().getCouponById(coupon.getId());
+            coupon.setAfterData(e.getMessage() + " with ID=" + coupon.getCode());
+            super.insert(coupon, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
+            if(list.isEmpty()) return true;
+            else return false;
+        }
+    }
+
+    @Override
+    public Discount getCouponByCode(String code) {
+        try {
+            return DiscountDAO.getInstance().getCouponByCode(code).get(0);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(DiscountService.getInstance().getCouponByCode("HEELO"));
     }
 }

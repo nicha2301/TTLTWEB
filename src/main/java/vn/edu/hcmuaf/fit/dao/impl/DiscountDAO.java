@@ -3,7 +3,7 @@ package vn.edu.hcmuaf.fit.dao.impl;
 import vn.edu.hcmuaf.fit.dao.IDiscountDAO;
 import vn.edu.hcmuaf.fit.model.Discount;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 public class DiscountDAO extends AbsDAO<Discount> implements IDiscountDAO {
@@ -15,8 +15,6 @@ public class DiscountDAO extends AbsDAO<Discount> implements IDiscountDAO {
         }
         return instance;
     }
-
-
     /**
      * TESTED
      * Retrieves all the coupons from the database.
@@ -47,14 +45,24 @@ public class DiscountDAO extends AbsDAO<Discount> implements IDiscountDAO {
         return query(sql, Discount.class, name);
     }
 
+    @Override
+    public List<Discount> getCouponByCode(String code) {
+        String sql = "SELECT * FROM discounts WHERE code =?";
+        return query(sql, Discount.class, code);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(DiscountDAO.getInstance().getCouponByCode("HEELO"));
+    }
+
     /**
      * TESTED
      * Adds a new coupon to the database.
      */
     @Override
-    public Discount addCoupon(String name, String des, Double percent, Integer quantity, Date startDate, Date dateEnd) {
-        String sql = "INSERT INTO `discounts`(`discountName`, `description`, `sale_percent`, `quantity`, `startDate`, `expirationDate`) VALUES(?,?,?,?,?,?)";
-        return insert(sql, Discount.class, name, des, percent, quantity, startDate, dateEnd);
+    public Discount addCoupon(String name, String code, String des, Double percent, Integer quantity, Timestamp startTimestamp, Timestamp TimestampEnd) {
+        String sql = "INSERT INTO `discounts`(`code`, `discountName`, `description`, `sale_percent`, `quantity`, `startTimestamp`, `expirationTimestamp`) VALUES(?,?,?,?,?,?,?)";
+        return insert(sql, Discount.class, code, name, des, percent, quantity, startTimestamp, TimestampEnd);
     }
 
     /**
@@ -67,13 +75,25 @@ public class DiscountDAO extends AbsDAO<Discount> implements IDiscountDAO {
         return update(sql, id);
     }
 
+    @Override
+    public boolean delCouponByCode(String code) {
+        String sql = "DELETE FROM discounts WHERE id=?";
+        return update(sql, code);
+    }
+
     /**
      * TESTED
      * Edits a coupon in the database by its id.
      */
     @Override
-    public boolean editCoupon(Integer id, String name, String des, Double percent, Integer quantity, Date startDate, Date dateEnd) {
-        String sql = "UPDATE `discounts` SET `discountName`=?, `description`=?, `sale_percent`=?, `quantity`=?, `startDate`=?, `expirationDate`=? WHERE id =?";
-        return update(sql, name, des, percent, quantity, startDate, dateEnd, id);
+    public boolean editCoupon(Integer id, String code, String name, String des, Double percent, Integer quantity, Timestamp startTimestamp, Timestamp TimestampEnd) {
+        String sql = "UPTimestamp `discounts` SET `code`=?, `discountName`=?, `description`=?, `sale_percent`=?, `quantity`=?, `startTimestamp`=?, `expirationTimestamp`=? WHERE id =?";
+        return update(sql, code, name, des, percent, quantity, startTimestamp, TimestampEnd, id);
+    }
+
+    @Override
+    public boolean editCouponByCode(String code, String name, String des, Double percent, Integer quantity, Timestamp startTimestamp, Timestamp TimestampEnd) {
+        String sql = "UPTimestamp `discounts` SET `discountName`=?, `description`=?, `sale_percent`=?, `quantity`=?, `startTimestamp`=?, `expirationTimestamp`=? WHERE code=?";
+        return update(sql, name, des, percent, quantity, startTimestamp, TimestampEnd, code);
     }
 }
