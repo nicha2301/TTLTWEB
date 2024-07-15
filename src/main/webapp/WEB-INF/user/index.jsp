@@ -6,7 +6,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+    <link rel="stylesheet" href="css/thuvien/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="/assets/user/css/HomePage/styles.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
           integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
@@ -21,6 +21,75 @@
     <link rel="icon" href="https://tienthangvet.vn/wp-content/uploads/cropped-favicon-Tien-Thang-Vet-192x192.png"
           sizes="192x192"/>
     <title>Thuốc Y The Pet</title>
+    <style>
+        .product-element-top {
+            position: relative;
+        }
+
+        .product-element-top .btn-buy {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%) translateY(100%);
+            opacity: 0;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .product-element-top:hover .btn-buy {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .btn-buy button {
+            --color: #560bad;
+            font-family: inherit;
+            display: inline-block;
+            width: 8em;
+            height: 2.6em;
+            cursor: pointer;
+            line-height: 2.5em;
+            margin: 20px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--color);
+            transition: color .5s;
+            z-index: 1;
+            font-size: 17px;
+            border-radius: 6px;
+            font-weight: 500;
+            color: var(--color);
+        }
+
+        .btn-buy button:before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            background: var(--color);
+            height: 150px;
+            width: 200px;
+            border-radius: 50%;
+        }
+
+        .btn-buy button:hover {
+            color: #fff;
+        }
+
+        .btn-buy button:before {
+            top: 100%;
+            left: 100%;
+            transition: all .7s;
+        }
+
+        .btn-buy button:hover:before {
+            top: -30px;
+            left: -30px;
+        }
+
+        .btn-buy button:active:before {
+            background: #3a0ca3;
+            transition: background 0s;
+        }
+    </style>
 </head>
 <body>
 <%@include file="/WEB-INF/user/include/header.jsp" %>
@@ -228,15 +297,22 @@
                     %>
                     <div class="item">
                         <div>
-                            <div class="product-element-top">
+                            <div  class="product-element-top">
                                 <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
                                     <img src="${pageContext.request.contextPath}<%=entry.getValue().get(0)%>" alt="">
                                 </a>
+                                <div class="btn-buy">
+                                    <button>Mua ngay</button>
+                                </div>
                             </div>
-                            <div class="product-element-bottom">
-                                <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
+                            <div style="text-align: center" class="product-element-bottom ">
+                                <a s  href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
                                     <%=entry.getKey().getProductName()%>
                                 </a>
+                                <div class="price">
+                                    <c:set var="unit" value="VND"/>
+                                    <fmt:formatNumber value="<%=entry.getKey().getPrice()%>" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}
+                                </div>
                             </div>
                         </div>
                         <div class="wd-buttons wd-pos-r-t">
@@ -309,11 +385,18 @@
                                 <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
                                     <img src="${pageContext.request.contextPath}<%=entry.getValue().get(0)%>" alt="">
                                 </a>
+                                <div class="btn-buy">
+                                    <button>Mua ngay</button>
+                                </div>
                             </div>
-                            <div class="product-element-bottom">
+                            <div style="text-align: center" class="product-element-bottom">
                                 <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
                                     <%=entry.getKey().getProductName()%>
                                 </a>
+                                <div class="price">
+                                    <c:set var="unit" value="VND"/>
+                                    <fmt:formatNumber value="<%=entry.getKey().getPrice()%>" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}
+                                </div>
                             </div>
                         </div>
                         <div class="wd-buttons wd-pos-r-t">
@@ -388,11 +471,18 @@
                                 <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
                                     <img src="${pageContext.request.contextPath}<%=entry.getValue().get(0)%>" alt="">
                                 </a>
+                                <div class="btn-buy">
+                                    <button>Mua ngay</button>
+                                </div>
                             </div>
-                            <div class="product-element-bottom">
+                            <div style="text-align: center" class="product-element-bottom">
                                 <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
                                     <%=entry.getKey().getProductName()%>
                                 </a>
+                                <div class="price">
+                                    <c:set var="unit" value="VND"/>
+                                    <fmt:formatNumber value="<%=entry.getKey().getPrice()%>" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}
+                                </div>
                             </div>
                         </div>
                         <div class="wd-buttons wd-pos-r-t">

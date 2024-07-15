@@ -12,9 +12,6 @@ import vn.edu.hcmuaf.fit.service.impl.ProductService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -75,7 +72,8 @@ public class ShoppingCartCL extends HttpServlet {
         Product product = null;
         CartItem cartItem = null;
         Map<Product, List<String>> products;
-        int quantity, id, re = 0;
+        int quantity,  re = 0;
+        int id;
         double retain;
 
         Discount discount = (Discount) session.getAttribute("discount");
@@ -212,7 +210,7 @@ public class ShoppingCartCL extends HttpServlet {
                 remain = product.getQuantity() - cartItem.getQuantity();
             } else {
                 for (CartItem item : shoppingCart.getItems()) {
-                    if (item.getProduct().getId() == product.getId() && item.getUser().getId() == user.getId()) {
+                    if (item.getProduct().getId().equals(product.getId()) && item.getUser().getId().equals(user.getId())) {
                         remain = product.getQuantity() - item.getQuantity() - cartItem.getQuantity();
                         count++;
                         break;

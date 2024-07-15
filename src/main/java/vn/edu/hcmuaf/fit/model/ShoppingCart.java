@@ -17,7 +17,7 @@ public class ShoppingCart {
 
     public void add(CartItem cartItem) {
         for (CartItem i : items) {
-            if (cartItem.getProduct().getId() == i.getProduct().getId() && cartItem.getUser().getId() == i.getUser().getId()) {
+            if (cartItem.getProduct().getId().equals(i.getProduct().getId()) && cartItem.getUser().getId().equals(i.getUser().getId())) {
                 int quantity = i.getQuantity() + cartItem.getQuantity();
 //                CartService.getInstance().updateItem(cartItem.getUser(), cartItem.getProduct(), quantity);
                 i.setQuantity(quantity);
@@ -30,7 +30,7 @@ public class ShoppingCart {
 
     public void update(CartItem cartItem) {
         for (CartItem i : items) {
-            if (cartItem.getProduct().getId() == i.getProduct().getId() && cartItem.getUser().getId() == i.getUser().getId()) {
+            if (cartItem.getProduct().getId().equals(i.getProduct().getId()) && cartItem.getUser().getId().equals(i.getUser().getId())) {
 //                CartService.getInstance().updateItem(cartItem.getUser(), cartItem.getProduct(), cartItem.getQuantity());
                 i.setQuantity(cartItem.getQuantity());
                 return;
@@ -42,7 +42,7 @@ public class ShoppingCart {
 
     public void remove(User user, Product product) {
         for (CartItem i : items){
-            if (product.getId() == i.getProduct().getId() && user.getId() == i.getUser().getId()) {
+            if (product.getId().equals(i.getProduct().getId()) && user.getId().equals(i.getUser().getId())) {
                 items.remove(i);
 //                CartService.getInstance().removeItem(user, product);
                 return;

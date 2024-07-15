@@ -7,12 +7,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
+
     <link rel="stylesheet" href="/assets/user/css/products/detailproduct.css"/>
     <link rel="icon" href="https://tienthangvet.vn/wp-content/uploads/cropped-favicon-Tien-Thang-Vet-192x192.png"
           sizes="192x192"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
           integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <!-- Add Slick CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css"/>
+    <!-- Add Slick Theme CSS (optional) -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick-theme.css"/>
+
+
+
     <title>Chi tiết sản phẩm</title>
     <style>
         .input-number {
@@ -28,6 +36,75 @@
             background-color: #f2f2f2;
             border: 1px solid #ccc;
         }
+        .add-to-cart-btn{
+            background-color: orange;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        /* Tab navigation styles */
+        .wd-nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .wd-nav-tabs li {
+            margin: 0 1rem;
+        }
+
+        .wd-nav-tabs li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .wd-nav-tabs li.active a {
+            border-bottom: 2px solid #000;
+            color: #000;
+        }
+
+        /* Tab content styles */
+        .entry-content {
+            display: none;
+        }
+
+        .entry-content.wd-active {
+            display: block;
+        }
+
+        /* Review tab form styles */
+        #comments-section {
+            margin-top: 1rem;
+        }
+
+        #comment-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #comment-text {
+            resize: none;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        #comment-form button {
+            align-self: flex-start;
+            padding: 0.5rem 1rem;
+        }
+
     </style>
 </head>
 <body>
@@ -136,16 +213,8 @@
                                         <button id="increase" class="btn-increase">+</button>
                                         <span style="color: red; margin: 10px" id="error"></span>
                                         <a id="add_cart" style="color: #000;" href="javascript:void(0)" onclick="addCart(this, '${prod.id}')">
-                                            <button class="add-to-cart-button">
-                                                <svg class="add-to-cart-box box-1" width="24" height="24" viewBox="0 0 24 24"
-                                                     fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect width="24" height="24" rx="2" fill="#ffffff"/>
-                                                </svg>
-                                                <svg class="add-to-cart-box box-2" width="24" height="24" viewBox="0 0 24 24"
-                                                     fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect width="24" height="24" rx="2" fill="#ffffff" />
-                                                </svg>
-                                                <svg class="cart-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            <button class="add-to-cart-btn">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                      viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
                                                      stroke-linecap="round" stroke-linejoin="round">
                                                     <circle cx="9" cy="21" r="1"></circle>
@@ -153,14 +222,9 @@
                                                     <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6">
                                                     </path>
                                                 </svg>
-                                                <svg class="tick" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                     viewBox="0 0 24 24">
-                                                    <path fill="none" d="M0 0h24v24H0V0z"/>
-                                                    <path fill="#ffffff"
-                                                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM9.29 16.29L5.7 12.7c-.39-.39-.39-1.02 0-1.41.39-.39 1.02-.39 1.41 0L10 14.17l6.88-6.88c.39-.39 1.02-.39 1.41 0 .39.39.39 1.02 0 1.41l-7.59 7.59c-.38.39-1.02.39-1.41 0z"/>
-                                                </svg>
-                                                <span class="add-to-cart">Thêm vào giỏ hàng</span>
-                                                <span class="added-to-cart">Da them</span>
+
+                                                <span class="">Thêm vào giỏ hàng</span>
+
                                            </button>
                                         </a>
                                     </c:when>
@@ -177,18 +241,18 @@
         <div class="wrapper-content">
             <div class="product-tabs-wrapper">
                 <div class="container">
-                    <div class="poduct-tabs-inner">
-                        <div class="woocommerce-tabs wc-tabs-wrapper tabs-layout-tabs" data-state="first"
-                             data-layout="tabs">
+                    <div class="product-tabs-inner">
+                        <div class="woocommerce-tabs wc-tabs-wrapper tabs-layout-tabs" data-state="first" data-layout="tabs">
                             <div class="wd-nav-wrapper wd-nav-tabs-wrapper text-center">
-                                <ul class="wd-nav wd-nav-tabs wd-icon-pos-left tabs wc-tabs wd-style-underline-reverse"
-                                    role="tablist">
-                                    <li class="description_tab active" id="tab-title-description" role="tab"
-                                        aria-controls="tab-description">
+                                <ul class="wd-nav wd-nav-tabs wd-icon-pos-left tabs wc-tabs wd-style-underline-reverse" role="tablist">
+                                    <li class="description_tab active" id="tab-title-description" role="tab" aria-controls="tab-description">
                                         <a class="wd-nav-link" href="#tab-description">
-                                                <span class="nav-link-text wd-tabs-title">
-                                                    Mô tả
-                                                </span>
+                                            <span class="nav-link-text wd-tabs-title">Mô tả</span>
+                                        </a>
+                                    </li>
+                                    <li class="reviews_tab" id="tab-title-reviews" role="tab" aria-controls="tab-reviews">
+                                        <a class="wd-nav-link" href="#tab-reviews">
+                                            <span class="nav-link-text wd-tabs-title">Bình luận</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -206,32 +270,59 @@
                                                 <div class="elementor-container elementor-column-gap-default">
                                                     <div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-56ddef75"
                                                          data-id="56ddef75" data-element_type="column">
-                                                        <div
-                                                                class="elementor-widget-wrap elementor-element-populated">
+                                                        <div class="elementor-widget-wrap elementor-element-populated">
                                                             <div class="elementor-element elementor-element-1400a071 color-scheme-inherit text-left elementor-widget elementor-widget-text-editor"
                                                                  data-id="1400a071" data-element_type="widget"
                                                                  data-widget_type="text-editor.default">
                                                                 <div class="elementor-widget-container">
                                                                     <h1>Công dụng:</h1>
-                                                                    <p>
-                                                                        ${prod.purpose}
-                                                                    </p>
+                                                                    <p>${prod.purpose}</p>
                                                                     <h1>Thành phần:</h1>
                                                                     <p>${prod.ingredients}</p>
                                                                     <h2>Liều lượng: ${prod.dosage} </h2>
                                                                     <h2>Hướng dẫn sử dụng:</h2>
-                                                                    <p>
-                                                                        ${prod.instructions}
-                                                                    </p>
+                                                                    <p>${prod.instructions}</p>
                                                                     <h2>Đối tượng: ${prod.type.typeName} </h2>
                                                                     <h2>CHỐNG CHỈ ĐỊNH:</h2>
-                                                                    <p>
-                                                                         ${prod.contraindications}<br/>
-                                                                    </p>
-                                                                    <h2>
-                                                                        BẢO QUẢN<br/> ${prod.storageCondition}<br/>
-                                                                    </h2>
+                                                                    <p>${prod.contraindications}<br/></p>
+                                                                    <h2>BẢO QUẢN<br/> ${prod.storageCondition}<br/></h2>
                                                                     <h2>Hạn sử dụng: ${prod.warrantyPeriod}</h2>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="entry-content woocommerce-Tabs-panel woocommerce-Tabs-panel--reviews panel wc-tab"
+                                     id="tab-reviews" role="tabpanel" aria-labelledby="tab-title-reviews"
+                                     data-accordion-index="reviews" style="display: none">
+                                    <div class="wc-tab-inner">
+                                        <div data-elementor-type="product-post" data-elementor-id="37779"
+                                             class="elementor elementor-37779">
+                                            <section
+                                                    class="wd-negative-gap elementor-section elementor-top-section elementor-element elementor-element-493d2219 elementor-section-boxed elementor-section-height-default elementor-section-height-default wd-section-disabled"
+                                                    data-id="493d2219" data-element_type="section">
+                                                <div class="elementor-container elementor-column-gap-default">
+                                                    <div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-56ddef76"
+                                                         data-id="56ddef76" data-element_type="column">
+                                                        <div class="elementor-widget-wrap elementor-element-populated">
+                                                            <div class="elementor-element elementor-element-1400a072 color-scheme-inherit text-left elementor-widget elementor-widget-text-editor"
+                                                                 data-id="1400a072" data-element_type="widget"
+                                                                 data-widget_type="text-editor.default">
+                                                                <div class="elementor-widget-container">
+                                                                    <h2>Bình luận sản phẩm</h2>
+                                                                    <!-- Nội dung bình luận sẽ được chèn vào đây -->
+                                                                    <div id="comments-section">
+                                                                        <p>Chưa có bình luận nào.</p>
+                                                                        <!-- Form để thêm bình luận -->
+                                                                        <form id="comment-form">
+                                                                            <textarea id="comment-text" rows="4" placeholder="Viết bình luận..."></textarea>
+                                                                            <button type="submit">Gửi</button>
+                                                                        </form>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -244,16 +335,18 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
         <div class="wrapper-content">
             <div class="container related-and-upsells">
+
                 <div class="related-products">
                     <h3 class="title slider-title">Sản phẩm tương tự</h3>
                     <div class="products">
                         <div class="wrapper-container">
-                            <div class="container">
+                            <div class="container slider">
                                 <%
                                     Map<Product, List<String>> products = (Map<Product, List<String>>) request.getAttribute("products");
                                     User user = (User) session.getAttribute("auth");
@@ -316,6 +409,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -435,5 +529,64 @@
         });
     }
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabs = document.querySelectorAll('.wd-nav-tabs li');
+        const tabContents = document.querySelectorAll('.entry-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = this.querySelector('a').getAttribute('href').substring(1);
+
+                // Remove active class from all tabs
+                tabs.forEach(item => item.classList.remove('active'));
+
+                // Hide all tab contents
+                tabContents.forEach(content => content.style.display = 'none');
+
+                // Add active class to the clicked tab
+                this.classList.add('active');
+
+                // Show the corresponding tab content
+                document.getElementById(target).style.display = 'block';
+            });
+        });
+
+        // Show the first tab by default
+        document.querySelector('.wd-nav-tabs li.active a').click();
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.slider').slick({
+            infinite: true,
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 1000,
+            arrows: true,
+            responsive: [
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 2
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 1
+                    }
+                }
+            ]
+        });
+    });
+</script>
+
+<!-- Add jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Add Slick JS -->
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.min.js"></script>
 </body>
 </html>
