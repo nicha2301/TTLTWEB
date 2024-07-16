@@ -40,8 +40,8 @@
             opacity: 1;
         }
 
-        .btn-buy button {
-            --color: #560bad;
+        .btn-buy a {
+            --color: #66b840;
             font-family: inherit;
             display: inline-block;
             width: 8em;
@@ -60,7 +60,7 @@
             color: var(--color);
         }
 
-        .btn-buy button:before {
+        .btn-buy a:before {
             content: "";
             position: absolute;
             z-index: -1;
@@ -70,23 +70,23 @@
             border-radius: 50%;
         }
 
-        .btn-buy button:hover {
+        .btn-buy a:hover {
             color: #fff;
         }
 
-        .btn-buy button:before {
+        .btn-buy a:before {
             top: 100%;
             left: 100%;
             transition: all .7s;
         }
 
-        .btn-buy button:hover:before {
+        .btn-buy a:hover:before {
             top: -30px;
             left: -30px;
         }
 
-        .btn-buy button:active:before {
-            background: #3a0ca3;
+        .btn-buy a:active:before {
+            background: #ffa500;
             transition: background 0s;
         }
     </style>
@@ -302,11 +302,11 @@
                                     <img src="${pageContext.request.contextPath}<%=entry.getValue().get(0)%>" alt="">
                                 </a>
                                 <div class="btn-buy">
-                                    <button>Mua ngay</button>
+                                    <a href="${pageContext.request.contextPath}/user/checkout?id=<%=entry.getKey().getId()%>">Mua ngay</a>
                                 </div>
                             </div>
                             <div style="text-align: center" class="product-element-bottom ">
-                                <a s  href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
+                                <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
                                     <%=entry.getKey().getProductName()%>
                                 </a>
                                 <div class="price">
@@ -386,7 +386,7 @@
                                     <img src="${pageContext.request.contextPath}<%=entry.getValue().get(0)%>" alt="">
                                 </a>
                                 <div class="btn-buy">
-                                    <button>Mua ngay</button>
+                                    <a href="${pageContext.request.contextPath}/user/checkout?id=<%=entry.getKey().getId()%>">Mua ngay</a>
                                 </div>
                             </div>
                             <div style="text-align: center" class="product-element-bottom">
@@ -472,7 +472,7 @@
                                     <img src="${pageContext.request.contextPath}<%=entry.getValue().get(0)%>" alt="">
                                 </a>
                                 <div class="btn-buy">
-                                    <button>Mua ngay</button>
+                                    <a href="${pageContext.request.contextPath}/user/checkout?id=<%=entry.getKey().getId()%>">Mua ngay</a>
                                 </div>
                             </div>
                             <div style="text-align: center" class="product-element-bottom">

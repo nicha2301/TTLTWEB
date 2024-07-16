@@ -234,7 +234,7 @@ public class ProductServlet extends HttpServlet {
                                     "           <div class=\"product-element\">\n" +
                                     "               <div class=\"price-wrap\">\n" +
                                     "                   <div class=\"price\">\n" +
-                                    Utils.formatCurrency(entry.getKey().getPrice()) + " VND\n" +
+                                                            Utils.formatCurrency(entry.getKey().getPrice()) + " VND\n" +
                                     "                   </div>\n" +
                                     "               </div>\n" +
                                     "           </div>\n" +

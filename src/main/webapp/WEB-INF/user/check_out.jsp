@@ -2,6 +2,7 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="vn.edu.hcmuaf.fit.service.impl.ProductService" %>
 <%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/common/taglib.jsp" %>
 <!DOCTYPE html>
@@ -27,74 +28,78 @@
 </head>
 <body>
 <%@include file="/WEB-INF/user/include/header.jsp" %>
-<div class="page-title" style="
-              background-image: url(https://tienthangvet.vn/wp-content/uploads/title-tag-tien-thang-vet-tsd1.jpg);
-            ">
+<div class="page-title" style="background-image: url(https://tienthangvet.vn/wp-content/uploads/title-tag-tien-thang-vet-tsd1.jpg);">
   <div class="container">
     <h1 class="title">Thanh toán</h1>
   </div>
 </div>
-
 <section class="checkout spad">
   <div class="container">
     <div class="row">
       <div class="col-lg-12">
         <h6>
           <span class="icon_tag_alt"></span> Đã có mã giảm giá?
-          <a href="${pageContext.request.contextPath}/user/cart">nhấn tại đây</a> để lấy mã giảm giá
+          <a href="${pageContext.request.contextPath}/user/cart">nhấn tại đây</a> để nhập mã giảm giá
         </h6>
       </div>
     </div>
     <h4>Chi tiết đơn hàng</h4>
-    <form id="checkoutForm" action="order-handle" method="post">
+    <form>
+
       <div class="row">
         <div class="col-lg-8 col-md-6">
           <div class="row">
             <div class="col-lg-6">
               <div class="checkout__input">
-                <p>Họ và tên đệm<span>*</span></p>
-                <input type="text" id="firstName" name="firstName" required />
-                <span class="error-message"></span>
+                <p>Họ và tên<span>*</span></p>
+                <input type="text" id="full_name" required />
               </div>
             </div>
-            <div class="col-lg-6">
-              <div class="checkout__input">
-                <p>Tên<span>*</span></p>
-                <input type="text" id="lastName" name="lastName" required />
-                <span class="error-message"></span>
-              </div>
-            </div>
-          </div>
-          <div class="checkout__input">
-            <p>Địa chỉ<span>*</span></p>
-            <input type="text" id="addressLine1"name="addressLine1"  placeholder="Số nhà / Đường" class="checkout__input__add" required />
-            <span class="error-message"></span>
-            <input type="text" id="addressLine2" name="addressLine2" placeholder="Xã / Phường / Thị trấn"   required/>
-            <span class="error-message"></span>
-          </div>
-          <div class="checkout__input">
-            <p>Huyện / Quận<span>*</span></p>
-            <input type="text" id="district" name="district" required />
-            <span class="error-message"></span>
-          </div>
-          <div class="checkout__input">
-            <p>Tỉnh / Thành phố<span>*</span></p>
-            <input type="text" id="city" name="city" required />
-            <span class="error-message"></span>
-          </div>
-          <div class="row">
             <div class="col-lg-6">
               <div class="checkout__input">
                 <p>Điện thoại<span>*</span></p>
-                <input type="number" id="phoneNumber" name="phoneNumber" required />
-                <span class="error-message"></span>
+                <input type="text" id="phone" required />
               </div>
             </div>
+          </div>
+
+          <div class="checkout__input">
+            <p>Địa chỉ<span>*</span></p>
+            <input type="text" id="address" placeholder="Số nhà / Đường" class="checkout__input__add" required />
+          </div>
+
+          <div class="checkout__input">
+            <p>Tỉnh / Thành phố<span>*</span></p>
+            <select id="tinh" name="tinh" title="Chọn Tỉnh Thành">
+              <option value="0">Tỉnh Thành</option>
+            </select>
+          </div>
+
+          <div class="checkout__input">
+            <p>Huyện / Quận<span>*</span></p>
+            <select id="quan" name="quan" title="Chọn Quận Huyện">
+              <option value="0">Quận Huyện</option>
+            </select>
+          </div>
+
+          <div class="checkout__input">
+            <p>Xã / Phường / Thị trấn<span>*</span></p>
+            <select id="phuong" name="phuong" title="Chọn Phường Xã">
+              <option value="0">Phường Xã</option>
+            </select>
+          </div>
+
+          <div class="row">
             <div class="col-lg-6">
               <div class="checkout__input">
                 <p>Email<span>*</span></p>
                 <input type="email" id="email" name="email" required />
-                <span id="emailErrorMessage" class="error-message"></span>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="checkout__input">
+                <p>At Home?<span></span></p>
+                <input type="checkbox" id="at-home" name="at-home">
               </div>
             </div>
           </div>
@@ -108,21 +113,23 @@
               <%
                 String ip = request.getHeader("X-FORWARDED-FOR");
                 if (ip == null) ip = request.getRemoteAddr();
-
-                double retain = (double) session.getAttribute("retain");
                 double result = (double) session.getAttribute("result");
-
-                for (CartItem item : cart) {
+                List<CartItem> temp = (List<CartItem>) request.getAttribute("temp");
+                if (temp == null || temp.isEmpty()) temp = cart;
+                for (CartItem item : temp) {
                   Product p = new Product(item.getProduct().getId());
                   Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(p, ip, "/user/checkout.jsp");
                   for (Map.Entry<Product, List<String>> entry : products.entrySet()) {
-                    int total = item.getQuantity()*entry.getKey().getPrice();
               %>
                 <div class="checkout__order__subtotal">
                   <p>Tên sản phẩm: <%=entry.getKey().getProductName()%></p>
                   <p>Giá bán: <fmt:formatNumber value="<%=entry.getKey().getPrice()%>" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit} ${unit}</p>
                   <p>Số lượng: <%=item.getQuantity()%></p>
                 </div>
+              <%
+                  }
+                }
+              %>
               <div class="checkout__order__subtotal">
                 <p>Tổng: <%=result%> ${unit}</p>
               </div>
@@ -133,70 +140,22 @@
                 <p style="color: red;">Tổng tiền thanh toán:  <fmt:formatNumber value='<%=request.getAttribute("totalPrice")%>' type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}</p>
               </div>
             </div>
-            <%
-                }
-              }
-            %>
             <div class="checkout__input__checkbox" >
-              <span  class="payment-validation-message"></span>
               <label for="cash">
                 Cash on delivery (COD)
-                <input type="checkbox" id="cash" name="cash" class="payment-option" />
+                <input type="checkbox" id="cash" name="cash" class="payment-option group-checkbox" />
                 <span class="checkmark"></span>
               </label>
             </div>
             <div class="checkout__input__checkbox">
               <label for="momo">
                 MOMO
-                <input type="checkbox" id="momo" name="momo" class="payment-option" data-toggle="collapse" data-target="#momo-code" />
+                <input type="checkbox" id="momo" name="momo" class="payment-option group-checkbox" data-toggle="collapse" data-target="#momo-code" />
                 <span class="checkmark"  ></span>
               </label>
             </div>
-
             <div>
-              <form action="${pageContext.request.contextPath}/user/checkout" method="post" id="paymentValidationMessage" class="payment-validation-message">
-                <!-- ... Form content ... -->
-                <button id="validateAndSubmitBtn" type="button" type="submit"  class="site-btn">Đặt hàng</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Modal -->
-      <div class="modal" id="orderSuccessModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Đặt hàng thành công!</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <p>Cảm ơn bạn đã đặt hàng! Chúng tôi sẽ liên hệ với bạn sớm nhất có thể.</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Modal for Momo QR Code -->
-      <div class="modal" id="momoQrCodeModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Momo QR Code</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <!-- Momo QR Code Image -->
-              <img id="momoQrCode" src="assets/img/qr_code/qr_code1.jpg" alt="Mã QR Momo" style="max-width: 100%; height: auto; display: block; margin: 0 auto;"/>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button id="btn_submit" type="button" type="submit"  class="site-btn">Đặt hàng</button>
             </div>
           </div>
         </div>
@@ -209,116 +168,112 @@
 <script src="/assets/user/js/thuvien/jquery-3.3.1.min.js"></script>
 <script src="/assets/user/js/thuvien/bootstrap.min.js"></script>
 <script src="/assets/user/js/thuvien/main.js"></script>
-<style>
-  .error-message{
-    color: red;
-    font-size: 12px;
-  }
-</style>
-
-<!-- Thêm vào cuối thẻ head -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://esgoo.net/scripts/jquery.js"></script>
 <script>
-  function validateForm() {
-    // Reset tất cả các thông báo lỗi
-    $(".error-message").text("");
-
-
-    // Kiểm tra và hiển thị thông báo lỗi
-    var isValid = true;
-
-    if ($("#firstName").val().trim() === "") {
-      $("#firstName + .error-message").text("Họ và tên đệm không được để trống");
-      isValid = false;
-    }
-
-    if ($("#lastName").val().trim() === "") {
-      $("#lastName + .error-message").text("Tên không được để trống");
-      isValid = false;
-    }
-
-    if ($("#addressLine1").val().trim() === "") {
-      $("#addressLine1 + .error-message").text("Địa chỉ không được để trống");
-      isValid = false;
-    }
-
-    if ($("#addressLine2").val().trim() === "") {
-      $("#addressLine2 + .error-message").text("Địa chỉ không được để trống");
-      isValid = false;
-    }
-
-    if ($("#district").val().trim() === "") {
-      $("#district + .error-message").text("Huyện / Quận không được để trống");
-      isValid = false;
-    }
-
-    if ($("#city").val().trim() === "") {
-      $("#city + .error-message").text("Tỉnh / Thành phố không được để trống");
-      isValid = false;
-    }
-
-    if ($("#phoneNumber").val().trim() === "") {
-      $("#phoneNumber + .error-message").text("Điện thoại không được để trống");
-      isValid = false;
-    }
-
-    var emailRegex = /\S+@\S+\.\S+/;
-    if (!emailRegex.test($("#email").val().trim())) {
-      $("#emailErrorMessage").text("Email không hợp lệ");
-      isValid = false;
-    }
-
-    return isValid;
-  }
-
-  $(document).ready(function () {
-    $("#validateAndSubmitBtn").click(function () {
-      var isValidForm = validateForm(); // Kiểm tra hợp lệ của form
-
-      if (isValidForm) {
-        var isMomoChecked = $("#momo").prop("checked");
-        var isCashChecked = $("#cash").prop("checked");
-
-        if (!isMomoChecked && !isCashChecked) {
-          // Hiển thị thông báo đỏ nếu form không hợp lệ
-          $(".payment-validation-message").text("Vui lòng chọn một phương thức thanh toán (COD hoặc MOMO).").show();
-        } else if (isCashChecked) {
-          // Nếu đã chọn COD, hiển thị modal
-          $("#orderSuccessModal").modal("show");
-
-        } else if (isMomoChecked) {
-          // Nếu đã chọn Momo, hiển thị mã QR code
-          $("#momoQrCodeModal").modal("show");
-
+  document.addEventListener('DOMContentLoaded', function() {
+    var checkboxes = document.querySelectorAll('.group-checkbox'); // Chỉ lấy các checkbox có class "group-checkbox"
+    checkboxes.forEach(function(checkbox) {
+      checkbox.addEventListener('change', function() {
+        // Khi một checkbox trong nhóm được chọn
+        if (this.checked) {
+          // Bỏ chọn tất cả các checkbox khác trong nhóm
+          checkboxes.forEach(function(box) {
+            if (box !== checkbox) {
+              box.checked = false;
+            }
+          });
         }
+      });
+    });
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    // Lấy tỉnh thành
+    $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
+      if (data_tinh.error == 0) {
+        $.each(data_tinh.data, function (key_tinh, val_tinh) {
+          $("#tinh").append('<option value="' + val_tinh.id + '" data-full-name="' + val_tinh.full_name + '">' + val_tinh.full_name + '</option>');
+        });
       }
     });
 
-    $("#momo").change(function () {
-      if ($(this).prop("checked")) {
-        $("#cash").prop("checked", false);
-        $(".payment-validation-message").hide();
-      }
+    $("#tinh").change(function (e) {
+      var idtinh = $(this).val(); // lấy ID của tỉnh
+      var fullNameTinh = $("#tinh option:selected").data('full-name'); // lấy full name của tỉnh đã chọn
+      // Lấy quận huyện
+      $.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
+        if (data_quan.error == 0) {
+          $("#quan").empty().append('<option value="0">--Chọn Quận Huyện--</option>');
+          $("#phuong").empty().append('<option value="0">--Chọn Phường/ Xã/ Thị trấn--</option>');
+          $.each(data_quan.data, function (key_quan, val_quan) {
+            $("#quan").append('<option value="' + val_quan.id + '" data-full-name="' + val_quan.full_name + '">' + val_quan.full_name + '</option>');
+          });
+        }
+      });
     });
 
-    $("#cash").change(function () {
-      if ($(this).prop("checked")) {
-        $("#momo").prop("checked", false);
-        $(".payment-validation-message").hide();
-      }
+    $("#quan").change(function (e) {
+      var idquan = $(this).val(); // lấy ID của quận/huyện
+      var fullNameQuan = $("#quan option:selected").data('full-name'); // lấy full name của quận/huyện đã chọn
+      // Lấy phường xã
+      $.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
+        if (data_phuong.error == 0) {
+          $("#phuong").empty().append('<option value="0">--Chọn Phường/ Xã/ Thị trấn--</option>');
+          $.each(data_phuong.data, function (key_phuong, val_phuong) {
+            $("#phuong").append('<option value="' + val_phuong.id + '" data-full-name="' + val_phuong.full_name + '">' + val_phuong.full_name + '</option>');
+          });
+        }
+      });
     });
-
-    $("#orderSuccessModal").on("hidden.bs.modal", function () {
-      $("#checkoutForm").submit();
-    });
-
-    // Xử lý sự kiện hidden.bs.modal của momoQrCodeModal
-    $("#momoQrCodeModal").on("hidden.bs.modal", function () {
-      $("#checkoutForm").submit();
-    });
-
-    // Thêm sự kiện change cho email để ẩn thông báo lỗi khi người dùng sửa nội dung
-    $("#email").change(function () {
-      $("#emailErrorMessage").text("");
+  });
+</script>
+<script>
+  var context = "${pageContext.request.contextPath}";
+  $(document).ready(function() {
+    $('#btn_submit').click(function (event) {
+      event.preventDefault();
+      var fullName = $('#full_name').val();
+      var phone = $('#phone').val();
+      var address = $('#address').val();
+      var fullNameTinh = $("#tinh option:selected").data('full-name');
+      var fullNameQuan = $("#quan option:selected").data('full-name');
+      var fullNamePhuong = $("#phuong option:selected").data('full-name');
+      var email = $('#email').val();
+      var atHome = $('#remember-me').is(':checked');
+      var momo = $('#momo').is(':checked');
+      var cash = $('cash').is(':checked');
+      $.ajax({
+        type: 'POST',
+        data: {
+          fullName: fullName,
+          phone: phone,
+          email: email,
+          tinh: fullNameTinh,
+          quan: fullNameQuan,
+          phuong: fullNamePhuong,
+          address: address,
+          atHome: atHome,
+          momo: momo,
+          cash: cash
+        },
+        url: 'updateinfouser',
+        success: function (result) {
+          try {
+            if (result.status !== "success") {
+              $('#errorUpdate').html(result.error);
+            } else {
+              window.location.href = context + "/user/updateinfouser";
+            }
+          } catch (e) {
+            $('#errorUpdate').html("Error loading request, please try again!");
+          }
+        },
+        error: function() {
+          $('#errorUpdate').html("Connection errors. Please check your network and try again!");
+        }
+      });
     });
   });
 </script>

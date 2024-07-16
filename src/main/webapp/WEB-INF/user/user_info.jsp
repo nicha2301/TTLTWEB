@@ -349,12 +349,12 @@
 <script src="/assets/user/js/thuvien/main.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://esgoo.net/scripts/jquery.js"></script>
-<%--<script>--%>
-<%--    window.addEventListener('scroll', () => {--%>
-<%--        var header = document.querySelector('.container-2')--%>
-<%--        header.classList.toggle('sticky', window.scrollY > 100)--%>
-<%--    });--%>
-<%--</script>--%>
+<script>
+    window.addEventListener('scroll', () => {
+        var header = document.querySelector('.container-2')
+        header.classList.toggle('sticky', window.scrollY > 100)
+    });
+</script>
 <script>
     var hidden = true;
     function toggleHidden(event) {
@@ -581,6 +581,5 @@
         }
     });
 </script>
-
 </body>
 </html>

@@ -1,14 +1,13 @@
 //package vn.edu.hcmuaf.fit.controller.user_page;
 //
-////import vn.edu.hcmuaf.fit.dao.OrderProductDAO;
-////import vn.edu.hcmuaf.fit.dao.OrderDAO;
-//import vn.edu.hcmuaf.fit.model.OrderProduct;
+//import jakarta.servlet.ServletException;
+//import jakarta.servlet.annotation.WebServlet;
+//import jakarta.servlet.http.HttpServlet;
+//import jakarta.servlet.http.HttpServletRequest;
+//import jakarta.servlet.http.HttpServletResponse;
 //import vn.edu.hcmuaf.fit.model.Order;
-//import jakarta.servlet.*;
-//import jakarta.servlet.http.*;
-//import jakarta.servlet.annotation.*;
+//
 //import java.io.IOException;
-//import java.util.List;
 //
 //@WebServlet(urlPatterns = "/user/order_detail")
 //public class OrderDetailServlet extends HttpServlet {

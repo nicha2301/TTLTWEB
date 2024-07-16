@@ -227,7 +227,7 @@
 
                                            </button>
                                         </a>
-                                        <button class="add-to-cart-btn">
+                                        <a class="add-to-cart-btn" id="checkoutLink" href="${pageContext.request.contextPath}/user/checkout?id=${prod.id}&quantity=" >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                  viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
                                                  stroke-linecap="round" stroke-linejoin="round">
@@ -239,7 +239,7 @@
 
                                             <span class="">Mua ngay</span>
 
-                                        </button>
+                                        </a>
                                     </c:when>
                                     <c:otherwise>
                                         <span style="color: red; margin: 10px" id="error">${requestScope.error}</span>
@@ -508,6 +508,16 @@
             if (value > min) {
                 input.value = value - 1;
             }
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        var quantityInput = document.getElementById('quantity');
+        var checkoutLink = document.getElementById('checkoutLink');
+
+        quantityInput.addEventListener('change', function() {
+            var quantity = quantityInput.value;  // Lấy giá trị mới từ input
+            var baseHref = checkoutLink.href.split('&quantity=')[0];  // Lấy phần cơ bản của URL, không bao gồm số lượng cũ
+            checkoutLink.href = baseHref + '&quantity=' + quantity;  // Cập nhật href của thẻ <a> với số lượng mới
         });
     });
 </script>

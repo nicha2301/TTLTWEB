@@ -42,6 +42,9 @@ public class Home extends HttpServlet {
                 session.setAttribute("flag", flag);
                 session.setAttribute("cart", cart);
                 session.setAttribute("total", cart.size());
+                double result = CartService.getInstance().getTotalPrice(user);
+                result += 0.0;
+                session.setAttribute("result", result);
             }
         }
         Map<Product, List<String>> products = ProductService.getInstance().getAllProductsLimited(0, 3);
