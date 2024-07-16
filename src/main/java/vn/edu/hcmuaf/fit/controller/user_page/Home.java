@@ -35,7 +35,6 @@ public class Home extends HttpServlet {
         User user = (User) session.getAttribute("auth");
         if (user != null) {
             Integer flag = (Integer) session.getAttribute("flag");
-            System.out.println("KT flag 1:" + flag);
             List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
             if (flag == 0) {
                 cart = CartService.getInstance().getCartByUser(user);
@@ -44,7 +43,6 @@ public class Home extends HttpServlet {
                 session.setAttribute("cart", cart);
                 session.setAttribute("total", cart.size());
             }
-            System.out.println("KT flag 2:" + flag);
         }
         Map<Product, List<String>> products = ProductService.getInstance().getAllProductsLimited(0, 3);
         ProductTypes type = new ProductTypes();

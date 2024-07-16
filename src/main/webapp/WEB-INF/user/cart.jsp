@@ -51,8 +51,8 @@
         <h1 style="text-align: center">Vui lòng mua sắm</h1>
     <%
         } else {
-            String result = (String) session.getAttribute("result");
-            if(result.trim().equals("0")) {
+            double result = (double) session.getAttribute("result");
+            if(result==0.0) {
     %>
         <h1 id="please" style="text-align: center">Vui lòng mua sắm</h1>
         <%
@@ -77,6 +77,7 @@
                             <%
                                 String ip = request.getHeader("X-FORWARDED-FOR");
                                 if (ip == null) ip = request.getRemoteAddr();
+
                                 for (CartItem item : cart) {
                                     Product p = new Product(item.getProduct().getId());
                                     Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(p, ip, "/user/cart.jsp");
@@ -89,7 +90,7 @@
                                     <h5><%=entry.getKey().getProductName()%>
                                     </h5>
                                 </td>
-                                <c:set var="unit" value="VND"/>
+                                <c:set var="unit" value=" VND"/>
                                 <td id="pr<%=entry.getKey().getId()%>" class="shoping__cart__price">
                                     <fmt:formatNumber value="<%=entry.getKey().getPrice()%>" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}
                                 </td>
@@ -144,7 +145,7 @@
                         <div class="shoping__checkout">
                             <h5>TỔNG TIỀN GIỎ HÀNG</h5>
                             <ul>
-                                <li>Giảm: <span id="retain">${sessionScope.retain==null?"0 ":sessionScope.retain}${unit}</span></li>
+                                <li>Giảm: <span id="retain">${sessionScope.retain==null?0.0:sessionScope.retain}${unit}</span></li>
                                 <li>Tổng: <span id="result">${sessionScope.result}${unit}</span></li>
                             </ul>
                             <a href="${pageContext.request.contextPath}/user/checkout" class="primary-btn">TIẾN HÀNH THANH TOÁN</a>
@@ -197,8 +198,8 @@
                         });
                         $('#errorDiscount').html("");
                     }
-                    result.innerHTML = response.result + "VND";
-                    retain.innerHTML = response.rect + "VND"
+                    result.innerHTML = response.result + " VND";
+                    retain.innerHTML = response.rect + " VND"
                 }
             });
         });
@@ -286,8 +287,8 @@
                     please.innerHTML = "Vui lòng mua sắm";
                     container.style.display = "none";
                 } else {
-                    result.innerHTML = response.result + "VND";
-                    retain.innerHTML = response.rect + "VND"
+                    result.innerHTML = response.result + " VND";
+                    retain.innerHTML = response.rect + " VND"
                     please.style.display = "none";
                 }
             }

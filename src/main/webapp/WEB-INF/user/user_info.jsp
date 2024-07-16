@@ -62,6 +62,9 @@
                     <li class="nav-item">
                         <a href="" data-target="#edit" data-toggle="tab" class="nav-link nav-link-2">Đơn Hàng</a>
                     </li>
+                    <li class="nav-item">
+                        <a href="" data-target="#favourite" data-toggle="tab" class="nav-link nav-link-2">Sản phẩm yêu thích</a>
+                    </li>
                 </ul>
                 <div class="tab-content py-4">
                     <div class="tab-pane active" id="profile">
@@ -288,8 +291,42 @@
                             </table>
                         </div>
                     </div>
+<div class="tab-pane" id="favourite">
+    <div class="container">
+        <h2 class="mb-4">Sản phẩm yêu thích</h2>
+        <table id="orderDetailsTable" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+            <tr>
+                <th>Ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Tổng giá</th>
+                <th>Mã đơn hàng</th>
+            </tr>
+            </thead>
+            <tbody>
 
-                    <!--/row-->
+            <tr>
+                <td>2</td>
+                <td>2</td>
+                <td>2</td>
+                <td>2</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>2</td>
+                <td>2</td>
+                <td>2</td>
+                <td>2</td>
+            </tr>
+
+            </tbody>
+        </table>
+
+
+    </div>
+</div>
                 </div>
 
             </div>
@@ -528,5 +565,22 @@
         });
     });
 </script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.0.5/datatables.min.css" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.0.5/datatables.min.js"></script>
+<script>
+    new DataTable('#orderDetailsTable', {
+        layout: {
+            bottomEnd: {
+                paging: {
+                    boundaryNumbers: false
+                }
+            }
+        }
+    });
+</script>
+
 </body>
 </html>
