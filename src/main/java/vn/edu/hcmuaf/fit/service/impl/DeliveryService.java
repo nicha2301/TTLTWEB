@@ -58,6 +58,23 @@ public class DeliveryService extends LogDAO<DeliveryAddress> implements IDeliver
         }
     }
 
+    public static void main(String[] args) {
+        DeliveryAddress deliveryAddress = new DeliveryAddress();
+        User user = new User();
+        user.setId(83);
+        deliveryAddress.setUser(user);
+        deliveryAddress.setFullName("John Doe");
+        deliveryAddress.setPhone("0987654321");
+        deliveryAddress.setProvince("Hà Nội");
+        deliveryAddress.setDistrict("Tây Hồ");
+        deliveryAddress.setWard("Đội Cung");
+        deliveryAddress.setDetailAddress("123 Đường Thanh Niên");
+        deliveryAddress.setAtHome(true);
+        deliveryAddress.setIsPrimary(true);
+
+        System.out.println(DeliveryService.getInstance().addDeliveryAddress(deliveryAddress, "124", "jdidsjd"));
+    }
+
     @Override
     public boolean updateDeliveryAddress(DeliveryAddress delivery, String ip, String address) {
         boolean success;

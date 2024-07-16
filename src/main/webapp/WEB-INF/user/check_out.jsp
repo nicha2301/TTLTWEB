@@ -115,7 +115,12 @@
                 if (ip == null) ip = request.getRemoteAddr();
                 double result = (double) session.getAttribute("result");
                 List<CartItem> temp = (List<CartItem>) request.getAttribute("temp");
-                if (temp == null || temp.isEmpty()) temp = cart;
+                if (temp == null || temp.isEmpty()) {
+                  temp = cart;
+                } else {
+                  int id = temp.getFirst().getProduct().getId();
+                  int quantity = temp.getFirst().getQuantity();
+                }
                 for (CartItem item : temp) {
                   Product p = new Product(item.getProduct().getId());
                   Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(p, ip, "/user/checkout.jsp");
@@ -154,8 +159,9 @@
                 <span class="checkmark"  ></span>
               </label>
             </div>
+            <span style="color:red; margin-top: 10px;" id="error"></span>
             <div>
-                <button id="btn_submit" type="button" type="submit"  class="site-btn">Đặt hàng</button>
+                <button id="btn_submit" type="submit"  class="site-btn">Đặt hàng</button>
             </div>
           </div>
         </div>
@@ -172,12 +178,10 @@
 <script src="https://esgoo.net/scripts/jquery.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    var checkboxes = document.querySelectorAll('.group-checkbox'); // Chỉ lấy các checkbox có class "group-checkbox"
+    var checkboxes = document.querySelectorAll('.group-checkbox');
     checkboxes.forEach(function(checkbox) {
       checkbox.addEventListener('change', function() {
-        // Khi một checkbox trong nhóm được chọn
         if (this.checked) {
-          // Bỏ chọn tất cả các checkbox khác trong nhóm
           checkboxes.forEach(function(box) {
             if (box !== checkbox) {
               box.checked = false;
@@ -190,7 +194,6 @@
 </script>
 <script>
   $(document).ready(function () {
-    // Lấy tỉnh thành
     $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
       if (data_tinh.error == 0) {
         $.each(data_tinh.data, function (key_tinh, val_tinh) {
@@ -198,11 +201,9 @@
         });
       }
     });
-
     $("#tinh").change(function (e) {
-      var idtinh = $(this).val(); // lấy ID của tỉnh
-      var fullNameTinh = $("#tinh option:selected").data('full-name'); // lấy full name của tỉnh đã chọn
-      // Lấy quận huyện
+      var idtinh = $(this).val();
+      var fullNameTinh = $("#tinh option:selected").data('full-name');
       $.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
         if (data_quan.error == 0) {
           $("#quan").empty().append('<option value="0">--Chọn Quận Huyện--</option>');
@@ -213,11 +214,9 @@
         }
       });
     });
-
     $("#quan").change(function (e) {
-      var idquan = $(this).val(); // lấy ID của quận/huyện
-      var fullNameQuan = $("#quan option:selected").data('full-name'); // lấy full name của quận/huyện đã chọn
-      // Lấy phường xã
+      var idquan = $(this).val();
+      var fullNameQuan = $("#quan option:selected").data('full-name');
       $.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
         if (data_phuong.error == 0) {
           $("#phuong").empty().append('<option value="0">--Chọn Phường/ Xã/ Thị trấn--</option>');
@@ -241,9 +240,12 @@
       var fullNameQuan = $("#quan option:selected").data('full-name');
       var fullNamePhuong = $("#phuong option:selected").data('full-name');
       var email = $('#email').val();
-      var atHome = $('#remember-me').is(':checked');
+      var atHome = $('#at-home').is(':checked');
+      var cash = $('#cash').is(':checked');
       var momo = $('#momo').is(':checked');
-      var cash = $('cash').is(':checked');
+      var id = '${param.id}';
+      var quantity = '${param.quantity}';
+      console.log(fullName, phone, address, fullNameTinh,  fullNameQuan, fullNamePhuong, email, atHome, momo, cash, id, quantity)
       $.ajax({
         type: 'POST',
         data: {
@@ -256,22 +258,23 @@
           address: address,
           atHome: atHome,
           momo: momo,
-          cash: cash
+          cash: cash,
         },
-        url: 'updateinfouser',
-        success: function (result) {
+        url: '${pageContext.request.contextPath}/user/checkout',
+        success: function (response) {
+          console.log(response)
           try {
-            if (result.status !== "success") {
-              $('#errorUpdate').html(result.error);
+            if (response.status !== "success") {
+              $('#error').html(response.error);
             } else {
-              window.location.href = context + "/user/updateinfouser";
+              window.location.href = context + "/user/order_success.jsp";
             }
           } catch (e) {
-            $('#errorUpdate').html("Error loading request, please try again!");
+            $('#error').html("Error loading request, please try again!");
           }
         },
         error: function() {
-          $('#errorUpdate').html("Connection errors. Please check your network and try again!");
+          $('#error').html("Connection errors. Please check your network and try again!");
         }
       });
     });
