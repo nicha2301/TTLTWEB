@@ -94,17 +94,21 @@
                                         </thead>
                                         <tbody>
                                         <c:forEach var="entry" items="${products}">
-                                            <c:set var="product" value="${entry.key}" />
-                                            <c:set var="images" value="${entry.value}" />
-                                            <tr>
+                                            <c:set var="product" value="${entry.key}"/>
+                                            <c:set var="images" value="${entry.value}"/>
+                                            <tr class="product-item" data-id="${product.id}">
                                                 <td>${product.id}</td>
                                                 <td>
                                                     <c:choose>
                                                         <c:when test="${not empty images}">
-                                                            <img class="rounded service-img mr-1" src="${pageContext.request.contextPath}${entry.value[0]}" alt="Hình ảnh sản phẩm">
+                                                            <img class="rounded service-img mr-1"
+                                                                 src="${pageContext.request.contextPath}${entry.value[0]}"
+                                                                 alt="Hình ảnh sản phẩm">
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <img class="rounded service-img mr-1" src="${pageContext.request.contextPath}/default-image-url" alt="Hình ảnh mặc định">
+                                                            <img class="rounded service-img mr-1"
+                                                                 src="${pageContext.request.contextPath}/default-image-url"
+                                                                 alt="Hình ảnh mặc định">
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </td>
@@ -113,12 +117,16 @@
                                                 <td>${product.quantity}</td>
                                                 <td>${product.supplier.getId()}</td>
                                                 <td class="text-right">
-                                                    <a href="product?type=edit&id=${product.id}" class="btn btn-sm bg-success-light">
+                                                    <a href="product?type=edit&id=${product.id}"
+                                                       class="btn btn-sm bg-success-light edit-product ">
                                                         <i class="far fa-edit mr-1"></i> Sửa
                                                     </a>
-                                                    <a href="#" onclick="confirmDeleteProduct(${product.id});" style="margin-top: 5px; color: red;" class="btn btn-outline-danger btn-sm">
+                                                    <button class="btn btn-outline-danger btn-sm text-danger delete-product"
+                                                            data-id="${product.id}">
                                                         <i class="fa fa-trash-o"></i> Xóa
-                                                    </a>
+                                                    </button>
+
+
                                                 </td>
                                             </tr>
                                         </c:forEach>
@@ -137,45 +145,51 @@
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Tên sản phẩm</label>
                                     <div class="col-md-10">
-                                        <input  id="add-productName" name="productName" type="text" class="form-control" required>
+                                        <input id="add-productName" name="productName" type="text" class="form-control"
+                                               required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Giá sản phẩm</label>
                                     <div class="col-md-10">
-                                        <input id="add-price" name="price" type="text" class="form-control"required>
+                                        <input id="add-price" name="price" type="text" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Danh mục</label>
                                     <div class="col-md-10">
-                                        <input id="add-categoryId" name="categoryId" type="text" class="form-control"required>
+                                        <input id="add-categoryId" name="categoryId" type="text" class="form-control"
+                                               required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Số lượng</label>
                                     <div class="col-md-10">
-                                        <input id="add-quantity" name="quantity" type="text" class="form-control" required>
+                                        <input id="add-quantity" name="quantity" type="text" class="form-control"
+                                               required>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Công dụng</label>
                                     <div class="col-md-10">
-                                        <input id="add-purpose" name="purpose" type="text" class="form-control" required>
+                                        <input id="add-purpose" name="purpose" type="text" class="form-control"
+                                               required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Chỉ định</label>
                                     <div class="col-md-10">
-                                        <input id="add-contraindications" name="contraindications" type="text" class="form-control" required>
+                                        <input id="add-contraindications" name="contraindications" type="text"
+                                               class="form-control" required>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Thành phần</label>
                                     <div class="col-md-10">
-                                        <input id="add-ingredients" name="ingredients" type="text" class="form-control" required>
+                                        <input id="add-ingredients" name="ingredients" type="text" class="form-control"
+                                               required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -187,19 +201,22 @@
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Hướng dẫn</label>
                                     <div class="col-md-10">
-                                        <input id="add-instructions" name="instructions" type="text" class="form-control" required>
+                                        <input id="add-instructions" name="instructions" type="text"
+                                               class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Thời hạn sử dụng</label>
                                     <div class="col-md-10">
-                                        <input id="add-warrantyPeriod" name="warrantyPeriod" type="text" class="form-control" required>
+                                        <input id="add-warrantyPeriod" name="warrantyPeriod" type="text"
+                                               class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Điều kiện bảo quản</label>
                                     <div class="col-md-10">
-                                        <input id="add-storageCondition" name="storageCondition" type="text" class="form-control" required>
+                                        <input id="add-storageCondition" name="storageCondition" type="text"
+                                               class="form-control" required>
                                     </div>
                                 </div>
 
@@ -213,14 +230,15 @@
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">ID nhà cung cấp</label>
                                     <div class="col-md-10">
-                                        <input id="add-supplierId" name="supplierId" type="text" class="form-control" required>
+                                        <input id="add-supplierId" name="supplierId" type="text" class="form-control"
+                                               required>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Hoạt động</label>
                                     <div class="col-md-10">
-                                        <select class="form-control"  id="add-active" name="active" required>
+                                        <select class="form-control" id="add-active" name="active" required>
                                             <option value="true">Có</option>
                                             <option value="false">Không</option>
                                         </select>
@@ -242,92 +260,107 @@
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Mã sản phẩm</label>
                                     <div class="col-md-10">
-                                        <input type="text" class="form-control" name="productId" value="${product.id}" readonly>
+                                        <input type="text" class="form-control" name="productId" value="${product.id}"
+                                               readonly>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Tên sản phẩm</label>
                                     <div class="col-md-10">
-                                        <input id="edit-productName" name="productName" type="text" class="form-control" value="${product.productName}" required>
+                                        <input id="edit-productName" name="productName" type="text" class="form-control"
+                                               value="${product.productName}" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Danh mục</label>
                                     <div class="col-md-10">
-                                        <input id="edit-categoryId" name="categoryId" type="number" class="form-control" value="${product.cate.id}" required>
+                                        <input id="edit-categoryId" name="categoryId" type="number" class="form-control"
+                                               value="${product.cate.id}" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Giá</label>
                                     <div class="col-md-10">
-                                        <input id="edit-price"  name="price" type="text" class="form-control" value="${product.price}" required>
+                                        <input id="edit-price" name="price" type="text" class="form-control"
+                                               value="${product.price}" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Số Lượng</label>
                                     <div class="col-md-10">
-                                        <input id="edit-quantity" name="quantity" type="number" class="form-control" value="${product.quantity}" required>
+                                        <input id="edit-quantity" name="quantity" type="number" class="form-control"
+                                               value="${product.quantity}" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Công dụng</label>
                                     <div class="col-md-10">
-                                        <input id="edit-purpose" name="purpose" type="text" class="form-control" value="${product.purpose}" required>
+                                        <input id="edit-purpose" name="purpose" type="text" class="form-control"
+                                               value="${product.purpose}" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Chỉ định</label>
                                     <div class="col-md-10">
-                                        <input id="edit-contraindications" name="contraindications" type="text" class="form-control" value="${product.contraindications}" required>
+                                        <input id="edit-contraindications" name="contraindications" type="text"
+                                               class="form-control" value="${product.contraindications}" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Thành phần</label>
                                     <div class="col-md-10">
-                                        <input id="edit-ingredients" name="ingredients" type="text" class="form-control" value="${product.ingredients}" required>
+                                        <input id="edit-ingredients" name="ingredients" type="text" class="form-control"
+                                               value="${product.ingredients}" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Liều lượng</label>
                                     <div class="col-md-10">
-                                        <input id="edit-dosage" name="dosage" type="text" class="form-control" value="${product.dosage}" required>
+                                        <input id="edit-dosage" name="dosage" type="text" class="form-control"
+                                               value="${product.dosage}" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Hướng dẫn</label>
                                     <div class="col-md-10">
-                                        <input id="edit-instructions" name="instructions" type="text" class="form-control" value="${product.instructions}" required>
+                                        <input id="edit-instructions" name="instructions" type="text"
+                                               class="form-control" value="${product.instructions}" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Thời hạn sử dụng</label>
                                     <div class="col-md-10">
-                                        <input id="edit-warrantyPeriod" name="warrantyPeriod" type="text" class="form-control" value="${product.warrantyPeriod}" required>
+                                        <input id="edit-warrantyPeriod" name="warrantyPeriod" type="text"
+                                               class="form-control" value="${product.warrantyPeriod}" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Bảo quản</label>
                                     <div class="col-md-10">
-                                        <input id="edit-storageCondition" name="storageCondition" type="text" class="form-control" value="${product.storageCondition}" required>
+                                        <input id="edit-storageCondition" name="storageCondition" type="text"
+                                               class="form-control" value="${product.storageCondition}" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Loại sản phẩm</label>
                                     <div class="col-md-10">
-                                        <input id="edit-typeId" name="typeId" type="number" class="form-control" value="${product.type.id}" required>
+                                        <input id="edit-typeId" name="typeId" type="number" class="form-control"
+                                               value="${product.type.id}" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">ID NCC</label>
                                     <div class="col-md-10">
-                                        <input id="edit-supplierId" name="supplierId" type="number" class="form-control" value="${product.supplier.id}" required>
+                                        <input id="edit-supplierId" name="supplierId" type="number" class="form-control"
+                                               value="${product.supplier.id}" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Hoạt động</label>
                                     <div class="col-md-10">
-                                        <input id="edit-active" name="active" type="text" class="form-control" value="${product.active}" required>
+                                        <input id="edit-active" name="active" type="text" class="form-control"
+                                               value="${product.active}" required>
                                     </div>
                                 </div>
                                 <div class="mt-4">
@@ -449,6 +482,30 @@
                     console.log(error);
                 }
             });
+        });
+        $(document).on('click', '.delete-product', function (event) {
+            var id = $(this).data('id');
+            var $productItem = $(this).closest('.product-item');
+            if (confirm('Bạn có chắc chắn muốn xóa san phẩm này không?')) {
+                $.ajax({
+                    type: 'POST',
+                    url: context + '/admin/product',
+                    data: {
+                        action: "delete",
+                        id: id,
+                    },
+                    success: function (response) {
+                        if (response.status !== "success") {
+                            alert(response.error);
+                        } else {
+                            $productItem.remove();
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                    }
+                });
+            }
         });
 
 

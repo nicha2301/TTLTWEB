@@ -1,10 +1,8 @@
 package vn.edu.hcmuaf.fit.controller.admin;
 
 import org.json.simple.JSONObject;
-import vn.edu.hcmuaf.fit.model.Product;
-import vn.edu.hcmuaf.fit.model.ProductCategories;
-import vn.edu.hcmuaf.fit.model.ProductTypes;
-import vn.edu.hcmuaf.fit.model.Supplier;
+import vn.edu.hcmuaf.fit.model.*;
+import vn.edu.hcmuaf.fit.service.impl.DiscountService;
 import vn.edu.hcmuaf.fit.service.impl.ProductService;
 
 import jakarta.servlet.ServletException;
@@ -108,28 +106,10 @@ public class Product_direct extends HttpServlet {
                 product.setCate(new ProductCategories(cateId));
                 product.setType(new ProductTypes(typeId));
                 product.setSupplier(new Supplier(supplierId));
-//                product.setActive(Boolean.parseBoolean(active));
                 product.setActive(true);
 
                 boolean valid = productName != null && price > 0 && quantity != null && cateId != null && typeId != null && supplierId != null;
 
-                System.out.println("Product Details:");
-                System.out.println("Action: " + action);
-                System.out.println("ID: " + id);
-                System.out.println("Name: " + productName);
-                System.out.println("Price: " + price);
-                System.out.println("Category ID: " + cateId);
-                System.out.println("Quantity: " + quantity);
-                System.out.println("Purpose: " + purpose);
-                System.out.println("Contraindications: " + contraindications);
-                System.out.println("Ingredients: " + ingredients);
-                System.out.println("Dosage: " + dosage);
-                System.out.println("Instructions: " + instructions);
-                System.out.println("Warranty Period: " + warrantyPeriod);
-                System.out.println("Storage Condition: " + storageCondition);
-                System.out.println("Type ID: " + typeId);
-                System.out.println("Supplier ID: " + supplierId);
-                System.out.println("Active: " + active);
 
                 if (valid && "edit".equals(action)) {
                     productService.updateProduct(product, ip, "admin/product");
@@ -142,6 +122,28 @@ public class Product_direct extends HttpServlet {
                 response.getWriter().print("{\"error\":\"Invalid number format.\"}");
                 response.getWriter().flush();
                 return;
+            }
+        } else if ("delete".equals(action)) {
+            try {
+                Product productToDelete = new Product();
+                productToDelete.setId(Integer.valueOf(id));
+
+                // In thông tin sản phẩm ra console trước khi xóa
+                System.out.println("Attempting to delete product with ID: " + id);
+
+
+                boolean deleted = productService.deleteProductById(productToDelete, ip, "admin/product");
+
+                if (deleted) {
+                    jsonResponse.put("status", "success");
+                    System.out.println("Product with ID " + id + " deleted successfully.");
+                } else {
+                    jsonResponse.put("status", "error");
+                    jsonResponse.put("message", "Failed to delete product.");
+                    System.out.println("Failed to delete product with ID " + id + ".");
+                }
+            } catch (NumberFormatException e) {
+                jsonResponse.put("error", "Invalid number format.");
             }
         }
         out.print(jsonResponse.toJSONString());
