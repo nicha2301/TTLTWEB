@@ -25,6 +25,26 @@
         sizes="192x192" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <title>Checkout</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px; /* 0px ngang và 10px dọc */
+    }
+
+    table tr {
+      background-color: #f9f9f9; /* Màu nền cho mỗi hàng */
+    }
+
+    table th, table td {
+      padding: 8px; /* Đệm cho các ô */
+      text-align: left; /* Căn lề trái cho văn bản trong ô */
+    }
+
+    table th {
+      background-color: #f2f2f2; /* Màu nền cho tiêu đề bảng */
+    }
+  </style>
 </head>
 <body>
 <%@include file="/WEB-INF/user/include/header.jsp" %>
@@ -40,19 +60,24 @@
         <h6>
           <span class="icon_tag_alt"></span> Đã có mã giảm giá?
           <a href="${pageContext.request.contextPath}/user/cart">nhấn tại đây</a> để nhập mã giảm giá
+          <form class=" d-flex align-items-center w-50 mx-auto mt-2">
+            <input type="text" class="form-control" placeholder="Nhập mã giảm giá">
+            <button type="submit" class="btn btn-success" style="white-space: nowrap">Áp dụng</button>
+          </form>
         </h6>
+
       </div>
     </div>
     <h4>Chi tiết đơn hàng</h4>
     <form>
 
       <div class="row">
-        <div class="col-lg-8 col-md-6">
+        <div class="col-lg-5 col-md-6">
           <div class="row">
             <div class="col-lg-6">
               <div class="checkout__input">
                 <p>Họ và tên<span>*</span></p>
-                <input type="text" id="full_name" required />
+                <input class="form-control" type="text" id="full_name" required />
               </div>
             </div>
             <div class="col-lg-6">
@@ -70,21 +95,21 @@
 
           <div class="checkout__input">
             <p>Tỉnh / Thành phố<span>*</span></p>
-            <select id="tinh" name="tinh" title="Chọn Tỉnh Thành">
+            <select class="form-control" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
               <option value="0">Tỉnh Thành</option>
             </select>
           </div>
 
           <div class="checkout__input">
             <p>Huyện / Quận<span>*</span></p>
-            <select id="quan" name="quan" title="Chọn Quận Huyện">
+            <select class="form-control" id="quan" name="quan" title="Chọn Quận Huyện">
               <option value="0">Quận Huyện</option>
             </select>
           </div>
 
           <div class="checkout__input">
             <p>Xã / Phường / Thị trấn<span>*</span></p>
-            <select id="phuong" name="phuong" title="Chọn Phường Xã">
+            <select class="form-control" id="phuong" name="phuong" title="Chọn Phường Xã">
               <option value="0">Phường Xã</option>
             </select>
           </div>
@@ -93,20 +118,20 @@
             <div class="col-lg-6">
               <div class="checkout__input">
                 <p>Email<span>*</span></p>
-                <input type="email" id="email" name="email" required />
+                <input class="form-control" type="email" id="email" name="email" required />
               </div>
             </div>
             <div class="col-lg-6">
               <div class="checkout__input">
                 <p>At Home?<span></span></p>
-                <input type="checkbox" id="at-home" name="at-home">
+                <input class="form-control" type="checkbox" style="width: 30px;height: 30px" id="at-home" name="at-home">
               </div>
             </div>
           </div>
 
         </div>
-        <div class="col-lg-4 col-md-6">
-          <div class="checkout__order">
+        <div class="col-lg-7 col-md-6">
+          <div class="checkout__order" style="background-color: #ccc">
             <div >
               <h2>Thông tin sản phẩm trong giỏ hàng:</h2>
               <c:set var="unit" value="VND"/>
@@ -121,20 +146,36 @@
                   int id = temp.getFirst().getProduct().getId();
                   int quantity = temp.getFirst().getQuantity();
                 }
-                for (CartItem item : temp) {
-                  Product p = new Product(item.getProduct().getId());
-                  Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(p, ip, "/user/checkout.jsp");
-                  for (Map.Entry<Product, List<String>> entry : products.entrySet()) {
               %>
-                <div class="checkout__order__subtotal">
-                  <p>Tên sản phẩm: <%=entry.getKey().getProductName()%></p>
-                  <p>Giá bán: <fmt:formatNumber value="<%=entry.getKey().getPrice()%>" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit} ${unit}</p>
-                  <p>Số lượng: <%=item.getQuantity()%></p>
-                </div>
-              <%
+              <table>
+                <tr>
+                  <th>Hình ảnh</th>
+                  <th>Tên sản phẩm</th>
+                  <th>Giá bán</th>
+                  <th>Số lượng</th>
+                </tr>
+                <%
+                  for (CartItem item : temp) {
+                    Product p = new Product(item.getProduct().getId());
+                    Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(p, ip, "/user/checkout.jsp");
+                    for (Map.Entry<Product, List<String>> entry : products.entrySet()) {
+                %>
+                <tr sy>
+                  <td>
+                    <img style="width: 100px;height: 100px;object-fit: cover" src="<%=entry.getValue().get(0)%>" alt="">
+                  </td>
+                  <td><%=entry.getKey().getProductName()%></td>
+                  <td>
+                    <fmt:formatNumber value="<%=entry.getKey().getPrice()%>" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}
+                  </td>
+                  <td><%=item.getQuantity()%></td>
+                </tr>
+                <%
+                    }
                   }
-                }
-              %>
+                %>
+              </table>
+
               <div class="checkout__order__subtotal">
                 <p>Tổng: <%=result%> ${unit}</p>
               </div>
@@ -267,7 +308,7 @@
             if (response.status !== "success") {
               $('#error').html(response.error);
             } else {
-              window.location.href = context + "/user/order_success.jsp";
+              window.location.href = context + "/user/success";
             }
           } catch (e) {
             $('#error').html("Error loading request, please try again!");

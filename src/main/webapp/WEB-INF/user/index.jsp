@@ -302,7 +302,7 @@
                                     <img src="${pageContext.request.contextPath}<%=entry.getValue().get(0)%>" alt="">
                                 </a>
                                 <div class="btn-buy">
-                                    <a href="${pageContext.request.contextPath}/user/checkout?id=<%=entry.getKey().getId()%>">Mua ngay</a>
+                                    <a style="display: block;text-align: center" href="${pageContext.request.contextPath}/user/checkout?id=<%=entry.getKey().getId()%>">Mua ngay</a>
                                 </div>
                             </div>
                             <div style="text-align: center" class="product-element-bottom ">
@@ -385,8 +385,8 @@
                                 <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
                                     <img src="${pageContext.request.contextPath}<%=entry.getValue().get(0)%>" alt="">
                                 </a>
-                                <div class="btn-buy">
-                                    <a href="${pageContext.request.contextPath}/user/checkout?id=<%=entry.getKey().getId()%>">Mua ngay</a>
+                                <div  class="btn-buy">
+                                    <a style="display: block;text-align: center" href="${pageContext.request.contextPath}/user/checkout?id=<%=entry.getKey().getId()%>">Mua ngay</a>
                                 </div>
                             </div>
                             <div style="text-align: center" class="product-element-bottom">
@@ -472,7 +472,7 @@
                                     <img src="${pageContext.request.contextPath}<%=entry.getValue().get(0)%>" alt="">
                                 </a>
                                 <div class="btn-buy">
-                                    <a href="${pageContext.request.contextPath}/user/checkout?id=<%=entry.getKey().getId()%>">Mua ngay</a>
+                                    <a style="display: block;text-align: center"  href="${pageContext.request.contextPath}/user/checkout?id=<%=entry.getKey().getId()%>">Mua ngay</a>
                                 </div>
                             </div>
                             <div style="text-align: center" class="product-element-bottom">

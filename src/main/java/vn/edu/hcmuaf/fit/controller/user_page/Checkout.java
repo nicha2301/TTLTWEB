@@ -124,6 +124,8 @@ public class Checkout extends HttpServlet {
         } else {
             if (cash == 0 && momo == 0) {
                 out.write("{\"error\":\"Please choose the type of payment!\"}");
+                out.close();
+                return;
             }
             if (user != null) {
                 DeliveryAddress dev = new DeliveryAddress();
