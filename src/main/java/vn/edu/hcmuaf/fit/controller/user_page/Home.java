@@ -33,7 +33,7 @@ public class Home extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
         HttpSession session = request.getSession(true);
         User user = (User) session.getAttribute("auth");
-        System.out.println(user);
+
         if (user != null) {
             Integer flag = (Integer) session.getAttribute("flag");
             List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
@@ -45,7 +45,7 @@ public class Home extends HttpServlet {
                 session.setAttribute("total", cart.size());
                 Integer result = CartService.getInstance().getTotalPrice(user);
                 double re = 0.0;
-                if (result!=null) re += result;
+                if (result != null) re += result;
                 session.setAttribute("result", re);
             }
         }

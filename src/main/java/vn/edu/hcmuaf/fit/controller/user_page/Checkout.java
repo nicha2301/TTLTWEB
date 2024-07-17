@@ -17,6 +17,7 @@ import java.util.Map;
 
 @WebServlet("/user/checkout")
 public class Checkout extends HttpServlet {
+    double priceShipment = 20000.0;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -24,6 +25,7 @@ public class Checkout extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession(true);
         User user = (User) session.getAttribute("auth");
+
         if (user == null) request.getRequestDispatcher("/WEB-INF/user/signIn.jsp").forward(request, response);
         else {
             String ip = request.getHeader("X-FORWARDED-FOR");
@@ -31,10 +33,10 @@ public class Checkout extends HttpServlet {
 
             List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
             String id = request.getParameter("id");
+
             if (id == null || id.isEmpty()) {
                 if (!cart.isEmpty()) {
                     double result = (double) session.getAttribute("result");
-                    double priceShipment = 20000.0;
                     double totalPrice = result + priceShipment;
                     request.setAttribute("totalPrice", totalPrice);
                     request.setAttribute("priceShipment", priceShipment);
@@ -46,11 +48,12 @@ public class Checkout extends HttpServlet {
             } else {
                 session.removeAttribute("discount");
                 session.removeAttribute("retain");
-                double priceShipment = 20000.0;
+
                 List<CartItem> temp = new ArrayList<>();
                 Product p = new Product(Integer.parseInt(id));
                 Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(p, ip, "/user/checkout.jsp");
                 String quantity = request.getParameter("quantity");
+
                 for (Map.Entry<Product, List<String>> entry : products.entrySet()) {
                     if (quantity == null) {
                         temp.add(new CartItem(user, entry.getKey(), 1));
@@ -73,8 +76,8 @@ public class Checkout extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
-        PrintWriter out = response.getWriter();
 
+        PrintWriter out = response.getWriter();
         String ip = request.getHeader("X-FORWARDED-FOR");
         if (ip == null) ip = request.getRemoteAddr();
 
@@ -128,43 +131,39 @@ public class Checkout extends HttpServlet {
                 return;
             }
             if (user != null) {
-                DeliveryAddress dev = new DeliveryAddress();
-                dev.setFullName(fullName);
-                dev.setPhone(phone);
-                dev.setUser(user);
-                dev.setProvince(tinh);
-                dev.setDistrict(quan);
-                dev.setWard(phuong);
-                dev.setDetailAddress(address);
-                dev.setAtHome(atHome);
-                dev.setIsPrimary(true);
+                DeliveryAddress dev = new DeliveryAddress(user, fullName, phone, tinh, quan, phuong, address, atHome, true);
                 DeliveryAddress delivery = DeliveryService.getInstance().addDeliveryAddress(dev, ip, "/user/checkout");
                 Order order = new Order();
                 order.setUser(user);
                 order.setAddress(delivery);
+
                 ShippingType shippingType = new ShippingType();
-                shippingType.setId(1); //hardcode for now
+                shippingType.setId(1);
                 order.setType(shippingType);
                 if(discount!=null) order.setDiscount(discount);
                 else {
-                    Discount discount1 = new Discount();
-                    discount1.setId(6); //hardcode for now
-                    order.setDiscount(discount1);
+                    Discount dis = new Discount();
+                    dis.setId(6);
+                    order.setDiscount(dis);
                 }
+
                 Payment payment = new Payment();
                 if (cash==0) payment.setId(momo);
                 else payment.setId(cash);
                 order.setPayment(PaymentService.getInstance().getPaymentById(payment));
                 order.setNote("");
-                order.setStatus(new OrderStatus(1, "", ""));
+                OrderStatus status = new OrderStatus();
+                status.setId(1);
+                order.setStatus(status);
+
                 List<OrderItem> items = new ArrayList<>();
-                if (id!=0) {
+                if (id != 0) {
                     Product product = null;
                     Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(id), ip, "/user/checkout");
                     for (Product p: products.keySet()) {
                         product = p;
                     }
-                     if(quantity!=0) items.add(new OrderItem(order, product, product.getPrice(), quantity));
+                     if(quantity != 0) items.add(new OrderItem(order, product, product.getPrice(), quantity));
                      else items.add(new OrderItem(order, product, product.getPrice(), 1));
                 } else {
                     for(CartItem i : cart) {
@@ -174,15 +173,18 @@ public class Checkout extends HttpServlet {
                         }
                     }
                 }
-                System.out.println(items);
-                System.out.println(order);
                 Map<Order, List<OrderItem>> map = OrderService.getInstance().insertOrders(order, items, ip, "/user/checkout");
-                System.out.println(map);
+
                 if (map==null || map.isEmpty()) {
                     out.write("{ \"status\": \"Save to database failed!\"}");
                 } else {
                     cart.clear();
+                    CartService.getInstance().removeCart(user);
                     session.setAttribute("cart", cart);
+                    session.setAttribute("total", 0);
+                    session.removeAttribute("discount");
+                    session.removeAttribute("retain");
+                    session.removeAttribute("result");
                     out.write("{ \"status\": \"success\"}");
                 }
             } else {
