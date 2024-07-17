@@ -209,9 +209,12 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
      * Deletes a product from the database by its ID.
      */
     public boolean deleteProductById(int productId) {
+
         String sql = "DELETE FROM products WHERE id = ?";
         return update(sql, productId);
     }
+
+
 
     /**
      * TESTED

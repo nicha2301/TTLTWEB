@@ -77,7 +77,7 @@ public class ProductService extends LogDAO<Product> implements IProductService {
         try {
             Level level;
             Map<Product, List<String>> success = ProductDAO.getInstance().getProductByIdWithSupplierInfo(p.getId());
-            if(success != null && success.size()==1) {
+            if (success != null && success.size() == 1) {
                 p.setAfterData("Get product with ID=" + p.getId() + " successfully");
                 level = LevelDAO.getInstance().getLevel(1).get(0);
             } else {
@@ -104,9 +104,9 @@ public class ProductService extends LogDAO<Product> implements IProductService {
             Level level;
             p.setBeforeData("Old info of ID=" + p.getId() + " is " + p);
             boolean success = ProductDAO.getInstance().updateProduct(p.getId(), p.getProductName(), p.getCate().getId(), p.getSalePercent(), p.getPrice(), p.getQuantity(),
-                                                                        p.getPurpose(), p.getContraindications(), p.getIngredients(), p.getDosage(), p.getInstructions(), p.getWarrantyPeriod(), p.getStorageCondition(),
-                                                                    p.getType().getId(), p.getSupplier().getId());
-            if(success) {
+                    p.getPurpose(), p.getContraindications(), p.getIngredients(), p.getDosage(), p.getInstructions(), p.getWarrantyPeriod(), p.getStorageCondition(),
+                    p.getType().getId(), p.getSupplier().getId());
+            if (success) {
                 p.setAfterData("Update success with ID=" + p.getId());
                 level = LevelDAO.getInstance().getLevel(1).get(0);
             } else {
@@ -127,8 +127,9 @@ public class ProductService extends LogDAO<Product> implements IProductService {
         try {
             Level level;
             p.setBeforeData("Product info of ID=" + p.getId() + " is " + p + " before delete");
+            ImageService.getInstance().removeImage(p, ip, address);
             boolean success = ProductDAO.getInstance().deleteProductById(p.getId());
-            if(success) {
+            if (success) {
                 level = LevelDAO.getInstance().getLevel(1).get(0);
                 p.setAfterData("Product ID=" + p.getId() + " has been deleted");
             } else {
@@ -141,7 +142,7 @@ public class ProductService extends LogDAO<Product> implements IProductService {
             Map<Product, List<String>> product = ProductDAO.getInstance().getProductByIdWithSupplierInfo(p.getId());
             p.setAfterData(e.getMessage() + " with ID=" + p.getId());
             super.insert(p, LevelDAO.getInstance().getLevel(2).get(0), ip, address);
-            if(product == null || product.isEmpty()) return true;
+            if (product == null || product.isEmpty()) return true;
             else return false;
         }
     }
@@ -151,9 +152,9 @@ public class ProductService extends LogDAO<Product> implements IProductService {
         try {
             Level level;
             Product success = ProductDAO.getInstance().addProduct(p.getProductName(), p.getCate().getId(), p.getSalePercent(), p.getPrice(), p.getQuantity(),
-                                p.getPurpose(), p.getContraindications(), p.getIngredients(), p.getDosage(), p.getInstructions(), p.getWarrantyPeriod(), p.getStorageCondition(),
-                        p.getType().getId(), p.getSupplier().getId(), p.getActive());
-            if(success != null) {
+                    p.getPurpose(), p.getContraindications(), p.getIngredients(), p.getDosage(), p.getInstructions(), p.getWarrantyPeriod(), p.getStorageCondition(),
+                    p.getType().getId(), p.getSupplier().getId(), p.getActive());
+            if (success != null) {
                 p.setAfterData("Add product success with ID=" + success.getId());
                 level = LevelDAO.getInstance().getLevel(1).get(0);
             } else {
@@ -165,5 +166,9 @@ public class ProductService extends LogDAO<Product> implements IProductService {
         } catch (Exception e) {
             return null;
         }
+
     }
+
+
 }
+

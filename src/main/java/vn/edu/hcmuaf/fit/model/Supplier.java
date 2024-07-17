@@ -21,4 +21,9 @@ public class Supplier extends AbsModel implements Serializable {
      String imageUrl;
      Boolean active;
 
+     public Supplier(Integer id) {
+          this.id = id;
+     }
+
+
 }
