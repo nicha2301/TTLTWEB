@@ -59,7 +59,7 @@ public class ProductDetailsServlet extends HttpServlet {
                 } else {
                     request.setAttribute("error", "Bạn đã thêm số lượng sản phẩm tối đa vào giỏ!");
                 }
-                Map<Product, List<String>> similar = ProductService.getInstance().getAllProductsLimited(0, 4);
+                Map<Product, List<String>> similar = ProductService.getInstance().getAllProducts();
                 request.setAttribute("products", similar);
                 request.getRequestDispatcher("/WEB-INF/user/product_detail.jsp").forward(request, response);
             } catch (Exception e) {

@@ -51,8 +51,8 @@
         <h1 style="text-align: center">Vui lòng mua sắm</h1>
     <%
         } else {
-            String result = (String) session.getAttribute("result");
-            if(result.trim().equals("0")) {
+            double result = (double) session.getAttribute("result");
+            if(result==0.0) {
     %>
         <h1 id="please" style="text-align: center">Vui lòng mua sắm</h1>
         <%
@@ -77,6 +77,7 @@
                             <%
                                 String ip = request.getHeader("X-FORWARDED-FOR");
                                 if (ip == null) ip = request.getRemoteAddr();
+
                                 for (CartItem item : cart) {
                                     Product p = new Product(item.getProduct().getId());
                                     Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(p, ip, "/user/cart.jsp");
@@ -89,7 +90,7 @@
                                     <h5><%=entry.getKey().getProductName()%>
                                     </h5>
                                 </td>
-                                <c:set var="unit" value="VND"/>
+                                <c:set var="unit" value=" VND"/>
                                 <td id="pr<%=entry.getKey().getId()%>" class="shoping__cart__price">
                                     <fmt:formatNumber value="<%=entry.getKey().getPrice()%>" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}
                                 </td>
@@ -131,9 +132,11 @@
                         <div class="shoping__continue">
                             <div class="shoping__discount">
                                 <h5>Mã giảm giá</h5>
+                                <span id="errorDiscount" style="color: red;"></span>
                                 <form>
-                                    <input type="text" name="discount" placeholder="Nhập mã giãm giá mua hàng">
-                                    <button class="site-btn">SỬ DỤNG MÃ</button>
+                                    <input type="text" id="discount" name="discount" placeholder="Nhập mã giãm giá mua hàng"
+                                    value="${sessionScope.discount.code}">
+                                    <button id="btnDiscount" class="site-btn">SỬ DỤNG MÃ</button>
                                 </form>
                             </div>
                         </div>
@@ -142,7 +145,7 @@
                         <div class="shoping__checkout">
                             <h5>TỔNG TIỀN GIỎ HÀNG</h5>
                             <ul>
-                                <li>Giảm: <span>0${ Util.formatCurrency(cart.totalPrice - cart.priceSaled) } VND</span></li>
+                                <li>Giảm: <span id="retain">${sessionScope.retain==null?0.0:sessionScope.retain}${unit}</span></li>
                                 <li>Tổng: <span id="result">${sessionScope.result}${unit}</span></li>
                             </ul>
                             <a href="${pageContext.request.contextPath}/user/checkout" class="primary-btn">TIẾN HÀNH THANH TOÁN</a>
@@ -165,6 +168,42 @@
         var header = document.querySelector('.container')
         header.classList.toggle('sticky', window.scrollY > 100)
     })
+</script>
+<script>
+    var context = "${pageContext.request.contextPath}";
+    $(document).ready(function() {
+        $('#btnDiscount').click(function (event) {
+            event.preventDefault();
+            var discountName = $('#discount').val();
+            console.log(discountName)
+            $.ajax({
+                type: 'POST',
+                data: {
+                    discount: discountName,
+                    action: "check"
+                },
+                url: '${request.servletContext.contextPath}/user/cart',
+                success: function (response) {
+                    const retain = document.getElementById("retain");
+                    const result = document.getElementById("result");
+                    if (response.state === "notfound" || response.state === "notempty") {
+                        $('#errorDiscount').html(response.error);
+                    } else {
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Thêm Sản Phẩm Vào Giỏ Hàng Thành Công!",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        $('#errorDiscount').html("");
+                    }
+                    result.innerHTML = response.result + " VND";
+                    retain.innerHTML = response.rect + " VND"
+                }
+            });
+        });
+    });
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -241,13 +280,15 @@
                 const result = document.getElementById("result");
                 const please = document.getElementById("please");
                 const container = document.getElementById("container1");
+                const retain = document.getElementById("retain");
                 badge.innerHTML = response.total;
                 if (response.state === "zero") {
                     please.style.display = "block";
                     please.innerHTML = "Vui lòng mua sắm";
                     container.style.display = "none";
                 } else {
-                    result.innerHTML = response.result + "VND";
+                    result.innerHTML = response.result + " VND";
+                    retain.innerHTML = response.rect + " VND"
                     please.style.display = "none";
                 }
             }

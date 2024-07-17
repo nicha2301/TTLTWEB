@@ -80,8 +80,14 @@ public class OrderDAO extends AbsDAO<Order> implements IOrderDAO {
 
     @Override
     public Order insertOrders(Integer userId, Integer addressId, Integer shipType, Integer discountId, Integer paymentId, String note, Integer statusId) {
-        String sql = "INSERT INTO orders (user_id, address_id, ship_type, discount_id, payment_id, note, status_id) VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO `orders` (`user_id`, `address_id`, `ship_type`, `discount_id`, `payment_id`, `note`, `status_id`) VALUES (?,?,?,?,?,?,?)";
         return insert(sql, Order.class, userId, addressId, shipType, discountId, paymentId, note, statusId);
+    }
+
+    public static void main(String[] args) {
+        IOrderDAO orderDAO = OrderDAO.getInstance();
+        Order order = orderDAO.insertOrders(80, 1, 1, 6, 1, "Test note", 1);
+        System.out.println("Order inserted: " + order);
     }
 
     @Override

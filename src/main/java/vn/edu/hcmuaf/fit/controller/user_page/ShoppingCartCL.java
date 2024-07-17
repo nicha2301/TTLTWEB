@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import vn.edu.hcmuaf.fit.model.*;
+import vn.edu.hcmuaf.fit.service.impl.DiscountService;
 import vn.edu.hcmuaf.fit.service.impl.ProductService;
 
 import java.io.IOException;
@@ -28,16 +29,23 @@ public class ShoppingCartCL extends HttpServlet {
             String ip = request.getHeader("X-FORWARDED-FOR");
             if (ip == null) ip = request.getRemoteAddr();
 
+            Discount discount = (Discount) session.getAttribute("discount");
             List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
             if (!cart.isEmpty()) {
-                int re = 0;
+                double re = 0;
                 for(CartItem i : cart) {
                     Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(i.getProduct().getId()), ip, "/user/cart");
                     for (Product p: products.keySet()) {
                         re += i.getQuantity() * p.getPrice();
                     }
                 }
-                session.setAttribute("result", Utils.formatCurrency(re));
+                if (discount != null) {
+                    double result = re - re * discount.getSalePercent();
+                    session.setAttribute("result", result);
+                    session.setAttribute("retain", (re * discount.getSalePercent()));
+                } else {
+                    session.setAttribute("result", re);
+                }
             }
             request.getRequestDispatcher("/WEB-INF/user/cart.jsp").forward(request, response);
         }
@@ -60,17 +68,58 @@ public class ShoppingCartCL extends HttpServlet {
 
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         ShoppingCart shoppingCart = new ShoppingCart(cart);
+
         Product product = null;
         CartItem cartItem = null;
         Map<Product, List<String>> products;
-        int quantity, re = 0, id;
-        String jsonResponse;
+        int id, quantity;
+        double retain, re = 0.0;
+
+        Discount discount = (Discount) session.getAttribute("discount");
+        if (discount == null) {
+            discount = new Discount();
+            discount.setSalePercent(0.0);
+        }
 
         String ip = request.getHeader("X-FORWARDED-FOR");
         if (ip == null) ip = request.getRemoteAddr();
 
         String action = request.getParameter("action");
         switch (action) {
+        case "check":
+            String code = request.getParameter("discount");
+            for(CartItem i : cart) {
+                products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(i.getProduct().getId()), ip, "/user/cart");
+                for (Product p: products.keySet()) {
+                    re += i.getQuantity() * p.getPrice();
+                }
+            }
+            if (code != null && !code.isEmpty()) {
+                discount = DiscountService.getInstance().getCouponByCode(code);
+                if (discount == null) {
+                    session.removeAttribute("discount");
+                    session.removeAttribute("retain");
+                    out.write("{ \"state\": \"notfound\", \"error\": \"Mã giảm giá không tồn tại!\", \"rect\": \""+0.0+"\", \"result\": \""+re+"\" }");
+                    out.close();
+                    return;
+                }
+//                else if (discount.getStartDate()> Timestamp.valueOf(n))
+                // Kiem tra ma giam gia co het han khong, hay chua den han, hay het luot su dung, hay khong ap dung cho gio hang chua san pham do.
+            } else {
+                out.write("{ \"state\": \"notempty\", \"error\": \"\", \"rect\": \""+ 0.0 +"\", \"result\": \""+re+"\" }");
+                session.removeAttribute("discount");
+                session.removeAttribute("retain");
+                out.close();
+                return;
+            }
+            session.setAttribute("discount", discount);
+            retain = re - discount.getSalePercent() * re;
+            session.setAttribute("result", retain);
+            session.setAttribute("retain", re * discount.getSalePercent());
+            out.write("{\"result\": \""+retain+"\", \"rect\": \"" + re * discount.getSalePercent() +"\"}");
+            out.flush();
+            out.close();
+            break;
         case "delete":
             id = Integer.parseInt(request.getParameter("id"));
             products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(id), ip, "/user/cart");
@@ -80,20 +129,22 @@ public class ShoppingCartCL extends HttpServlet {
             shoppingCart.remove(user, product);
             session.setAttribute("cart", cart);
 
-            for(CartItem i: cart) {
+            for(CartItem i : cart) {
                 products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(i.getProduct().getId()), ip, "/user/cart");
                 for (Product p: products.keySet()) {
-                    re += i.getQuantity()*p.getPrice();
+                    re += i.getQuantity() * p.getPrice();
                 }
             }
+            retain = re - discount.getSalePercent() * re;
 
             if (re==0) {
-                out.write("{ \"state\": \"zero\", \"total\": \""+cart.size()+"\", \"items\": \""+cart+"\" , \"result\": \""+Utils.formatCurrency(re)+"\" }");
+                out.write("{ \"state\": \"zero\", \"total\": \""+cart.size()+"\", \"items\": \""+cart+"\" , \"result\": \""+retain+"\" }");
             } else {
-                out.write("{ \"total\": \""+cart.size()+"\", \"items\": \""+cart+"\" , \"result\": \""+Utils.formatCurrency(re)+"\" }");
+                out.write("{ \"total\": \""+cart.size()+"\", \"items\": \""+cart+"\" , \"result\": \""+retain+"\", \"rect\": \"" + re * discount.getSalePercent() +"\"}");
             }
             session.setAttribute("total", cart.size());
-            session.setAttribute("result", Utils.formatCurrency(re));
+            session.setAttribute("result", retain);
+            session.setAttribute("retain", re * discount.getSalePercent());
             out.flush();
             out.close();
             break;
@@ -117,14 +168,15 @@ public class ShoppingCartCL extends HttpServlet {
                     re += i.getQuantity()*p.getPrice();
                 }
             }
-
+            retain = re - discount.getSalePercent() * re;
             if (re==0) {
-                out.write("{ \"state\": \"zero\", \"total\": \""+cart.size()+"\", \"items\": \""+cart+"\" , \"result\": \""+Utils.formatCurrency(re)+"\" }");
+                out.write("{ \"state\": \"zero\", \"total\": \""+cart.size()+"\", \"items\": \""+cart+"\" , \"result\": \""+retain+"\" }");
             } else {
-                out.write("{ \"total\": \""+cart.size()+"\", \"items\": \""+cart+"\" , \"result\": \""+Utils.formatCurrency(re)+"\" }");
+                out.write("{ \"total\": \""+cart.size()+"\", \"items\": \""+cart+"\" , \"result\": \""+retain+"\", \"rect\": \"" + re * discount.getSalePercent() +"\"}");
             }
             session.setAttribute("total", cart.size());
-            session.setAttribute("result", Utils.formatCurrency(re));
+            session.setAttribute("result", retain);
+            session.setAttribute("retain", re * discount.getSalePercent());
             out.flush();
             out.close();
             break;
@@ -146,6 +198,11 @@ public class ShoppingCartCL extends HttpServlet {
                     return;
                 }
                 quantity = Integer.parseInt(input);
+                if (quantity==0) {
+                    out.write("{\"status\": \"bigger\", \"error\": \"Bạn chỉ được phép thêm số lượng sản phẩm khác 0!\"}");
+                    out.close();
+                    return;
+                }
                 cartItem = new CartItem(user, product, quantity);
             }
             int remain = product.getQuantity();
@@ -154,7 +211,7 @@ public class ShoppingCartCL extends HttpServlet {
                 remain = product.getQuantity() - cartItem.getQuantity();
             } else {
                 for (CartItem item : shoppingCart.getItems()) {
-                    if (item.getProduct().getId() == product.getId() && item.getUser().getId() == user.getId()) {
+                    if (item.getProduct().getId().equals(product.getId()) && item.getUser().getId().equals(user.getId())) {
                         remain = product.getQuantity() - item.getQuantity() - cartItem.getQuantity();
                         count++;
                         break;
@@ -181,9 +238,11 @@ public class ShoppingCartCL extends HttpServlet {
                     re += i.getQuantity()*p.getPrice();
                 }
             }
-            out.write("{ \"total\": \""+cart.size()+"\", \"items\": \""+cart+"\" , \"prefix\": \""+remain+"\" }");
+            retain = re - discount.getSalePercent() * re;
+            out.write("{ \"total\": \""+cart.size()+"\", \"items\": \""+cart+"\" , \"prefix\": \""+remain+"\", \"rect\": \""+ re * discount.getSalePercent()+ "\"}");
             session.setAttribute("total", cart.size());
-            session.setAttribute("result", Utils.formatCurrency(re));
+            session.setAttribute("result", retain);
+            session.setAttribute("retain", re * discount.getSalePercent());
             out.flush();
             out.close();
             break;
