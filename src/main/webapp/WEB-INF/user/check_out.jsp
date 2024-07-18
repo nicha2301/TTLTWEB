@@ -197,7 +197,7 @@
               <label for="momo">
                 MOMO
                 <input type="checkbox" id="momo" name="momo" class="payment-option group-checkbox" data-toggle="collapse" data-target="#momo-code" />
-                <span class="checkmark"  ></span>
+                <span class="checkmark"></span>
               </label>
             </div>
             <span style="color:red; margin-top: 10px;" id="error"></span>
@@ -282,44 +282,72 @@
       var fullNamePhuong = $("#phuong option:selected").data('full-name');
       var email = $('#email').val();
       var atHome = $('#at-home').is(':checked');
-      var cash = $('#cash').is(':checked');
-      var momo = $('#momo').is(':checked');
       var id = '${param.id}';
       var quantity = '${param.quantity}';
-      console.log(fullName, phone, address, fullNameTinh,  fullNameQuan, fullNamePhuong, email, atHome, momo, cash, id, quantity)
-      $.ajax({
-        type: 'POST',
-        data: {
-          fullName: fullName,
-          phone: phone,
-          email: email,
-          tinh: fullNameTinh,
-          quan: fullNameQuan,
-          phuong: fullNamePhuong,
-          address: address,
-          atHome: atHome,
-          momo: momo,
-          cash: cash,
-        },
-        url: '${pageContext.request.contextPath}/user/checkout',
-        success: function (response) {
-          console.log(response)
-          try {
-            if (response.status !== "success") {
-              $('#error').html(response.error);
-            } else {
-              window.location.href = context + "/user/success";
-            }
-          } catch (e) {
-            $('#error').html("Error loading request, please try again!");
-          }
-        },
-        error: function() {
-          $('#error').html("Connection errors. Please check your network and try again!");
-        }
-      });
+      var cash = $('#cash').is(':checked');
+      var momo = $('#momo').is(':checked');
+
+      if (momo) {
+        $.ajax({
+          type: 'POST',
+          data: {
+            fullName: fullName,
+            phone: phone,
+            email: email,
+            tinhText: fullNameTinh,
+            quanText: fullNameQuan,
+            phuongText: fullNamePhuong,
+            txt_inv_addr1: address,
+            txt_inv_customer: "${sessionScope.auth}",
+            atHome: atHome,
+            cash: cash,
+            momo: momo,
+            id: id,
+            quantity: quantity
+          },
+          url: context + '/user/payByVNPay',
+          success: handleResponse,
+          error: handleError
+        });
+      } else if (cash) {
+        $.ajax({
+          type: 'POST',
+          data: {
+            fullName: fullName,
+            phone: phone,
+            email: email,
+            tinh: fullNameTinh,
+            quan: fullNameQuan,
+            phuong: fullNamePhuong,
+            address: address,
+            atHome: atHome,
+            cash: cash,
+            id: id,
+            quantity: quantity
+          },
+          url: context + '/user/checkout',
+          success: handleResponse,
+          error: handleError
+        });
+      } else {
+        $('#error').html("Choose the type of payment");
+      }
     });
+
+    function handleResponse(response) {
+      console.log(response);
+      if (response.status !== "success") {
+        $('#error').html(response.error);
+      } else {
+        window.location.href = context + "/user/success";
+      }
+    }
+
+    function handleError() {
+      $('#error').html("Connection errors. Please check your network and try again!");
+    }
   });
 </script>
+
 </body>
 </html>

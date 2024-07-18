@@ -6,12 +6,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import vn.edu.hcmuaf.fit.model.CartItem;
-import vn.edu.hcmuaf.fit.model.Product;
-import vn.edu.hcmuaf.fit.model.ProductTypes;
-import vn.edu.hcmuaf.fit.model.User;
+import vn.edu.hcmuaf.fit.model.*;
 import vn.edu.hcmuaf.fit.service.impl.CartService;
 import vn.edu.hcmuaf.fit.service.impl.ProductService;
+import vn.edu.hcmuaf.fit.service.impl.WishlistService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,12 +35,16 @@ public class Home extends HttpServlet {
         if (user != null) {
             Integer flag = (Integer) session.getAttribute("flag");
             List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+            List<WishlistItem> wishlist = (List<WishlistItem>) session.getAttribute("wishlist");
             if (flag == 0) {
                 cart = CartService.getInstance().getCartByUser(user);
+                wishlist = WishlistService.getInstance().getWishlistByUser(user);
+                if(wishlist==null) wishlist = new ArrayList<>();
                 flag++;
                 session.setAttribute("flag", flag);
                 session.setAttribute("cart", cart);
                 session.setAttribute("total", cart.size());
+                session.setAttribute("wishlist", wishlist);
                 Integer result = CartService.getInstance().getTotalPrice(user);
                 double re = 0.0;
                 if (result != null) re += result;

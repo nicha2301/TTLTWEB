@@ -77,6 +77,8 @@ public class Checkout extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
 
+        System.out.println("heeloo");
+
         PrintWriter out = response.getWriter();
         String ip = request.getHeader("X-FORWARDED-FOR");
         if (ip == null) ip = request.getRemoteAddr();
@@ -88,15 +90,16 @@ public class Checkout extends HttpServlet {
         String fullName = request.getParameter("fullName");
         String phone = request.getParameter("phone");
         String email= request.getParameter("email");
+
         String tinh = request.getParameter("tinh");
         String quan = request.getParameter("quan");
         String phuong = request.getParameter("phuong");
+
         String address = request.getParameter("address");
         boolean atHome = request.getParameter("atHome") != null;
-        int cash = request.getParameter("cash") == null ? 0 : 1;
-        int momo = request.getParameter("momo") == null ? 0 : 2;
-        int id = request.getParameter("id")==null ? 0 : Integer.parseInt(request.getParameter("id"));
-        int quantity = request.getParameter("quantity")==null ? 0 : Integer.parseInt(request.getParameter("quantity"));
+
+        int id = request.getParameter("id")==null||request.getParameter("id").isEmpty()? 0 : Integer.parseInt(request.getParameter("id"));
+        int quantity = request.getParameter("quantity")==null||request.getParameter("quantity").isEmpty() ? 0 : Integer.parseInt(request.getParameter("quantity"));
         Discount discount = (Discount) session.getAttribute("discount");
 
         boolean ok = true;
@@ -125,11 +128,6 @@ public class Checkout extends HttpServlet {
         if(!ok) {
             out.write("{\"error\":\"Please fill in all information completely\"}");
         } else {
-            if (cash == 0 && momo == 0) {
-                out.write("{\"error\":\"Please choose the type of payment!\"}");
-                out.close();
-                return;
-            }
             if (user != null) {
                 DeliveryAddress dev = new DeliveryAddress(user, fullName, phone, tinh, quan, phuong, address, atHome, true);
                 DeliveryAddress delivery = DeliveryService.getInstance().addDeliveryAddress(dev, ip, "/user/checkout");
@@ -148,8 +146,7 @@ public class Checkout extends HttpServlet {
                 }
 
                 Payment payment = new Payment();
-                if (cash==0) payment.setId(momo);
-                else payment.setId(cash);
+                payment.setId(1);
                 order.setPayment(PaymentService.getInstance().getPaymentById(payment));
                 order.setNote("");
                 OrderStatus status = new OrderStatus();
@@ -165,6 +162,7 @@ public class Checkout extends HttpServlet {
                     }
                      if(quantity != 0) items.add(new OrderItem(order, product, product.getPrice(), quantity));
                      else items.add(new OrderItem(order, product, product.getPrice(), 1));
+                    System.out.println(id + ", " + quantity);
                 } else {
                     for(CartItem i : cart) {
                         Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(i.getProduct(), ip, "/user/checkout");

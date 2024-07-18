@@ -3,7 +3,7 @@ package vn.edu.hcmuaf.fit.service.impl;
 import vn.edu.hcmuaf.fit.dao.impl.WishlistDAO;
 import vn.edu.hcmuaf.fit.model.Product;
 import vn.edu.hcmuaf.fit.model.User;
-import vn.edu.hcmuaf.fit.model.Wishlist;
+import vn.edu.hcmuaf.fit.model.WishlistItem;
 import vn.edu.hcmuaf.fit.service.IWishlistService;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class WishlistService implements IWishlistService {
     }
 
     @Override
-    public List<Wishlist> getWishlistByUser(User user) {
+    public List<WishlistItem> getWishlistByUser(User user) {
         try {
             return WishlistDAO.getInstance().getWishlistByUser(user.getId());
         } catch (Exception e) {
@@ -28,7 +28,7 @@ public class WishlistService implements IWishlistService {
     }
 
     @Override
-    public Wishlist addWishList(User user, Product product) {
+    public WishlistItem addWishList(User user, Product product) {
         try {
             return WishlistDAO.getInstance().addWishList(user.getId(), product.getId());
         } catch (Exception e) {

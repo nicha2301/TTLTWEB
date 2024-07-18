@@ -2,6 +2,7 @@ package vn.edu.hcmuaf.fit.dao.impl;
 
 import vn.edu.hcmuaf.fit.dao.IWishlistDAO;
 import vn.edu.hcmuaf.fit.model.Wishlist;
+import vn.edu.hcmuaf.fit.model.WishlistItem;
 
 import java.util.List;
 
@@ -16,15 +17,15 @@ public class WishlistDAO extends AbsDAO<Wishlist> implements IWishlistDAO {
     }
 
     @Override
-    public List<Wishlist> getWishlistByUser(Integer userId) {
+    public List<WishlistItem> getWishlistByUser(Integer userId) {
         String sql = "SELECT * FROM wishlists WHERE user_id = ?";
-        return query(sql, Wishlist.class, userId);
+        return query(sql, WishlistItem.class, userId);
     }
 
     @Override
-    public Wishlist addWishList(Integer userId, Integer productId) {
+    public WishlistItem addWishList(Integer userId, Integer productId) {
         String sql = "INSERT INTO wishlists (user_id, product_id) VALUES (?,?)";
-        return insert(sql, Wishlist.class, userId, productId);
+        return insert(sql, WishlistItem.class, userId, productId);
     }
 
     @Override
