@@ -30,4 +30,8 @@ public class ProductCategories extends AbsModel implements Serializable {
     public void setGroup(ProductGroups group) {
         this.group = group;
     }
+
+    public ProductCategories(Integer id) {
+        this.id = id;
+    }
 }

@@ -27,15 +27,12 @@ public class SignOut extends HttpServlet {
         HttpSession session = request.getSession(true);
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         User user = (User) session.getAttribute("auth");
-        boolean success = CartService.getInstance().removeCart(user);
-        System.out.println(success + ": heelo");
+        CartService.getInstance().removeCart(user);
         if (!cart.isEmpty()) {
             for (CartItem item : cart) {
                 CartService.getInstance().addIntoCart(item.getUser(), item.getProduct(), item.getQuantity());
-                System.out.println("vo day ha heelo" + cart.size());
             }
         }
-        System.out.println(CartService.getInstance().getCartByUser(user));
         session.invalidate();
         getServletContext().removeAttribute("email");
         getServletContext().removeAttribute("action");

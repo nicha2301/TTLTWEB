@@ -29,8 +29,12 @@ public class DeliveryDAO extends AbsDAO<DeliveryAddress> implements IDeliveryDAO
 
     @Override
     public DeliveryAddress addDeliveryAddress(Integer userId, String fullName, String phone, String province, String district, String ward, String detailAddress, Boolean atHome, Boolean primary) {
-        String sql = "INSERT INTO delivery_address(user_id, full_name, phone, province, district, ward, detail_address, at_home, primary) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO `delivery_address`(`user_id`, `full_name`, `phone`, `province`, `district`, `ward`, `detail_address`, `at_home`, `primary`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         return insert(sql, DeliveryAddress.class, userId, fullName, phone, province, district, ward, detailAddress, atHome?1:0, primary?1:0);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(DeliveryDAO.getInstance().addDeliveryAddress(78, "John", "0384774118", "HN", "tn", "YS", "VB", true, true));
     }
 
     @Override

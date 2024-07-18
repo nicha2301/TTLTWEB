@@ -112,7 +112,6 @@ public class OrderService extends LogDAO<Order> implements IOrderService {
     @Override
     public Map<Order, List<OrderItem>> insertOrders(Order order, List<OrderItem> orderItems, String ip, String address) {
         Map<Order, List<OrderItem>> re = new HashMap<>();
-        List<OrderItem> items = new ArrayList<>();
         try {
             Level level;
             Order success = OrderDAO.getInstance().insertOrders(order.getUser().getId(), order.getAddress().getId(), order.getType().getId(), order.getDiscount().getId(), order.getPayment().getId(), order.getNote(), order.getStatus().getId());
@@ -120,16 +119,9 @@ public class OrderService extends LogDAO<Order> implements IOrderService {
                 order.setAfterData("Add successfully with ID=" + success.getId());
                 level = LevelDAO.getInstance().getLevel(1).get(0);
                 for (OrderItem item : orderItems) {
-                    OrderItem ok = OrderItemDAO.getInstance().addOrderItem(success.getId(), item.getProduct().getId(), item.getQuantity(), item.getOrderPrice());
-                    if(ok!= null) {
-                        items.add(ok);
-                    } else {
-                        order.setAfterData("Add order items failed!");
-                        level = LevelDAO.getInstance().getLevel(3).get(0);
-                        return null;
-                    }
+                    OrderItemDAO.getInstance().addOrderItem(success.getId(), item.getProduct().getId(), item.getQuantity(), item.getOrderPrice());
                 }
-                re.put(success, items);
+                re.put(success, OrderItemDAO.getInstance().getOrderItems(success.getId()));
             } else {
                 order.setAfterData("Add failed. New order isn't created in database");
                 level = LevelDAO.getInstance().getLevel(3).get(0);
@@ -140,6 +132,32 @@ public class OrderService extends LogDAO<Order> implements IOrderService {
             return null;
         }
     }
+
+    public static void main(String[] args) {
+        Order order = new Order();
+        User user = new User();
+        user.setId(80);
+        order.setUser(user);
+        DeliveryAddress a = new DeliveryAddress();
+        a.setId(7);
+        order.setAddress(a);
+        ShippingType type = new ShippingType();
+        type.setId(1);
+        order.setType(type);
+        Payment payment = new Payment();
+        payment.setId(1);
+        order.setPayment(payment);
+        Discount discount = new Discount();
+        discount.setId(6);
+        order.setDiscount(discount);
+        order.setNote("mdlfmfd");
+        order.setStatus(new OrderStatus(1, "New", "mkfdmidf"));
+        List<OrderItem> items = new ArrayList<>();
+        items.add(new OrderItem(order, new Product(1), 10, 50000));
+        items.add(new OrderItem(order, new Product(2), 10, 50000));
+        System.out.println(OrderService.getInstance().insertOrders(order, items, "13839443", "djsiijdsdij"));
+    }
+
 
     @Override
     public boolean updateOrderStatus(Order order, String ip, String address) {

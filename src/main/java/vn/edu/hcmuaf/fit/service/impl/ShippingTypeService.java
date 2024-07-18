@@ -8,6 +8,14 @@ import vn.edu.hcmuaf.fit.service.IShippingTypeService;
 import java.util.List;
 
 public class ShippingTypeService implements IShippingTypeService {
+    private static ShippingTypeService instance;
+
+    public static ShippingTypeService getInstance() {
+        if (instance == null) {
+            instance = new ShippingTypeService();
+        }
+        return instance;
+    }
 
     @Override
     public ShippingType getShippingTypeById(ShippingType type) {
