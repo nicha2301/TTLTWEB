@@ -42,7 +42,7 @@ public class SupplierService extends LogDAO<Supplier> implements ISupplierServic
     public Supplier insertSupplier(Supplier supplier, String ip, String address) {
         try {
             Level level;
-            int activeInt = supplier.getActive() ? 1 : 0;
+
             Supplier success = SupplierDAO.getInstance().insertSupplier(
                     supplier.getSupplierName(),
                     supplier.getContactName(),
