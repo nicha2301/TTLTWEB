@@ -100,7 +100,24 @@ public class Supplier_direct extends HttpServlet {
                 response.getWriter().flush();
                 return;
             }
+        } else if ("delete".equals(action)) {
+            try {
+                Supplier supplierToDelete = new Supplier();
+                supplierToDelete.setId(Integer.valueOf(id));
 
+                boolean deleted = supplierService.deleteSupplier(supplierToDelete, ip, "admin/supplier");
+
+                if (deleted) {
+                    jsonResponse.put("status", "success");
+                    System.out.println("Product with ID " + id + " deleted successfully.");
+                } else {
+                    jsonResponse.put("status", "error");
+                    jsonResponse.put("message", "Failed to delete product.");
+                    System.out.println("Failed to delete product with ID " + id + ".");
+                }
+            } catch (NumberFormatException e) {
+                jsonResponse.put("error", "Invalid number format.");
+            }
         }
 
         out.print(jsonResponse.toJSONString());

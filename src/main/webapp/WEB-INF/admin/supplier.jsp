@@ -356,6 +356,30 @@
                 }
             });
         });
+        $(document).on('click', '.delete-supplier', function (event) {
+            var id = $(this).data('id');
+            var $supplierItem = $(this).closest('.supplier-item');
+            if (confirm('Bạn có chắc chắn muốn xóa san phẩm này không?')) {
+                $.ajax({
+                    type: 'POST',
+                    url: context + '/admin/supplier',
+                    data: {
+                        action: "delete",
+                        id: id,
+                    },
+                    success: function (response) {
+                        if (response.status !== "success") {
+                            alert(response.error);
+                        } else {
+                            $supplierItem.remove();
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                    }
+                });
+            }
+        });
 
 
     })
