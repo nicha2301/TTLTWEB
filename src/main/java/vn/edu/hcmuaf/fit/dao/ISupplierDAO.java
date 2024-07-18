@@ -12,9 +12,10 @@ public interface ISupplierDAO extends GenericDAO<Supplier> {
 
     List<Supplier> getSupplierById(Integer id);
 
-    Supplier insertSupplier(String name, String detail_address, String phone, String email);
+    Supplier insertSupplier(String supplierName, String contactName, String email, String phone, String detailAddress, String imageUrl, Boolean active);
 
-    boolean updateSupplier(Integer id, String name, String email, String phone, String detailAddress);
+    boolean updateSupplier(Integer id, String supplierName, String contactName, String email, String phone, String detailAddress, String imageUrl, Boolean active);
+
 
     boolean deleteSupplier(Integer id);
 }

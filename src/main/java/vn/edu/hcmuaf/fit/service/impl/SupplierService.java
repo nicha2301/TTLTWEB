@@ -42,7 +42,16 @@ public class SupplierService extends LogDAO<Supplier> implements ISupplierServic
     public Supplier insertSupplier(Supplier supplier, String ip, String address) {
         try {
             Level level;
-            Supplier success = SupplierDAO.getInstance().insertSupplier(supplier.getSupplierName(), supplier.getDetailAddress(), supplier.getPhone(), supplier.getEmail());
+            int activeInt = supplier.getActive() ? 1 : 0;
+            Supplier success = SupplierDAO.getInstance().insertSupplier(
+                    supplier.getSupplierName(),
+                    supplier.getContactName(),
+                    supplier.getEmail(),
+                    supplier.getPhone(),
+                    supplier.getDetailAddress(),
+                    supplier.getImageUrl(),
+                    supplier.getActive()
+            );
             if(success != null) {
                 supplier.setAfterData("Add successfully with ID=" + success.getId());
                 level = LevelDAO.getInstance().getLevel(1).get(0);
@@ -58,11 +67,20 @@ public class SupplierService extends LogDAO<Supplier> implements ISupplierServic
     }
 
     @Override
-    public boolean updateSupplier(Supplier supplier, String name, String email, String phone, String detailAddress, String ip, String address) {
+    public boolean updateSupplier(Supplier supplier, String name, String email, String phone, String detailAddress, String imageUrl, Boolean active, String ip, String address) {
         try {
             Level level;
             supplier.setBeforeData("Old info of ID=" + supplier.getId() + " is " + supplier);
-            boolean success = SupplierDAO.getInstance().updateSupplier(supplier.getId(), supplier.getSupplierName(), supplier.getEmail(), supplier.getPhone(), supplier.getDetailAddress());
+            boolean success = SupplierDAO.getInstance().updateSupplier(
+                    supplier.getId(),
+                    supplier.getSupplierName(),
+                    supplier.getContactName(),
+                    supplier.getEmail(),
+                    supplier.getPhone(),
+                    supplier.getDetailAddress(),
+                    supplier.getImageUrl(),
+                    supplier.getActive()
+            );
             if(success) {
                 supplier.setAfterData("New info of ID=" + supplier.getId() + " is updated!");
                 level = LevelDAO.getInstance().getLevel(1).get(0);
@@ -102,4 +120,6 @@ public class SupplierService extends LogDAO<Supplier> implements ISupplierServic
             else return false;
         }
     }
+
+
 }
