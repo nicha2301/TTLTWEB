@@ -19,6 +19,7 @@ import java.util.function.Function;
 
 public class AbsDAO<T> implements GenericDAO<T> {
 
+    // select
     @Override
     public <T> List<T> query(String sql, Class<T> bean, Object... parameters) {
         return JDBIConnector.get().withHandle(handle ->
@@ -26,6 +27,7 @@ public class AbsDAO<T> implements GenericDAO<T> {
         );
     }
 
+    // select with RowMapper
     private <T> List<T> query(String sql, RowMapper<T> rowMapper, Object... parameters) {
         return JDBIConnector.get().withHandle(handle ->
                 handle.select(sql, parameters).map(rowMapper).list()
@@ -40,7 +42,7 @@ public class AbsDAO<T> implements GenericDAO<T> {
         );
     }
 
-    // update, delete
+    // update, delete, insert if you don't want to get T
     @Override
     public boolean update(String sql, Object... parameters) {
         return JDBIConnector.get().withHandle(handle ->
@@ -61,6 +63,7 @@ public class AbsDAO<T> implements GenericDAO<T> {
         }
     }
 
+    // get only value has instance of Integer
     @Override
     public Integer count(String sql, Object... parameters) {
         return JDBIConnector.get().withHandle(handle ->

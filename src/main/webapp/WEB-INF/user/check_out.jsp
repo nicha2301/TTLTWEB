@@ -53,9 +53,8 @@
     <div class="row">
       <div class="col-lg-12">
         <h6>
-          <span class="icon_tag_alt"></span> Đã có mã giảm giá?
-          <a href="javascript:void(0);" onclick="showInputDiscount(this)">nhấn tại đây</a> để nhập mã giảm giá
-          <form style="display: none;" class="align-items-center w-50 mx-auto mt-2">
+          <span class="icon_tag_alt"></span>
+          <form class="d-flex align-items-center w-50 mx-auto mt-2">
             <input type="text" id="discount" class="form-control" placeholder="Nhập mã giảm giá" value="${sessionScope.discount.code}">
             <button type="submit" id="btnDiscount" class="btn btn-success" style="white-space: nowrap">Áp dụng</button>
           </form>
@@ -168,16 +167,16 @@
               </table>
 
               <div class="checkout__order__subtotal">
-                <p>Tổng: ${requestScope.totalNotVoucher} ${unit}</p>
+                Tổng: <br><strong id="result">${requestScope.totalNotVoucher} ${unit}</strong>
               </div>
               <div class="checkout__order__subtotal">
-                <p>Giảm: ${sessionScope.retain==null?0.0:sessionScope.retain} ${unit}</p>
+                Giảm: <br><strong id="retain">${sessionScope.retain==null?0.0:sessionScope.retain} ${unit}</strong>
               </div>
               <div class="checkout__order__subtotal">
-                <p>Phí vận chuyển:  <fmt:formatNumber value='<%=request.getAttribute("priceShipment")%>' type="number" maxFractionDigits="0" pattern="#,##0"/>${unit}</p>
+                Phí vận chuyển: <br><strong><%=request.getAttribute("priceShipment")%> ${unit}</strong>
               </div>
               <div class="checkout__order__total">
-                <p style="color: red;">Tổng tiền thanh toán:  <fmt:formatNumber value='<%=request.getAttribute("totalPrice")%>' type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}</p>
+                Tổng tiền thanh toán: <br><strong id="all" style="color: red;"><%=request.getAttribute("totalPrice")%> ${unit}</strong>
               </div>
             </div>
             <span style="color:red; margin-top: 10px;" id="error"></span>
@@ -200,26 +199,34 @@
 <script src="/assets/user/js/thuvien/main.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://esgoo.net/scripts/jquery.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   var context = "${pageContext.request.contextPath}";
-  function showInputDiscount(element) {
-    var form = element.nextElementSibling;
-    form.style.display = 'flex';
-  }
   $(document).ready(function() {
     $('#btnDiscount').click(function (event) {
       event.preventDefault();
       var code = $('#discount').val();
+      var id = '${param.id}';
+      var quantity = '${param.quantity}';
       $.ajax({
-        type: 'GET',
+        type: 'POST',
         data: {
-          discountCode: code
+          discountCode: code,
+          action: "check",
+          id: id,
+          quantity: quantity
         },
         url: '${request.servletContext.contextPath}/user/checkout',
         success: function (response) {
           const retain = document.getElementById("retain");
           const result = document.getElementById("result");
-          if (response.state === "notfound" || response.state === "notempty") {
+          const all = document.getElementById("all");
+          if (response.state === "notfound" || response.state === "notempty" || response.state === "outquantity") {
+            $('#errorDiscount').html(response.error);
+            all.innerHTML = response.last + " VND";
+            result.innerHTML = response.result + " VND";
+            retain.innerHTML = response.rect + " VND"
+          } else if (response.state === "duplicate") {
             $('#errorDiscount').html(response.error);
           } else {
             Swal.fire({
@@ -230,15 +237,15 @@
               timer: 1500
             });
             $('#errorDiscount').html("");
+            all.innerHTML = response.last + " VND";
+            result.innerHTML = response.result + " VND";
+            retain.innerHTML = response.rect + " VND"
           }
-          result.innerHTML = response.result + " VND";
-          retain.innerHTML = response.rect + " VND"
         }
       });
     });
   });
 </script>
-
 <script>
   $(document).ready(function () {
     $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {

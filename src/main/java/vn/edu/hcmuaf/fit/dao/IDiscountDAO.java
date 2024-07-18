@@ -25,4 +25,10 @@ public interface IDiscountDAO extends GenericDAO<Discount> {
 
     boolean editCouponByCode(String code, String name, String des, Double percent, Integer quantity, Timestamp startTimestamp, Timestamp TimestampEnd);
 
+    boolean setQuantity(String code);
+
+    Integer getQuantity(String code);
+
+    List<Discount> isOutOfUse(String code);
+
 }

@@ -96,4 +96,22 @@ public class DiscountDAO extends AbsDAO<Discount> implements IDiscountDAO {
         String sql = "UPTimestamp `discounts` SET `discountName`=?, `description`=?, `sale_percent`=?, `quantity`=?, `startTimestamp`=?, `expirationTimestamp`=? WHERE code=?";
         return update(sql, name, des, percent, quantity, startTimestamp, TimestampEnd, code);
     }
+
+    @Override
+    public boolean setQuantity(String code) {
+        String sql = "UPDATE discounts SET quantity = quantity - 1 WHERE code =? AND quantity > ?";
+        return update(sql, code, 0);
+    }
+
+    @Override
+    public Integer getQuantity(String code) {
+        String sql = "SELECT quantity FROM discounts WHERE code = ?";
+        return count(sql, code);
+    }
+
+    @Override
+    public List<Discount> isOutOfUse(String code) {
+        String sql = "SELECT * FROM discounts WHERE code = ? AND quantity = ?";
+        return query(sql, Discount.class, code, 0);
+    }
 }

@@ -40,4 +40,8 @@ public interface IProductService {
 
     Product addProduct(Product p, String ip, String address);
 
+    boolean setQuantity(Product p, String ip, String address);
+
+    List<Product> getOutOfProducts();
+
 }

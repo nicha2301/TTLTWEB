@@ -95,16 +95,29 @@ public class ShoppingCartCL extends HttpServlet {
                 }
             }
             if (code != null && !code.isEmpty()) {
-                discount = DiscountService.getInstance().getCouponByCode(code);
-                if (discount == null) {
-                    session.removeAttribute("discount");
-                    session.removeAttribute("retain");
-                    out.write("{ \"state\": \"notfound\", \"error\": \"Mã giảm giá không tồn tại!\", \"rect\": \""+0.0+"\", \"result\": \""+re+"\" }");
+                if (discount.getCode().equalsIgnoreCase(code)) {
+                    out.write("{\"state\":\"duplicate\", \"error\":\"Ban da nhap ma nay truoc do!\"}");
+                    out.flush();
                     out.close();
                     return;
+                } else {
+                    discount = DiscountService.getInstance().getCouponByCode(code);
+                    if (discount == null) {
+                        session.removeAttribute("discount");
+                        session.removeAttribute("retain");
+                        out.write("{ \"state\": \"notfound\", \"error\": \"Mã giảm giá không tồn tại!\", \"rect\": \""+0.0+"\", \"result\": \""+re+"\" }");
+                        out.close();
+                        return;
+                    } else {
+                        if (discount.getQuantity()==0) {
+                            session.removeAttribute("discount");
+                            session.removeAttribute("retain");
+                            out.write("{ \"state\": \"outquantity\", \"error\": \"Mã giảm giá đã hết lượt!\", \"rect\": \""+0.0+"\", \"result\": \""+re+"\" }");
+                            out.close();
+                            return;
+                        }
+                    }
                 }
-//                else if (discount.getStartDate()> Timestamp.valueOf(n))
-                // Kiem tra ma giam gia co het han khong, hay chua den han, hay het luot su dung, hay khong ap dung cho gio hang chua san pham do.
             } else {
                 out.write("{ \"state\": \"notempty\", \"error\": \"\", \"rect\": \""+ 0.0 +"\", \"result\": \""+re+"\" }");
                 session.removeAttribute("discount");
