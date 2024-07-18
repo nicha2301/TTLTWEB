@@ -136,7 +136,7 @@
                                 <form>
                                     <input type="text" id="discount" name="discount" placeholder="Nhập mã giãm giá mua hàng"
                                     value="${sessionScope.discount.code}">
-                                    <button id="btnDiscount" class="site-btn">SỬ DỤNG MÃ</button>
+                                    <button id="btnDiscount" class="site-btn">LƯU MÃ</button>
                                 </form>
                             </div>
                         </div>
@@ -175,7 +175,6 @@
         $('#btnDiscount').click(function (event) {
             event.preventDefault();
             var discountName = $('#discount').val();
-            console.log(discountName)
             $.ajax({
                 type: 'POST',
                 data: {

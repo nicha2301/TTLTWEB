@@ -42,48 +42,47 @@ public class WishlistServlet extends HttpServlet {
             out.close();
             return;
         }
-
         List<WishlistItem> wishlist = (List<WishlistItem>) session.getAttribute("wishlist");
         Wishlist inventory = new Wishlist(wishlist);
         String productId = request.getParameter("productId");
         String action = request.getParameter("action");
         switch (action) {
-            case "add":
-                if (productId != null && !productId.isEmpty()) {
-                    Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(Integer.parseInt(productId)), ip, "/user/wishlist");
-                    for (Product product : products.keySet()) {
-                        inventory.add(new WishlistItem(user, product));
-                    }
-                    session.setAttribute("wishlist", wishlist);
+        case "add":
+            if (productId != null && !productId.isEmpty()) {
+                Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(Integer.parseInt(productId)), ip, "/user/wishlist");
+                for (Product product : products.keySet()) {
+                    inventory.add(new WishlistItem(user, product));
+                }
+                session.setAttribute("wishlist", wishlist);
+                out.write("{ \"status\": \"success\"}");
+            }
+            out.flush();
+            out.close();
+            break;
+        case "remove":
+            if (productId != null && !productId.isEmpty()) {
+                Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(Integer.parseInt(productId)), ip, "/user/wishlist");
+                for (Product product : products.keySet()) {
+                    inventory.remove(new WishlistItem(user, product));
+                }
+                session.setAttribute("wishlist", wishlist);
+                int size = wishlist.isEmpty() ? 0 : wishlist.size();
+                if (size==0) {
+                    out.write("{ \"status\": \"success\", \"size\": \""+size+"\"}");
+                } else {
                     out.write("{ \"status\": \"success\"}");
                 }
-                out.flush();
-                out.close();
-                break;
-            case "remove":
-                if (productId != null && !productId.isEmpty()) {
-                    Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(Integer.parseInt(productId)), ip, "/user/wishlist");
-                    for (Product product : products.keySet()) {
-                        inventory.remove(new WishlistItem(user, product));
-                    }
-                    session.setAttribute("wishlist", wishlist);
-                    int size = wishlist.isEmpty() ? 0 : wishlist.size();
-                    if (size==0) {
-                        out.write("{ \"status\": \"success\", \"size\": \""+size+"\"}");
-                    } else {
-                        out.write("{ \"status\": \"success\"}");
-                    }
-                }
-                out.flush();
-                out.close();
-                break;
-            case "clear":
-                // Clear wishlist
-                // ...
-                break;
-            default:
-                out.write("{\"message\": \"Invalid action\"}");
-                break;
+            }
+            out.flush();
+            out.close();
+            break;
+        case "clear":
+            // Clear wishlist
+            // ...
+            break;
+        default:
+            out.write("{\"message\": \"Invalid action\"}");
+            break;
         }
     }
 }

@@ -1,8 +1,6 @@
 <%@ page import="vn.edu.hcmuaf.fit.model.Product" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="vn.edu.hcmuaf.fit.service.impl.ProductService" %>
-<%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
-<%@ page import="vn.edu.hcmuaf.fit.model.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/common/taglib.jsp" %>
 <!DOCTYPE html>
@@ -29,20 +27,17 @@
     table {
       width: 100%;
       border-collapse: separate;
-      border-spacing: 0 10px; /* 0px ngang và 10px dọc */
+      border-spacing: 0 10px;
     }
-
     table tr {
-      background-color: #f9f9f9; /* Màu nền cho mỗi hàng */
+      background-color: #f9f9f9;
     }
-
     table th, table td {
-      padding: 8px; /* Đệm cho các ô */
-      text-align: left; /* Căn lề trái cho văn bản trong ô */
+      padding: 8px;
+      text-align: left;
     }
-
     table th {
-      background-color: #f2f2f2; /* Màu nền cho tiêu đề bảng */
+      background-color: #f2f2f2;
     }
   </style>
 </head>
@@ -59,18 +54,17 @@
       <div class="col-lg-12">
         <h6>
           <span class="icon_tag_alt"></span> Đã có mã giảm giá?
-          <a href="${pageContext.request.contextPath}/user/cart">nhấn tại đây</a> để nhập mã giảm giá
-          <form class=" d-flex align-items-center w-50 mx-auto mt-2">
-            <input type="text" class="form-control" placeholder="Nhập mã giảm giá">
-            <button type="submit" class="btn btn-success" style="white-space: nowrap">Áp dụng</button>
+          <a href="javascript:void(0);" onclick="showInputDiscount(this)">nhấn tại đây</a> để nhập mã giảm giá
+          <form style="display: none;" class="align-items-center w-50 mx-auto mt-2">
+            <input type="text" id="discount" class="form-control" placeholder="Nhập mã giảm giá" value="${sessionScope.discount.code}">
+            <button type="submit" id="btnDiscount" class="btn btn-success" style="white-space: nowrap">Áp dụng</button>
           </form>
+          <span id="errorDiscount" style="color: red;"></span>
         </h6>
-
       </div>
     </div>
     <h4>Chi tiết đơn hàng</h4>
     <form>
-
       <div class="row">
         <div class="col-lg-5 col-md-6">
           <div class="row">
@@ -87,30 +81,28 @@
               </div>
             </div>
           </div>
-
           <div class="checkout__input">
             <p>Địa chỉ<span>*</span></p>
             <input type="text" id="address" placeholder="Số nhà / Đường" class="checkout__input__add" required />
           </div>
-
           <div class="checkout__input">
             <p>Tỉnh / Thành phố<span>*</span></p>
             <select class="form-control" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
-              <option value="0">Tỉnh Thành</option>
+              <option value="0">--Chọn Tỉnh/Thành phố--</option>
             </select>
           </div>
 
           <div class="checkout__input">
             <p>Huyện / Quận<span>*</span></p>
             <select class="form-control" id="quan" name="quan" title="Chọn Quận Huyện">
-              <option value="0">Quận Huyện</option>
+              <option value="0">--Chọn Quận/ Huyện--</option>
             </select>
           </div>
 
           <div class="checkout__input">
             <p>Xã / Phường / Thị trấn<span>*</span></p>
             <select class="form-control" id="phuong" name="phuong" title="Chọn Phường Xã">
-              <option value="0">Phường Xã</option>
+              <option value="0">--Chọn Phường/ Xã/ Thị trấn--</option>
             </select>
           </div>
 
@@ -138,7 +130,6 @@
               <%
                 String ip = request.getHeader("X-FORWARDED-FOR");
                 if (ip == null) ip = request.getRemoteAddr();
-                double result = (double) session.getAttribute("result");
                 List<CartItem> temp = (List<CartItem>) request.getAttribute("temp");
                 if (temp == null || temp.isEmpty()) {
                   temp = cart;
@@ -177,7 +168,10 @@
               </table>
 
               <div class="checkout__order__subtotal">
-                <p>Tổng: <%=result%> ${unit}</p>
+                <p>Tổng: ${requestScope.totalNotVoucher} ${unit}</p>
+              </div>
+              <div class="checkout__order__subtotal">
+                <p>Giảm: ${sessionScope.retain==null?0.0:sessionScope.retain} ${unit}</p>
               </div>
               <div class="checkout__order__subtotal">
                 <p>Phí vận chuyển:  <fmt:formatNumber value='<%=request.getAttribute("priceShipment")%>' type="number" maxFractionDigits="0" pattern="#,##0"/>${unit}</p>
@@ -186,23 +180,12 @@
                 <p style="color: red;">Tổng tiền thanh toán:  <fmt:formatNumber value='<%=request.getAttribute("totalPrice")%>' type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}</p>
               </div>
             </div>
-            <div class="checkout__input__checkbox" >
-              <label for="cash">
-                Cash on delivery (COD)
-                <input type="checkbox" id="cash" name="cash" class="payment-option group-checkbox" />
-                <span class="checkmark"></span>
-              </label>
-            </div>
-            <div class="checkout__input__checkbox">
-              <label for="momo">
-                MOMO
-                <input type="checkbox" id="momo" name="momo" class="payment-option group-checkbox" data-toggle="collapse" data-target="#momo-code" />
-                <span class="checkmark"></span>
-              </label>
-            </div>
             <span style="color:red; margin-top: 10px;" id="error"></span>
             <div>
                 <button id="btn_submit" type="submit"  class="site-btn">Đặt hàng</button>
+            </div>
+            <div>
+              <button id="btn_vnpay" type="submit"  class="site-btn">Thanh toán ngay</button>
             </div>
           </div>
         </div>
@@ -218,21 +201,44 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://esgoo.net/scripts/jquery.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var checkboxes = document.querySelectorAll('.group-checkbox');
-    checkboxes.forEach(function(checkbox) {
-      checkbox.addEventListener('change', function() {
-        if (this.checked) {
-          checkboxes.forEach(function(box) {
-            if (box !== checkbox) {
-              box.checked = false;
-            }
-          });
+  var context = "${pageContext.request.contextPath}";
+  function showInputDiscount(element) {
+    var form = element.nextElementSibling;
+    form.style.display = 'flex';
+  }
+  $(document).ready(function() {
+    $('#btnDiscount').click(function (event) {
+      event.preventDefault();
+      var code = $('#discount').val();
+      $.ajax({
+        type: 'GET',
+        data: {
+          discountCode: code
+        },
+        url: '${request.servletContext.contextPath}/user/checkout',
+        success: function (response) {
+          const retain = document.getElementById("retain");
+          const result = document.getElementById("result");
+          if (response.state === "notfound" || response.state === "notempty") {
+            $('#errorDiscount').html(response.error);
+          } else {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Thêm Sản Phẩm Vào Giỏ Hàng Thành Công!",
+              showConfirmButton: false,
+              timer: 1500
+            });
+            $('#errorDiscount').html("");
+          }
+          result.innerHTML = response.result + " VND";
+          retain.innerHTML = response.rect + " VND"
         }
       });
     });
   });
 </script>
+
 <script>
   $(document).ready(function () {
     $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
@@ -244,7 +250,6 @@
     });
     $("#tinh").change(function (e) {
       var idtinh = $(this).val();
-      var fullNameTinh = $("#tinh option:selected").data('full-name');
       $.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
         if (data_quan.error == 0) {
           $("#quan").empty().append('<option value="0">--Chọn Quận Huyện--</option>');
@@ -257,7 +262,6 @@
     });
     $("#quan").change(function (e) {
       var idquan = $(this).val();
-      var fullNameQuan = $("#quan option:selected").data('full-name');
       $.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
         if (data_phuong.error == 0) {
           $("#phuong").empty().append('<option value="0">--Chọn Phường/ Xã/ Thị trấn--</option>');
@@ -270,7 +274,63 @@
   });
 </script>
 <script>
-  var context = "${pageContext.request.contextPath}";
+  document.getElementById("btn_vnpay").addEventListener("click",function () {
+    const fullName = document.getElementById("full_name").value;
+    const phone = document.getElementById("phone").value;
+    const address = document.getElementById("address").value;
+    const email = document.getElementById("email").value;
+    const atHome = document.getElementById("at-home").value;
+    const id = '${param.id}';
+    const quantity = '${param.quantity}';
+    const amount = Math.round(<%=request.getAttribute("totalPrice")%>);
+    console.log(amount);
+    const tinhText = document.getElementById('tinh').options[document.getElementById('tinh').selectedIndex].text;
+    const quanText= document.getElementById('quan').options[document.getElementById('quan').selectedIndex].text;
+    const phuongText = document.getElementById('phuong').options[document.getElementById('phuong').selectedIndex].text;
+    const data = {
+      tinhText: tinhText,
+      quanText: quanText,
+      phuongText: phuongText,
+      vnp_OrderInfo: "Thanh toan don hang",
+      ordertype: "Sample order type",
+      amount: amount,
+      language: "vn",
+      txt_billing_mobile: phone,
+      txt_billing_email: email,
+      txt_billing_fullname: fullName,
+      txt_inv_addr1: address,
+      txt_bill_city: tinhText,
+      txt_bill_country: "Vietnam",
+      txt_bill_state: "HN",
+      txt_inv_mobile: phone,
+      txt_inv_email: email,
+      txt_inv_customer: '${sessionScope.auth.fullName}',
+      txt_inv_addr1: address,
+      txt_inv_company: "Cong Ty TNHH Thuong Mai va Dich Vu Phat Trien Tien Thang Pet",
+      txt_inv_taxcode: "123456789",
+      cbo_inv_type: "I",
+      atHome: atHome,
+      id: id,
+      quantity: quantity
+    };
+    const formBody = Object.keys(data).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key])).join('&');
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "http://localhost:8080/user/vnpay", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        const response = JSON.parse(xhr.responseText);
+        if (response.code === "00") {
+          window.location.href = response.data;
+        } else {
+          alert("Error: " + response.message);
+        }
+      }
+    };
+    xhr.send(formBody);
+  })
+</script>
+<script>
   $(document).ready(function() {
     $('#btn_submit').click(function (event) {
       event.preventDefault();
@@ -284,70 +344,39 @@
       var atHome = $('#at-home').is(':checked');
       var id = '${param.id}';
       var quantity = '${param.quantity}';
-      var cash = $('#cash').is(':checked');
-      var momo = $('#momo').is(':checked');
-
-      if (momo) {
-        $.ajax({
-          type: 'POST',
-          data: {
-            fullName: fullName,
-            phone: phone,
-            email: email,
-            tinhText: fullNameTinh,
-            quanText: fullNameQuan,
-            phuongText: fullNamePhuong,
-            txt_inv_addr1: address,
-            txt_inv_customer: "${sessionScope.auth}",
-            atHome: atHome,
-            cash: cash,
-            momo: momo,
-            id: id,
-            quantity: quantity
-          },
-          url: context + '/user/payByVNPay',
-          success: handleResponse,
-          error: handleError
-        });
-      } else if (cash) {
-        $.ajax({
-          type: 'POST',
-          data: {
-            fullName: fullName,
-            phone: phone,
-            email: email,
-            tinh: fullNameTinh,
-            quan: fullNameQuan,
-            phuong: fullNamePhuong,
-            address: address,
-            atHome: atHome,
-            cash: cash,
-            id: id,
-            quantity: quantity
-          },
-          url: context + '/user/checkout',
-          success: handleResponse,
-          error: handleError
-        });
-      } else {
-        $('#error').html("Choose the type of payment");
-      }
+      $.ajax({
+        type: 'POST',
+        data: {
+          fullName: fullName,
+          phone: phone,
+          email: email,
+          tinh: fullNameTinh,
+          quan: fullNameQuan,
+          phuong: fullNamePhuong,
+          address: address,
+          atHome: atHome,
+          id: id,
+          quantity: quantity
+        },
+        url: context + '/user/checkout',
+        success: handleResponse,
+        error: handleError
+      });
     });
-
     function handleResponse(response) {
       console.log(response);
-      if (response.status !== "success") {
-        $('#error').html(response.error);
-      } else {
+      if (response.status === "success") {
         window.location.href = context + "/user/success";
+      } else if(response.status === "failed") {
+        window.location.href = context + "/user/signin";
+      } else {
+        $('#error').html(response.error);
       }
     }
-
     function handleError() {
       $('#error').html("Connection errors. Please check your network and try again!");
     }
   });
 </script>
-
 </body>
 </html>

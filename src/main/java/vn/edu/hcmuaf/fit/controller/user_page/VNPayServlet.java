@@ -9,30 +9,40 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import vn.edu.hcmuaf.fit.controller.user_page.VNPayService.VnpayConfig;
+import vn.edu.hcmuaf.fit.model.*;
+import vn.edu.hcmuaf.fit.service.impl.*;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@WebServlet("/user/payByVNPay")
-public class PayByVN extends HttpServlet {
+@WebServlet("/user/vnpay")
+public class VNPayServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.getWriter().write("Hello, this is a GET request. Please use POST method to submit data.");
+        this.doPost(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+
         try {
             HttpSession session = request.getSession(true);
-            String tinhText=request.getParameter("tinhText");
-            String quanText=request.getParameter("quanText");
-            String phuongText=request.getParameter("phuongText");
-            String homeNumber=request.getParameter("txt_inv_addr1");
-            String address = tinhText + ", " + quanText + ", " + phuongText+","+homeNumber;
+
+            String tinhText = request.getParameter("tinhText");
+            String quanText = request.getParameter("quanText");
+            String phuongText = request.getParameter("phuongText");
+            String homeNumber = request.getParameter("txt_inv_addr1");
+
+            String address = tinhText + ", " + quanText + ", " + phuongText+ "," + homeNumber;
             session.setAttribute("address", address);
             session.setAttribute("txt_inv_customer", request.getParameter("txt_inv_customer"));
             session.setAttribute("txt_billing_mobile", request.getParameter("txt_billing_mobile"));
@@ -46,7 +56,10 @@ public class PayByVN extends HttpServlet {
             String vnp_IpAddr = VnpayConfig.getIpAddress(request);
             String vnp_TmnCode = VnpayConfig.vnp_TmnCode;
 
-            long amount = Integer.parseInt(request.getParameter("amount")) * 100;
+            double result = Double.parseDouble(request.getParameter("amount"));
+
+            long amount = (long) (result * 100);
+            System.out.println(amount);
             Map<String, String> vnp_Params = new HashMap<>();
             vnp_Params.put("vnp_Version", vnp_Version);
             vnp_Params.put("vnp_Command", vnp_Command);
@@ -83,7 +96,7 @@ public class PayByVN extends HttpServlet {
             vnp_Params.put("vnp_Bill_Mobile", request.getParameter("txt_billing_mobile"));
             vnp_Params.put("vnp_Bill_Email", request.getParameter("txt_billing_email"));
             String fullName = (request.getParameter("txt_billing_fullname")).trim();
-            if (fullName != null && !fullName.isEmpty()) {
+            if (!fullName.isEmpty()) {
                 int idx = fullName.indexOf(' ');
                 String firstName = fullName.substring(0, idx);
                 String lastName = fullName.substring(fullName.lastIndexOf(' ') + 1);
@@ -104,6 +117,7 @@ public class PayByVN extends HttpServlet {
             vnp_Params.put("vnp_Inv_Company", request.getParameter("txt_inv_company"));
             vnp_Params.put("vnp_Inv_Taxcode", request.getParameter("txt_inv_taxcode"));
             vnp_Params.put("vnp_Inv_Type", request.getParameter("cbo_inv_type"));
+
             //Build data to hash and querystring
             List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
             Collections.sort(fieldNames);
@@ -128,6 +142,76 @@ public class PayByVN extends HttpServlet {
                     }
                 }
             }
+
+            // Database saving to localhost
+            String ip = request.getHeader("X-FORWARDED-FOR");
+            if (ip == null) ip = request.getRemoteAddr();
+            String phone = request.getParameter("txt_inv_mobile");
+            boolean atHome = request.getParameter("atHome") != null;
+            int id = request.getParameter("id")==null||request.getParameter("id").isEmpty()? 0 : Integer.parseInt(request.getParameter("id"));
+            int quantity = request.getParameter("quantity")==null||request.getParameter("quantity").isEmpty() ? 0 : Integer.parseInt(request.getParameter("quantity"));
+
+            Discount discount = (Discount) session.getAttribute("discount");
+            List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+            User user = (User) session.getAttribute("auth");
+
+            DeliveryAddress dev = new DeliveryAddress(user, fullName, phone, tinhText, quanText, phuongText, address, atHome, true);
+            DeliveryAddress delivery = DeliveryService.getInstance().addDeliveryAddress(dev, ip, "/user/checkout");
+            Order order = new Order();
+            order.setUser(user);
+            order.setAddress(delivery);
+
+            ShippingType shippingType = new ShippingType();
+            shippingType.setId(1);
+            order.setType(shippingType);
+            if(discount!=null) order.setDiscount(discount);
+            else order.setDiscount(new Discount());
+
+            Payment payment = new Payment();
+            payment.setId(3);
+            order.setPayment(PaymentService.getInstance().getPaymentById(payment));
+            order.setNote("");
+
+            OrderStatus status = new OrderStatus();
+            status.setId(1);
+            order.setStatus(status);
+
+            List<OrderItem> items = new ArrayList<>();
+            if (id != 0) {
+                Product product = null;
+                Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(id), ip, "/user/checkout");
+                for (Product p: products.keySet()) {
+                    product = p;
+                }
+                if(quantity != 0) items.add(new OrderItem(order, product, product.getPrice(), quantity));
+                else items.add(new OrderItem(order, product, product.getPrice(), 1));
+            } else {
+                for(CartItem i : cart) {
+                    Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(i.getProduct(), ip, "/user/checkout");
+                    for (Product p: products.keySet()) {
+                        items.add(new OrderItem(order, p, p.getPrice(), i.getQuantity()));
+                    }
+                }
+            }
+            Map<Order, List<OrderItem>> map = OrderService.getInstance().insertOrders(order, items, ip, "/user/checkout");
+
+            if (map==null || map.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                out.write("{\"code\":\"99\",\"message\":\"Error: insert into database failed!\"}");
+                out.flush();
+                out.close();
+                return;
+            } else {
+                if (id == 0) {
+                    cart.clear();
+                    session.setAttribute("cart", cart);
+                    CartService.getInstance().removeCart(user);
+                    session.setAttribute("total", 0);
+                }
+                session.removeAttribute("discount");
+                session.removeAttribute("retain");
+                session.removeAttribute("result");
+            }
             String queryUrl = query.toString();
             String vnp_SecureHash = VnpayConfig.hmacSHA512(VnpayConfig.vnp_HashSecret, hashData.toString());
             queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
@@ -139,12 +223,13 @@ public class PayByVN extends HttpServlet {
             Gson gson = new Gson();
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(gson.toJson(job));
+            out.write(gson.toJson(job));
         } catch (Exception e) {
-            e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"code\":\"99\",\"message\":\"Error: " + e.getMessage() + "\"}");
+            out.write("{\"code\":\"99\",\"message\":\"Error: " + e.getMessage() + "\"}");
+        } finally {
+            out.flush();
+            out.close();
         }
     }
-
 }
