@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Payment implements Serializable {
      Integer id;
-     String payName;
+     String name;
      String description;
      Timestamp remainingTime;
 

@@ -29,6 +29,15 @@ public class OrderService extends LogDAO<Order> implements IOrderService {
     }
 
     @Override
+    public Order getOrderStatus(Order od) {
+        try {
+            return OrderDAO.getInstance().getOrderStatus(od);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
     public Map<Order, List<OrderItem>> loadOrdersByStatus(OrderStatus status) {
         try {
             return OrderDAO.getInstance().loadOrdersByStatus(status.getId());
@@ -251,4 +260,5 @@ public class OrderService extends LogDAO<Order> implements IOrderService {
             return false;
         }
     }
+
 }

@@ -41,4 +41,5 @@ public interface IOrderDAO extends GenericDAO<Order> {
 
     boolean updateDelivery(Integer orderId, Integer delivery);
 
+    Order getOrderStatus(Order od);
 }

@@ -1,5 +1,6 @@
 package vn.edu.hcmuaf.fit.controller.admin;
 
+import org.json.JSONArray;
 import org.json.simple.JSONObject;
 import vn.edu.hcmuaf.fit.dao.impl.DiscountDAO;
 import jakarta.servlet.ServletException;
@@ -99,6 +100,20 @@ public class CouponCode extends HttpServlet {
             coupon = new Discount();
             coupon.setId(Integer.valueOf(id));
             DiscountService.getInstance().delCoupon(coupon, ip, "admin/coupon-code");
+        } else if ("listAll".equals(action)) {
+            List<Discount> coupons = DiscountService.getInstance().getAllCoupons();
+            JSONArray jsonArray = new JSONArray();
+            for (Discount cp : coupons) {
+                JSONObject couponJson = new JSONObject();
+                couponJson.put("id", cp.getId());
+                couponJson.put("name", cp.getDiscountName());
+                couponJson.put("salePercent", cp.getSalePercent());
+                couponJson.put("quantity", cp.getQuantity());
+                couponJson.put("startDate", cp.getStartDate());
+                couponJson.put("expirationDate", cp.getExpirationDate());
+                jsonArray.put(couponJson);
+            }
+            jsonResponse.put("coupons", jsonArray);
         }
 
         out.print(jsonResponse.toJSONString());
