@@ -199,9 +199,10 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
     public boolean updateProduct(Integer id, String productName, Integer categoryId, Double percent,
                                  Integer price, Integer quantity, String purpose, String contraindications,
                                  String ingredients, String dosage, String instructions, String warrantyPeriod,
-                                 String storageCondition, Integer typeId, Integer supplierId) {
-        String sql = "UPDATE `products` SET productName =?, cate_id =?, sale_percent =?, price =?, quantity =?, purpose =?, contraindications =?, ingredients =?, dosage =?, instructions =?, warrantyPeriod =?, storageCondition =?, type_id =?, supplier_id =? WHERE id =?";
-        return update(sql, productName, categoryId, percent, price, quantity, purpose, contraindications, ingredients, dosage, instructions, warrantyPeriod, storageCondition, typeId, supplierId, id);
+                                 String storageCondition, Integer typeId, Integer supplierId, Boolean active) {
+        String sql = "UPDATE `products` SET productName =?, cate_id =?, sale_percent =?, price =?, quantity =?, purpose =?, contraindications =?, ingredients =?, dosage =?, instructions =?, warrantyPeriod =?, storageCondition =?, type_id =?, supplier_id =?, active =? WHERE id =?";
+        int activeInt = (active != null && active) ? 1 : 0;
+        return update(sql, productName, categoryId, percent, price, quantity, purpose, contraindications, ingredients, dosage, instructions, warrantyPeriod, storageCondition, typeId, supplierId, activeInt, id);
     }
 
     /**
@@ -225,7 +226,8 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
                               String ingredients, String dosage, String instructions, String warrantyPeriod,
                               String storageCondition, Integer typeId, Integer supplierId, Boolean active) {
         String sql = "INSERT INTO `products`(`productName`, `cate_id`, `sale_percent`, `price`, `quantity`, `purpose`, `contraindications`, `ingredients`, `dosage`, `instructions`, `warrantyPeriod`, `storageCondition`, `type_id`, `supplier_id`, `active`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        return insert(sql, Product.class, productName, categoryId, percent, price, quantity, purpose, contraindications, ingredients, dosage, instructions, warrantyPeriod, storageCondition, typeId, supplierId, active ? 1 : 0);
+        int activeInt = (active != null && active) ? 1 : 0;
+        return insert(sql, Product.class, productName, categoryId, percent, price, quantity, purpose, contraindications, ingredients, dosage, instructions, warrantyPeriod, storageCondition, typeId, supplierId, activeInt );
     }
 
     /**

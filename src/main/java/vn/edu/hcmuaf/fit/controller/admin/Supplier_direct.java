@@ -66,7 +66,6 @@ public class Supplier_direct extends HttpServlet {
         String imageUrl = request.getParameter("imageUrl");
         String activeParam = request.getParameter("active");
         Boolean active = (activeParam != null && activeParam.equalsIgnoreCase("true"));
-//        int activeInt = active ? 1 : 0; // Chuyển đổi Boolean sang int
         String ip = request.getHeader("X-FORWARDED-FOR");
         if (ip == null) ip = request.getRemoteAddr();
 

@@ -34,7 +34,7 @@ public interface IProductDAO extends GenericDAO<Product> {
     boolean updateProduct(Integer id, String productName, Integer categoryId, Double percent,
                           Integer price, Integer quantity, String purpose, String contraindications,
                           String ingredients, String dosage, String instructions, String warrantyPeriod,
-                          String storageCondition, Integer typeId, Integer supplierId);
+                          String storageCondition, Integer typeId, Integer supplierId, Boolean active);
 
     boolean deleteProductById(int productId);
 

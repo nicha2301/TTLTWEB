@@ -234,7 +234,6 @@
                                                required>
                                     </div>
                                 </div>
-
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Hoạt động</label>
                                     <div class="col-md-10">
@@ -356,13 +355,17 @@
                                                value="${product.supplier.id}" required>
                                     </div>
                                 </div>
+
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2">Hoạt động</label>
                                     <div class="col-md-10">
-                                        <input id="edit-active" name="active" type="text" class="form-control"
-                                               value="${product.active}" required>
+                                        <select class="form-control" id="edit-active" name="active" required>
+                                            <option value="true" ${product.active ? 'selected' : ''}>Có</option>
+                                            <option value="false" ${!product.active ? 'selected' : ''}>Không</option>
+                                        </select>
                                     </div>
                                 </div>
+
                                 <div class="mt-4">
                                     <button class="btn btn-primary edit-product">Lưu thay đổi</button>
                                     <a href="product" class="btn btn-link">Hủy</a>
