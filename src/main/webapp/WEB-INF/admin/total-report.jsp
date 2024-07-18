@@ -50,17 +50,17 @@
                 </div>
             </div>
             <c:if test="${requestScope.type eq 'show' || requestScope.type eq 'null'}">
-            <ul class="nav nav-tabs menu-tabs">
-                <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0);" onclick="loadOrders(0)">Tất cả</a>
-                </li>
-                <c:forEach items="${listStatus}" var="status">
+                <ul class="nav nav-tabs menu-tabs">
                     <li class="nav-item">
-                        <a class="nav-link" href="javascript:void(0);"
-                           onclick="loadOrders(${status.id})">${status.status_name}</a>
+                        <a class="nav-link" href="javascript:void(0);" onclick="loadOrders(0)">Tất cả</a>
                     </li>
-                </c:forEach>
-            </ul>
+                    <c:forEach items="${listStatus}" var="status">
+                        <li class="nav-item">
+                            <a class="nav-link" href="javascript:void(0);"
+                               onclick="loadOrders(${status.id})">${status.status_name}</a>
+                        </li>
+                    </c:forEach>
+                </ul>
             </c:if>
 
             <%--Show orders--%>
@@ -82,8 +82,8 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <c:forEach var="entry" items="${total_report}">
-                            <c:set var="order" value="${entry.key}" />
-                            <c:set var="orderItems" value="${entry.value}" />
+                            <c:set var="order" value="${entry.key}"/>
+                            <c:set var="orderItems" value="${entry.value}"/>
                             <div class="card">
                                 <div class="card-body" id="gener-info">
                                     <div class="form-group row" style="display: none">
@@ -175,7 +175,7 @@
                                         <div class="form-group row">
                                             <label class="col-md-3">Số điện thoại</label>
                                             <div class="col-md-9">
-                                                ${order.address.phone}
+                                                    ${order.address.phone}
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -252,6 +252,7 @@
     }
 
     var context = "${pageContext.request.contextPath}";
+
     function loadOrders(statusId) {
 
         $.ajax({
@@ -306,9 +307,11 @@
     }
 
     function editStatus() {
-        $('.edit-status').click(function() {
+        $('.edit-status').click(function () {
+            <c:set var="idValue" value="${requestScope.id != null ? requestScope.id : 0}" />
             var newStatus = $('select[name="status"]').val();
-            var id =${order.id};
+            var id =${idValue};
+
             $.ajax({
                 type: "POST",
                 url: context + "/admin/total-report",
@@ -317,7 +320,7 @@
                     id: id,
                     newStatus: newStatus
                 },
-                success: function(response) {
+                success: function (response) {
                     console.log(response)
                     if (!response.success) {
                         $('#error').html(response.message);
@@ -327,7 +330,7 @@
                         $('#error').html('');
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                 }
             });
         });

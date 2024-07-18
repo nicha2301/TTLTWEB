@@ -88,14 +88,19 @@ public class CouponCode extends HttpServlet {
                 DiscountService.getInstance().editCoupon(coupon, ip, "admin/coupon-code");
                 jsonResponse.put("status", "success");
             } else if (valid && "add".equals(action)) {
-                DiscountService.getInstance().addCoupon(coupon, ip, "admin/coupon-code");
-                jsonResponse.put("status", "success");
+                if(DiscountService.getInstance().getCouponByName(coupon.getDiscountName()) == null ) {
+                    System.out.println("thoax maximum");
+                    DiscountService.getInstance().addCoupon(coupon, ip, "admin/coupon-code");
+                    jsonResponse.put("status", "success");
+                } else {
+                    jsonResponse.put("error", "Mã đã tồn tại!");
+                }
+            } else {
+                jsonResponse.put("error", "Thông tin phải tuân theo:\n" +
+                        "% Khuyến mãi > 0 và < 100\n" +
+                        "Ngày bắt đầu > hôm nay\n" +
+                        "Ngày hết hạn > ngày bắt đầu");
             }
-
-            jsonResponse.put("error", "Thông tin phải tuân theo:\n" +
-                    "% Khuyến mãi > 0 và < 100\n" +
-                    "Ngày bắt đầu > hôm nay\n" +
-                    "Ngày hết hạn > ngày bắt đầu");
         } else if ("delete".equals(action)) {
             coupon = new Discount();
             coupon.setId(Integer.valueOf(id));
