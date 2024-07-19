@@ -90,12 +90,6 @@ public class OrderDAO extends AbsDAO<Order> implements IOrderDAO {
         }
     }
 
-    public static void main(String[] args) {
-        IOrderDAO orderDAO = OrderDAO.getInstance();
-        Order order = orderDAO.insertOrders(80, 1, 1, null, 1, "Test note", 1);
-        System.out.println("Order inserted: " + order);
-    }
-
     @Override
     public Map<Order, List<OrderItem>> loadOrderNear(Integer limit) {
         String sql = "SELECT o.*, i.* FROM (" +
@@ -117,9 +111,9 @@ public class OrderDAO extends AbsDAO<Order> implements IOrderDAO {
     }
 
     @Override
-    public boolean updateTimePayment(Integer orderId) {
-        String sql = "UPDATE orders SET date_payment = CURRENT_TIMESTAMP WHERE id = ?";
-        return update(sql, orderId);
+    public boolean updateTimePayment(Integer orderId, String date) {
+        String sql = "UPDATE orders SET date_payment = ? WHERE id = ?";
+        return update(sql, date, orderId);
     }
 
     @Override

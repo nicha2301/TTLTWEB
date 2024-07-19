@@ -59,7 +59,6 @@ public class VNPayServlet extends HttpServlet {
             double result = Double.parseDouble(request.getParameter("amount"));
 
             long amount = (long) (result * 100);
-            System.out.println(amount);
             Map<String, String> vnp_Params = new HashMap<>();
             vnp_Params.put("vnp_Version", vnp_Version);
             vnp_Params.put("vnp_Command", vnp_Command);
@@ -217,6 +216,7 @@ public class VNPayServlet extends HttpServlet {
                 session.removeAttribute("discount");
                 session.removeAttribute("retain");
                 session.removeAttribute("result");
+                session.setAttribute("orders", map);
             }
             String queryUrl = query.toString();
             String vnp_SecureHash = VnpayConfig.hmacSHA512(VnpayConfig.vnp_HashSecret, hashData.toString());

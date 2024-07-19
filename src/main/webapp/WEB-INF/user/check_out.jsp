@@ -281,7 +281,7 @@
   });
 </script>
 <script>
-  document.getElementById("btn_vnpay").addEventListener("click",function () {
+  document.getElementById("btn_vnpay").addEventListener("click", function () {
     const fullName = document.getElementById("full_name").value;
     const phone = document.getElementById("phone").value;
     const address = document.getElementById("address").value;
@@ -289,7 +289,12 @@
     const atHome = document.getElementById("at-home").value;
     const id = '${param.id}';
     const quantity = '${param.quantity}';
-    const amount = Math.round(<%=request.getAttribute("totalPrice")%>);
+
+    // Lấy giá trị price ngay tại thời điểm click
+    const priceElement = document.getElementById('all');
+    const priceText = priceElement.innerText.split(' ')[0];
+    const price = parseFloat(priceText);
+    const amount = Math.round(price);
 
     const tinhText = document.getElementById('tinh').options[document.getElementById('tinh').selectedIndex].text;
     const quanText = document.getElementById('quan').options[document.getElementById('quan').selectedIndex].text;
