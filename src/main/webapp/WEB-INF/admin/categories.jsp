@@ -2,7 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@include file="/WEB-INF/common/taglib.jsp" %>
 <!DOCTYPE html>
 <html lang="vi-VN">
 <head>
@@ -61,10 +60,17 @@
                         <span style="color: red;margin-bottom: 10px" id="error"></span>
                     </div>
                     <c:if test="${param.type == 'list' || param.type == null}">
-                        <div class="col-auto text-right">
-                            <a href="category?type=add" class="btn btn-primary add-button ml-3">
-                                <i class="fas fa-plus"></i>
-                            </a>
+                        <div class="d-flex align-items-center">
+                            <div class="col-auto text-right">
+                                <button id="exportBtn" class="btn btn-primary">
+                                    <i class="fas fa-file-export"></i>
+                                </button>
+                            </div>
+                            <div class="col-auto text-right">
+                                <a href="category?type=add" class="btn btn-primary add-button">
+                                    <i class="fas fa-plus"></i>
+                                </a>
+                            </div>
                         </div>
                     </c:if>
                 </div>
@@ -174,6 +180,7 @@
 
 <!-- jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 <script type="text/javascript">
     window.addEventListener("scroll", () => {
         var header = document.querySelector(".container");
@@ -257,6 +264,33 @@
                 error: function (xhr, status, error) {
 
                     $('#error').html(status, error);
+                }
+            });
+        });
+
+        $("#exportBtn").click(function() {
+            $.ajax({
+                type: 'POST',
+                url: context + '/admin/category',
+                data: { action: 'listAll' },
+                dataType: 'json',
+                success: function(response) {
+                    var tableData = [];
+
+                    tableData.push(["ID", "Danh mục", "Số Lượng"]);
+
+                    response.categories.forEach(function(category) {
+                        tableData.push([category.id, category.categoryName, category.quantity]);
+                    });
+
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(tableData);
+                    XLSX.utils.book_append_sheet(wb, ws, "Categories");
+
+                    XLSX.writeFile(wb, "categories.xlsx");
+                },
+                error: function(xhr, status, error) {
+                    console.error("Failed to fetch category data:", status, error);
                 }
             });
         });

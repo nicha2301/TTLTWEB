@@ -1,5 +1,6 @@
 package vn.edu.hcmuaf.fit.controller.admin;
 
+import org.json.JSONArray;
 import org.json.simple.JSONObject;
 import vn.edu.hcmuaf.fit.model.ProductCategories;
 import vn.edu.hcmuaf.fit.model.ProductGroups;
@@ -11,6 +12,8 @@ import vn.edu.hcmuaf.fit.service.impl.CategoryService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -105,11 +108,25 @@ public class Category extends HttpServlet {
             } else {
                 jsonResponse.put("error", "Danh mục đã tồn tại");
             }
+        } else if ("listAll".equals(action)) {
+            Map<ProductCategories, Integer> categories = CategoryService.getInstance().getQuantityCategories();
+            List<Map.Entry<ProductCategories, Integer>> sortedEntries = new ArrayList<>(categories.entrySet());
+            sortedEntries.sort(Comparator.comparingInt(entry -> entry.getKey().getId()));
+
+            JSONArray categoryArray = new JSONArray();
+            for (Map.Entry<ProductCategories, Integer> entry : sortedEntries) {
+                ProductCategories cate = entry.getKey();
+                int quantity = entry.getValue();
+
+                JSONObject categoryJson = new JSONObject();
+                categoryJson.put("id", cate.getId());
+                categoryJson.put("categoryName", cate.getCategoryName());
+                categoryJson.put("quantity", quantity);
+
+                categoryArray.put(categoryJson);
+            }
+            jsonResponse.put("categories", categoryArray);
         }
-
-
-        Map<ProductCategories, Integer> categories = CategoryService.getInstance().getQuantityCategories();
-        List<ProductGroups> groups = CategoryService.getInstance().getCategoriesGroups();
 
         out.print(jsonResponse.toJSONString());
         out.flush();

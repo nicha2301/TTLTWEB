@@ -36,7 +36,11 @@ public class DiscountService extends LogDAO<Discount> implements IDiscountServic
     @Override
     public Discount getCouponByName(String name) {
         try {
-            return DiscountDAO.getInstance().getCouponByName(name).get(0);
+            List<Discount> coupons = DiscountDAO.getInstance().getCouponByName(name);
+            if (coupons.isEmpty()) {
+                return null;
+            }
+            return coupons.get(0);
         } catch (Exception e) {
             return null;
         }

@@ -11,6 +11,8 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductCategories extends AbsModel implements Serializable {
      Integer id;
@@ -27,5 +29,9 @@ public class ProductCategories extends AbsModel implements Serializable {
     @Nested("group")
     public void setGroup(ProductGroups group) {
         this.group = group;
+    }
+
+    public ProductCategories(Integer id) {
+        this.id = id;
     }
 }

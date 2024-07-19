@@ -16,4 +16,7 @@ public class ProductTypes extends AbsModel implements Serializable {
      String typeName;
      Boolean active;
 
+     public ProductTypes(Integer id) {
+          this.id = id;
+     }
 }
