@@ -61,11 +61,19 @@
                         </ul>
                         <span style="color: red;margin-bottom: 10px" id="error"></span>
                     </div>
+
                     <c:if test="${param.type == 'add' || param.type == null}">
-                        <div class="col-auto text-right">
-                            <a href="coupon-code?type=add" class="btn btn-primary add-button ml-3">
-                                <i class="fas fa-plus"></i>
-                            </a>
+                        <div class="d-flex align-items-center">
+                            <div class="col-auto text-right">
+                                <button id="exportBtn" class="btn btn-primary">
+                                    <i class="fas fa-file-export"></i>
+                                </button>
+                            </div>
+                            <div class="col-auto text-right">
+                                <a href="coupon-code?type=add" class="btn btn-primary add-button">
+                                    <i class="fas fa-plus"></i>
+                                </a>
+                            </div>
                         </div>
                     </c:if>
                 </div>
@@ -241,6 +249,7 @@
 </div>
 <!-- jQuery -->
 <script src="/assets/admin/js/jquery-3.5.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 
 <script>
     var context = "${pageContext.request.contextPath}";
@@ -328,6 +337,33 @@
                     }
                 });
             }
+        });
+
+        $('#exportBtn').click(function() {
+            $.ajax({
+                type: 'POST',
+                url: context + '/admin/coupon-code',
+                data: { action: 'listAll' },
+                dataType: 'json',
+                success: function(response) {
+                    var tableData = [];
+
+                    tableData.push(["ID", "Tên", "% Giảm giá", "Số lượng", "Ngày bắt đầu", "Ngày hết hạn"]);
+
+                    response.coupons.forEach(function(cp) {
+                        tableData.push([cp.id, cp.name, cp.salePercent, cp.quantity, cp.startDate, cp.expirationDate]);
+                    });
+
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(tableData);
+                    XLSX.utils.book_append_sheet(wb, ws, "Coupons");
+
+                    XLSX.writeFile(wb, "coupons.xlsx");
+                },
+                error: function(xhr, status, error) {
+                    console.error("Failed to fetch coupon data:", status, error);
+                }
+            });
         });
     })
 

@@ -26,6 +26,12 @@ public class OrderDAO extends AbsDAO<Order> implements IOrderDAO {
     }
 
     @Override
+    public Order getOrderStatus(Order od) {
+        String sql = "SELECT * FROM orders where id=?";
+        return query(sql, Order.class, od.getId()).get(0);
+    }
+
+    @Override
     public Map<Order, List<OrderItem>> loadOrdersByStatus(Integer status) {
         String sql = "SELECT o.*, i.* FROM (" +
                 " SELECT * FROM orders WHERE status_id = ?" +
@@ -133,4 +139,6 @@ public class OrderDAO extends AbsDAO<Order> implements IOrderDAO {
         String sql = "UPDATE orders SET address_id = ? WHERE id = ?";
         return update(sql, delivery, orderId);
     }
+
+
 }

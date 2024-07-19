@@ -9,10 +9,12 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderStatus implements Serializable {
      Integer id;
-     String status;
+     String status_name;
      String description;
 
 }

@@ -66,8 +66,8 @@
                     <a href="#"><i class="fas fa-shopping-cart"></i><span>Bán hàng</span> <span
                             class="menu-arrow"></span></a>
                     <ul style="display: none;">
-                        <li><a href="total-report"
-                               <c:if test="${current_page=='total-report'}">class="active"</c:if>>Danh sách đặt hàng</a>
+                        <li><a href="total-report?type=show"
+                               <c:if test="${current_page=='total-report?type=show'}">class="active"</c:if>>Danh sách đặt hàng</a>
                         </li>
                     </ul>
                 </li>

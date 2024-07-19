@@ -42,7 +42,7 @@ public class AdminAccessFilter implements Filter {
             User user = (User) session.getAttribute("adminAuth");
             if (user == null) {
                 // Người dùng chưa đăng nhập, chuyển hướng đến trang đăng nhập admin
-                request.getRequestDispatcher("/WEB-INF/admin/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/admin/signIn.jsp").forward(request, response);
                 return;
             }
         }
