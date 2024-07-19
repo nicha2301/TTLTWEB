@@ -105,7 +105,7 @@ public class ProductService extends LogDAO<Product> implements IProductService {
             p.setBeforeData("Old info of ID=" + p.getId() + " is " + p);
             boolean success = ProductDAO.getInstance().updateProduct(p.getId(), p.getProductName(), p.getCate().getId(), p.getSalePercent(), p.getPrice(), p.getQuantity(),
                     p.getPurpose(), p.getContraindications(), p.getIngredients(), p.getDosage(), p.getInstructions(), p.getWarrantyPeriod(), p.getStorageCondition(),
-                    p.getType().getId(), p.getSupplier().getId());
+                    p.getType().getId(), p.getSupplier().getId(), p.getActive());
             if (success) {
                 p.setAfterData("Update success with ID=" + p.getId());
                 level = LevelDAO.getInstance().getLevel(1).get(0);

@@ -76,7 +76,8 @@ public class Product_direct extends HttpServlet {
         String storageCondition = request.getParameter("storageCondition");
         String typeIdStr = request.getParameter("typeId");
         String supplierIdStr = request.getParameter("supplierId");
-        String active = request.getParameter("active");
+        String activeParam = request.getParameter("active");
+        Boolean active = (activeParam != null && activeParam.equalsIgnoreCase("true"));
 
         String ip = request.getHeader("X-FORWARDED-FOR");
         if (ip == null) ip = request.getRemoteAddr();
@@ -106,17 +107,20 @@ public class Product_direct extends HttpServlet {
                 product.setCate(new ProductCategories(cateId));
                 product.setType(new ProductTypes(typeId));
                 product.setSupplier(new Supplier(supplierId));
-                product.setActive(true);
+                product.setActive(active);
 
                 boolean valid = productName != null && price > 0 && quantity != null && cateId != null && typeId != null && supplierId != null;
 
 
                 if (valid && "edit".equals(action)) {
                     productService.updateProduct(product, ip, "admin/product");
+
                     jsonResponse.put("status", "success");
+
                 } else if (valid && "add".equals(action)) {
                     productService.addProduct(product, ip, "admin/product");
                     jsonResponse.put("status", "success");
+
                 }
             } catch (NumberFormatException e) {
                 response.getWriter().print("{\"error\":\"Invalid number format.\"}");

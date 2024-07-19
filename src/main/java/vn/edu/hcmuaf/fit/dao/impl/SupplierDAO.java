@@ -50,9 +50,11 @@ public class SupplierDAO extends AbsDAO<Supplier> implements ISupplierDAO {
      * Inserts a new supplier into the database.
      */
     @Override
-    public Supplier insertSupplier(String name, String detail_address, String phone, String email) {
-        String sql = "INSERT INTO suppliers (supplierName, detail_address, phone, email, active) VALUES(?,?,?,?,0)";
-        return insert(sql, Supplier.class, name, detail_address, phone, email);
+    public Supplier insertSupplier(String supplierName, String contactName, String email, String phone, String detailAddress, String imageUrl, Boolean active) {
+        String sql = "INSERT INTO suppliers (supplierName, contactName, email, phone, detail_Address, imageUrl, active) VALUES(?,?,?,?,?,?,?)";
+        int activeInt = (active != null && active) ? 1 : 0; // Chuyển đổi Boolean sang int
+
+        return insert(sql, Supplier.class, supplierName, contactName, email, phone, detailAddress, imageUrl, activeInt);
     }
 
     /**
@@ -60,10 +62,13 @@ public class SupplierDAO extends AbsDAO<Supplier> implements ISupplierDAO {
      * Updates a supplier in the database.
      */
     @Override
-    public boolean updateSupplier(Integer id, String name, String email, String phone, String detailAddress) {
-        String sql = "UPDATE suppliers SET supplierName=?, email=?, phone=?, detail_address=? WHERE id=?";
-        return update(sql, name, email, phone, detailAddress, id);
+    public boolean updateSupplier(Integer id, String supplierName, String contactName, String email, String phone, String detailAddress, String imageUrl, Boolean active) {
+        String sql = "UPDATE suppliers SET supplierName = ?, contactName = ?, email = ?, phone = ?, detail_Address = ?, imageUrl = ?, active = ? WHERE id = ?";
+        int activeInt = (active != null && active) ? 1 : 0;
+        return update(sql, supplierName, contactName, email, phone, detailAddress, imageUrl, activeInt, id);
     }
+
+
 
     /**
      * TESTED
@@ -72,6 +77,7 @@ public class SupplierDAO extends AbsDAO<Supplier> implements ISupplierDAO {
     @Override
     public boolean deleteSupplier(Integer id) {
         String sql = "DELETE FROM suppliers WHERE id=?";
+
         return update(sql, id);
     }
 }
