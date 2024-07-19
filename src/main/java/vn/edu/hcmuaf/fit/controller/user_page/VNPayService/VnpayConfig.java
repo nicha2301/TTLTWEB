@@ -11,7 +11,7 @@ public class VnpayConfig {
     public static String vnp_TmnCode = "68LS8U23";
     public static String vnp_HashSecret = "ZG4Z1Z0PCE6225L6JBQY7KG8X03SD88C";
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";// Gửi yêu cầu thanh toán
-    public static String vnp_Returnurl = "http://localhost:8080/user/success";// URL để nhận kết quả thanh toán.
+    public static String vnp_Returnurl = "http://localhost:8080/user/success?action=vnpay";// URL để nhận kết quả thanh toán.
     public static String vnp_apiUrl = "http://sandbox.vnpayment.vn/merchant_webapi/merchant.html";
     public static String getRandomNumber(int len) {
         Random rnd = new Random();

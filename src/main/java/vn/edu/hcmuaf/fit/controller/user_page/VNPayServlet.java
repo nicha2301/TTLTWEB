@@ -147,7 +147,7 @@ public class VNPayServlet extends HttpServlet {
             String ip = request.getHeader("X-FORWARDED-FOR");
             if (ip == null) ip = request.getRemoteAddr();
             String phone = request.getParameter("txt_inv_mobile");
-            boolean atHome = request.getParameter("atHome") != null;
+            String atHome = request.getParameter("atHome")==null? "" : request.getParameter("atHome");
             int id = request.getParameter("id")==null||request.getParameter("id").isEmpty()? 0 : Integer.parseInt(request.getParameter("id"));
             int quantity = request.getParameter("quantity")==null||request.getParameter("quantity").isEmpty() ? 0 : Integer.parseInt(request.getParameter("quantity"));
 
@@ -155,7 +155,7 @@ public class VNPayServlet extends HttpServlet {
             List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
             User user = (User) session.getAttribute("auth");
 
-            DeliveryAddress dev = new DeliveryAddress(user, fullName, phone, tinhText, quanText, phuongText, address, atHome, true);
+            DeliveryAddress dev = new DeliveryAddress(user, fullName, phone, tinhText, quanText, phuongText, address, atHome.equals("on"), true);
             DeliveryAddress delivery = DeliveryService.getInstance().addDeliveryAddress(dev, ip, "/user/checkout");
             Order order = new Order();
             order.setUser(user);
@@ -202,6 +202,12 @@ public class VNPayServlet extends HttpServlet {
                 out.close();
                 return;
             } else {
+                if (discount != null) {
+                    DiscountService.getInstance().setQuantity(discount, ip, "/user/checkout");
+                }
+                for (OrderItem item : items) {
+                    ProductService.getInstance().setQuantity(item.getProduct(), ip, "/user/checkout");
+                }
                 if (id == 0) {
                     cart.clear();
                     session.setAttribute("cart", cart);

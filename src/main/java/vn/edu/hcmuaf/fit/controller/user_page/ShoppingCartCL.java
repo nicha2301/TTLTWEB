@@ -78,6 +78,7 @@ public class ShoppingCartCL extends HttpServlet {
         Discount discount = (Discount) session.getAttribute("discount");
         if (discount == null) {
             discount = new Discount();
+            discount.setCode("");
             discount.setSalePercent(0.0);
         }
 
@@ -87,7 +88,7 @@ public class ShoppingCartCL extends HttpServlet {
         String action = request.getParameter("action");
         switch (action) {
         case "check":
-            String code = request.getParameter("discount");
+            String code = request.getParameter("discountName");
             for(CartItem i : cart) {
                 products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(i.getProduct().getId()), ip, "/user/cart");
                 for (Product p: products.keySet()) {

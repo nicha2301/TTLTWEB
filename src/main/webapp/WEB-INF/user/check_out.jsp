@@ -86,21 +86,21 @@
           </div>
           <div class="checkout__input">
             <p>Tỉnh / Thành phố<span>*</span></p>
-            <select class="form-control" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
+            <select class="form-control" id="tinh" name="tinh" title="Chọn Tỉnh Thành" required>
               <option value="0">--Chọn Tỉnh/Thành phố--</option>
             </select>
           </div>
 
           <div class="checkout__input">
             <p>Huyện / Quận<span>*</span></p>
-            <select class="form-control" id="quan" name="quan" title="Chọn Quận Huyện">
+            <select class="form-control" id="quan" name="quan" title="Chọn Quận Huyện" required>
               <option value="0">--Chọn Quận/ Huyện--</option>
             </select>
           </div>
 
           <div class="checkout__input">
             <p>Xã / Phường / Thị trấn<span>*</span></p>
-            <select class="form-control" id="phuong" name="phuong" title="Chọn Phường Xã">
+            <select class="form-control" id="phuong" name="phuong" title="Chọn Phường Xã" required>
               <option value="0">--Chọn Phường/ Xã/ Thị trấn--</option>
             </select>
           </div>
@@ -197,7 +197,7 @@
 <script src="/assets/user/js/thuvien/jquery-3.3.1.min.js"></script>
 <script src="/assets/user/js/thuvien/bootstrap.min.js"></script>
 <script src="/assets/user/js/thuvien/main.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://esgoo.net/scripts/jquery.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
@@ -216,7 +216,7 @@
           id: id,
           quantity: quantity
         },
-        url: '${request.servletContext.contextPath}/user/checkout',
+        url: '${pageContext.request.contextPath}/user/checkout',
         success: function (response) {
           const retain = document.getElementById("retain");
           const result = document.getElementById("result");
@@ -290,10 +290,20 @@
     const id = '${param.id}';
     const quantity = '${param.quantity}';
     const amount = Math.round(<%=request.getAttribute("totalPrice")%>);
-    console.log(amount);
+
     const tinhText = document.getElementById('tinh').options[document.getElementById('tinh').selectedIndex].text;
-    const quanText= document.getElementById('quan').options[document.getElementById('quan').selectedIndex].text;
+    const quanText = document.getElementById('quan').options[document.getElementById('quan').selectedIndex].text;
     const phuongText = document.getElementById('phuong').options[document.getElementById('phuong').selectedIndex].text;
+
+    // Kiểm tra các trường thông tin có rỗng hay không
+    const fields = [fullName, phone, address, email, tinhText, quanText, phuongText, amount];
+    const emptyField = fields.some(field => field === "" || field === undefined || field === null);
+
+    if (emptyField) {
+      document.getElementById('error').innerHTML = "Please fill in all information completely";
+      return; // Ngăn chặn việc gửi dữ liệu nếu có trường rỗng
+    }
+
     const data = {
       tinhText: tinhText,
       quanText: quanText,
@@ -320,6 +330,7 @@
       id: id,
       quantity: quantity
     };
+
     const formBody = Object.keys(data).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key])).join('&');
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "http://localhost:8080/user/vnpay", true);
@@ -335,7 +346,7 @@
       }
     };
     xhr.send(formBody);
-  })
+  });
 </script>
 <script>
   $(document).ready(function() {

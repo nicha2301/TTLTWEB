@@ -135,7 +135,7 @@
                                 <span id="errorDiscount" style="color: red;"></span>
                                 <form>
                                     <input type="text" id="discount" name="discount" placeholder="Nhập mã giãm giá mua hàng" value="${sessionScope.discount.code}">
-                                    <button id="btnDiscount" class="site-btn">LƯU MÃ</button>
+                                    <button id="btnDiscount" class="site-btn">SỬ DỤNG MÃ</button>
                                 </form>
                             </div>
                         </div>
@@ -159,9 +159,9 @@
     </section>
     <%@include file="/WEB-INF/user/include/footer.jsp" %>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://esgoo.net/scripts/jquery.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     window.addEventListener('scroll', () => {
         var header = document.querySelector('.container')
@@ -177,10 +177,10 @@
             $.ajax({
                 type: 'POST',
                 data: {
-                    discount: discountName,
-                    action: "check",
+                    discountName: discountName,
+                    action: "check"
                 },
-                url: '${request.servletContext.contextPath}/user/cart',
+                url: '${pageContext.request.contextPath}/user/cart',
                 success: function (response) {
                     const retain = document.getElementById("retain");
                     const result = document.getElementById("result");
