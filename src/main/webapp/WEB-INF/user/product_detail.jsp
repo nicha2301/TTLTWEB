@@ -208,38 +208,51 @@
                             <div class="container">
                                 <c:choose>
                                     <c:when test="${not empty requestScope.remain}">
-                                        <button id="decrease" class="btn-decrease">-</button>
-                                        <input type="number" id="quantity" class="input-number" value="1" min="1" max="${requestScope.remain}">
-                                        <button id="increase" class="btn-increase">+</button>
-                                        <span style="color: red; margin: 10px" id="error"></span>
-                                        <a id="add_cart" style="color: #000;" href="javascript:void(0)" onclick="addCart(this, '${prod.id}')">
-                                            <button class="add-to-cart-btn">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                     viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
-                                                     stroke-linecap="round" stroke-linejoin="round">
-                                                    <circle cx="9" cy="21" r="1"></circle>
-                                                    <circle cx="20" cy="21" r="1"></circle>
-                                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6">
-                                                    </path>
-                                                </svg>
+                                        <div style="display: flex;align-items: center;">
+                                            <div>
+                                                <button id="decrease" class="btn-decrease">-</button>
+                                                <input type="number" id="quantity" class="input-number" value="1" min="1" max="${requestScope.remain}">
+                                                <button id="increase" class="btn-increase">+</button>
+                                                <span style="color: red; margin: 10px" id="error"></span>
+                                            </div>
 
-                                                <span class="">Thêm vào giỏ hàng</span>
+                                            <div style="display: inline-block">
+                                                <a class="add-to-cart-btn" style="display: flex;align-items: center" id="checkoutLink" href="${pageContext.request.contextPath}/user/checkout?id=${prod.id}&quantity=" >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                         viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
+                                                         stroke-linecap="round" stroke-linejoin="round">
+                                                        <circle cx="9" cy="21" r="1"></circle>
+                                                        <circle cx="20" cy="21" r="1"></circle>
+                                                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6">
+                                                        </path>
+                                                    </svg>
 
-                                           </button>
-                                        </a>
-                                        <a class="add-to-cart-btn" id="checkoutLink" href="${pageContext.request.contextPath}/user/checkout?id=${prod.id}&quantity=" >
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                 viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
-                                                 stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="9" cy="21" r="1"></circle>
-                                                <circle cx="20" cy="21" r="1"></circle>
-                                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6">
-                                                </path>
-                                            </svg>
+                                                    <span class="">Mua ngay</span>
 
-                                            <span class="">Mua ngay</span>
+                                                </a>
+                                            </div>
+                                        </div>
 
-                                        </a>
+
+
+                                         <div>
+                                             <a id="add_cart" style="color: #000;display: inline-block" href="javascript:void(0)" onclick="addCart(this, '${prod.id}')">
+                                                 <button class="add-to-cart-btn">
+                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                          viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
+                                                          stroke-linecap="round" stroke-linejoin="round">
+                                                         <circle cx="9" cy="21" r="1"></circle>
+                                                         <circle cx="20" cy="21" r="1"></circle>
+                                                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6">
+                                                         </path>
+                                                     </svg>
+
+                                                     <span class="">Thêm vào giỏ hàng</span>
+
+                                                 </button>
+                                             </a>
+                                         </div>
+
                                     </c:when>
                                     <c:otherwise>
                                         <span style="color: red; margin: 10px" id="error">${requestScope.error}</span>

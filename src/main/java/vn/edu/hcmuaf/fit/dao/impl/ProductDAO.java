@@ -241,4 +241,16 @@ public class ProductDAO extends AbsDAO<Product> implements IProductDAO {
         ProductImageMapper mapper = new ProductImageMapper(rs -> RSHandler.getString(rs, "image_url"));
         return queryForMap(sql, mapper, true, type_id, limit);
     }
+
+    @Override
+    public boolean setQuantity(Integer id) {
+        String sql = "UPDATE products SET quantity = quantity - 1 WHERE id = ? AND quantity > ?";
+        return update(sql, id, 0);
+    }
+
+    @Override
+    public List<Product> getOutOfProducts() {
+        String sql = "SELECT * FROM products WHERE quantity = ?";
+        return query(sql, Product.class, 0);
+    }
 }

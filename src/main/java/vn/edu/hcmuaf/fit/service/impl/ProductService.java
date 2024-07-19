@@ -168,7 +168,33 @@ public class ProductService extends LogDAO<Product> implements IProductService {
         }
 
     }
+    @Override
+    public boolean setQuantity(Product p, String ip, String address) {
+        try {
+            Level level;
+            p.setBeforeData("Product info of ID=" + p.getId() + " is " + p + " before set");
+            boolean success = ProductDAO.getInstance().setQuantity(p.getId());
+            if(success) {
+                level = LevelDAO.getInstance().getLevel(1).get(0);
+                p.setAfterData("Product ID=" + p.getId() + " has been set");
+            } else {
+                level = LevelDAO.getInstance().getLevel(2).get(0);
+                p.setAfterData("set failed with ID=" + p.getId());
+            }
+            super.insert(p, level, ip, address);
+            return success;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
-
+    @Override
+    public List<Product> getOutOfProducts() {
+        try {
+            return ProductDAO.getInstance().getOutOfProducts();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
 

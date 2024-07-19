@@ -8,7 +8,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import vn.edu.hcmuaf.fit.model.CartItem;
 import vn.edu.hcmuaf.fit.model.User;
+import vn.edu.hcmuaf.fit.model.WishlistItem;
 import vn.edu.hcmuaf.fit.service.impl.CartService;
+import vn.edu.hcmuaf.fit.service.impl.WishlistService;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,11 +28,18 @@ public class SignOut extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        List<WishlistItem> wishlist = (List<WishlistItem>) session.getAttribute("wishlist");
         User user = (User) session.getAttribute("auth");
         CartService.getInstance().removeCart(user);
         if (!cart.isEmpty()) {
             for (CartItem item : cart) {
                 CartService.getInstance().addIntoCart(item.getUser(), item.getProduct(), item.getQuantity());
+            }
+        }
+        WishlistService.getInstance().deleteAllWishlist(user);
+        if (!wishlist.isEmpty()) {
+            for (WishlistItem item : wishlist) {
+                WishlistService.getInstance().addWishList(item.getUser(), item.getProduct());
             }
         }
         session.invalidate();

@@ -134,8 +134,7 @@
                                 <h5>Mã giảm giá</h5>
                                 <span id="errorDiscount" style="color: red;"></span>
                                 <form>
-                                    <input type="text" id="discount" name="discount" placeholder="Nhập mã giãm giá mua hàng"
-                                    value="${sessionScope.discount.code}">
+                                    <input type="text" id="discount" name="discount" placeholder="Nhập mã giãm giá mua hàng" value="${sessionScope.discount.code}">
                                     <button id="btnDiscount" class="site-btn">SỬ DỤNG MÃ</button>
                                 </form>
                             </div>
@@ -160,9 +159,9 @@
     </section>
     <%@include file="/WEB-INF/user/include/footer.jsp" %>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://esgoo.net/scripts/jquery.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     window.addEventListener('scroll', () => {
         var header = document.querySelector('.container')
@@ -175,18 +174,21 @@
         $('#btnDiscount').click(function (event) {
             event.preventDefault();
             var discountName = $('#discount').val();
-            console.log(discountName)
             $.ajax({
                 type: 'POST',
                 data: {
-                    discount: discountName,
+                    discountName: discountName,
                     action: "check"
                 },
-                url: '${request.servletContext.contextPath}/user/cart',
+                url: '${pageContext.request.contextPath}/user/cart',
                 success: function (response) {
                     const retain = document.getElementById("retain");
                     const result = document.getElementById("result");
-                    if (response.state === "notfound" || response.state === "notempty") {
+                    if (response.state === "notfound" || response.state === "notempty" || response.state === "outquantity") {
+                        $('#errorDiscount').html(response.error);
+                        result.innerHTML = response.result + " VND";
+                        retain.innerHTML = response.rect + " VND"
+                    } else if (response.state === "duplicate") {
                         $('#errorDiscount').html(response.error);
                     } else {
                         Swal.fire({
@@ -197,9 +199,9 @@
                             timer: 1500
                         });
                         $('#errorDiscount').html("");
+                        result.innerHTML = response.result + " VND";
+                        retain.innerHTML = response.rect + " VND"
                     }
-                    result.innerHTML = response.result + " VND";
-                    retain.innerHTML = response.rect + " VND"
                 }
             });
         });

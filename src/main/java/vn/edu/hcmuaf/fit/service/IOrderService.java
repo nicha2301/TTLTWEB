@@ -31,7 +31,7 @@ public interface IOrderService {
 
     boolean deleteOrder(Order order, String ip, String address);
 
-    boolean updateTimePayment(Order order, String ip, String address);
+    boolean updateTimePayment(Order order, String date, String ip, String address);
 
     boolean updateOrdStatusByAdmin(Order order, String ip, String address);
 

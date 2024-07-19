@@ -166,7 +166,41 @@ public class DiscountService extends LogDAO<Discount> implements IDiscountServic
         }
     }
 
-    public static void main(String[] args) {
-        System.out.println(DiscountService.getInstance().getCouponByCode("HEELO"));
+    @Override
+    public boolean setQuantity(Discount coupon, String ip, String address) {
+        boolean success;
+        try {
+            Level level;
+            success = DiscountDAO.getInstance().setQuantity(coupon.getCode());
+            if(success) {
+                coupon.setAfterData("Set quantity success with code=" + coupon.getCode());
+                level = LevelDAO.getInstance().getLevel(1).get(0);
+            } else {
+                coupon.setAfterData("Set quantity failed with code=" + coupon.getCode());
+                level = LevelDAO.getInstance().getLevel(2).get(0);
+            }
+            super.insert(coupon, level, ip, address);
+            return success;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public Integer getQuantity(String code) {
+        try {
+            return DiscountDAO.getInstance().getQuantity(code);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Discount isOutOfUse(String code) {
+        try {
+            return DiscountDAO.getInstance().isOutOfUse(code).get(0);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

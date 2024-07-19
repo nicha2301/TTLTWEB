@@ -86,14 +86,14 @@ public class OrderDAO extends AbsDAO<Order> implements IOrderDAO {
 
     @Override
     public Order insertOrders(Integer userId, Integer addressId, Integer shipType, Integer discountId, Integer paymentId, String note, Integer statusId) {
-        String sql = "INSERT INTO `orders` (`user_id`, `address_id`, `ship_type`, `discount_id`, `payment_id`, `note`, `status_id`) VALUES (?,?,?,?,?,?,?)";
-        return insert(sql, Order.class, userId, addressId, shipType, discountId, paymentId, note, statusId);
-    }
-
-    public static void main(String[] args) {
-        IOrderDAO orderDAO = OrderDAO.getInstance();
-        Order order = orderDAO.insertOrders(80, 1, 1, 6, 1, "Test note", 1);
-        System.out.println("Order inserted: " + order);
+        String sql;
+        if (discountId == null) {
+            sql = "INSERT INTO `orders` (`user_id`, `address_id`, `ship_type`, `payment_id`, `note`, `status_id`) VALUES (?, ?, ?, ?, ?, ?)";
+            return insert(sql, Order.class, userId, addressId, shipType, paymentId, note, statusId);
+        } else {
+            sql = "INSERT INTO `orders` (`user_id`, `address_id`, `ship_type`, `discount_id`, `payment_id`, `note`, `status_id`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            return insert(sql, Order.class, userId, addressId, shipType, discountId, paymentId, note, statusId);
+        }
     }
 
     @Override
@@ -117,9 +117,9 @@ public class OrderDAO extends AbsDAO<Order> implements IOrderDAO {
     }
 
     @Override
-    public boolean updateTimePayment(Integer orderId) {
-        String sql = "UPDATE orders SET date_payment = CURRENT_TIMESTAMP WHERE id = ?";
-        return update(sql, orderId);
+    public boolean updateTimePayment(Integer orderId, String date) {
+        String sql = "UPDATE orders SET date_payment = ? WHERE id = ?";
+        return update(sql, date, orderId);
     }
 
     @Override

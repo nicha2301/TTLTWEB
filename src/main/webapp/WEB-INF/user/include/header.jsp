@@ -28,13 +28,13 @@
             <div class="header-nav" role="navigation" aria-label="Main navigation">
                 <ul class="menu">
                     <li class="menu-item">
-                        <a href="${request.servletContext.contextPath}/user/home"><span class="nav-link-text">Thuốc Y The Pet</span></a>
+                        <a href="${request.servletContext.contextPath}/user/home"><span class="nav-link-text" style="white-space: nowrap">Thuốc Y The Pet</span></a>
                     </li>
                     <li class="menu-item">
-                        <a href="${request.servletContext.contextPath}/user/introduce"><span class="nav-link-text">Giới thiệu</span></a>
+                        <a href="${request.servletContext.contextPath}/user/introduce"><span class="nav-link-text" style="white-space: nowrap">Giới thiệu</span></a>
                     </li>
                     <li class="menu-item">
-                        <a href="${request.servletContext.contextPath}/user/products"><span class="nav-link-text">Sản phẩm</span></a>
+                        <a href="${request.servletContext.contextPath}/user/products"><span class="nav-link-text" style="white-space: nowrap">Sản phẩm</span></a>
                         <div class="container">
                             <ul class="sub-menu">
                                 <li class="menu-item">
@@ -61,7 +61,7 @@
                         </div>
                     </li>
                     <li class="menu-item">
-                        <a href="${request.servletContext.contextPath}/user/feedback"><span class="nav-link-text">Liên hệ</span></a>
+                        <a href="${request.servletContext.contextPath}/user/feedback"><span class="nav-link-text" style="white-space: nowrap">Liên hệ</span></a>
                     </li>
                 </ul>
             </div>

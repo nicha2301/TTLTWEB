@@ -204,10 +204,10 @@ public class OrderService extends LogDAO<Order> implements IOrderService {
     }
 
     @Override
-    public boolean updateTimePayment(Order order, String ip, String address) {
+    public boolean updateTimePayment(Order order, String date, String ip, String address) {
         try {
             Level level;
-            boolean success = OrderDAO.getInstance().updateTimePayment(order.getId());
+            boolean success = OrderDAO.getInstance().updateTimePayment(order.getId(), date);
             if(success) {
                 order.setAfterData("Update time payment success with orderID=" + order.getId());
                 level = LevelDAO.getInstance().getLevel(1).get(0);

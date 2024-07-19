@@ -33,7 +33,7 @@ public interface IOrderDAO extends GenericDAO<Order> {
 
     boolean deleteOrder(Integer orderId);
 
-    boolean updateTimePayment(Integer orderId);
+    boolean updateTimePayment(Integer orderId, String date);
 
     boolean updateOrdStatusByAdmin(Integer orderId, Integer adminId, Integer statusId);
 

@@ -1,3 +1,8 @@
+<%@ page import="vn.edu.hcmuaf.fit.model.WishlistItem" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.User" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.Product" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="vn.edu.hcmuaf.fit.service.impl.ProductService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/common/taglib.jsp" %>
 <!DOCTYPE html>
@@ -292,39 +297,48 @@
                         </div>
                     </div>
 <div class="tab-pane" id="favourite">
-    <div class="container">
-        <h2 class="mb-4">Sản phẩm yêu thích</h2>
+<%--    <h2 id="favorite" class="mb-4">Không co sản phẩm yêu thích</h2>--%>
+    <div class="container" id="container">
+        <%
+            List<WishlistItem> wishlist = (List<WishlistItem>) session.getAttribute("wishlist");
+            User user = (User) session.getAttribute("auth");
+            String ip = request.getHeader("X-FORWARDED-FOR");
+            if (ip == null) ip = request.getRemoteAddr();
+            if(user!=null && wishlist !=null && !wishlist.isEmpty()) {
+        %>
         <table id="orderDetailsTable" class="table table-striped table-bordered" style="width:100%">
             <thead>
             <tr>
                 <th>Ảnh</th>
                 <th>Tên sản phẩm</th>
-                <th>Số lượng</th>
-                <th>Tổng giá</th>
-                <th>Mã đơn hàng</th>
+                <th>Loại sản phẩm</th>
+                <th>Hành động</th>
             </tr>
             </thead>
             <tbody>
-
-            <tr>
-                <td>2</td>
-                <td>2</td>
-                <td>2</td>
-                <td>2</td>
-                <td>2</td>
+        <%}%>
+        <%
+            if(user!=null && wishlist !=null && !wishlist.isEmpty()) {
+                for (WishlistItem item : wishlist) {
+                    Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(new Product(item.getProduct().getId()), ip, "/user/cart");
+                    for(Map.Entry<Product, List<String>> entry : products.entrySet()) {
+        %>
+            <tr id="w<%=entry.getKey().getId()%>">
+                <td><img style="width: 100px; height: 100px" src="${pageContext.request.contextPath}<%=entry.getValue().getFirst()%>"/></td>
+                <td><%=entry.getKey().getProductName()%></td>
+                <td><%=entry.getKey().getCate().getCategoryName()%></td>
+                <td><a href="javascript:void(0);" onclick="removeFromWishlist('<%=entry.getKey().getId()%>')">X</a></td>
             </tr>
-            <tr>
-                <td>2</td>
-                <td>2</td>
-                <td>2</td>
-                <td>2</td>
-                <td>2</td>
-            </tr>
-
+        <%          }
+                }
+            }
+            if(user!=null && wishlist !=null && !wishlist.isEmpty()) {
+        %>
             </tbody>
         </table>
-
-
+        <%
+            }
+        %>
     </div>
 </div>
                 </div>
@@ -332,7 +346,7 @@
             </div>
             <div class="col-lg-4 order-lg-1 text-center img-2">
                 <div class="img-ava">
-                    <img src="${sessionScope.auth.avatar}" class="mx-auto img-fluid img-circle d-block" alt="avatar" id="avatar">
+                    <img src="${sessionScope.auth.avatar}" class="mx-auto img-fluid img-circle d-block" id="avatar" style="border-radius: 1px">
                     <label class="load-ava">
                         <span class="custom-file-control">Đổi Ảnh</span>
                         <input type="file" id="file" class="custom-file-input">
@@ -570,6 +584,10 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.0.5/datatables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     new DataTable('#orderDetailsTable', {
         layout: {
@@ -580,6 +598,41 @@
             }
         }
     });
+</script>
+<script>
+    function removeFromWishlist(productId) {
+        $.ajax({
+            url: "${request.servletContext.contextPath}/user/wishlist",
+            method: "POST",
+            data: {
+                productId: productId,
+                action: "remove"
+            },
+            success: function (response) {
+                console.log(response)
+                if (response.status === "success") {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Xoá Khỏi Wishlist Thành Công!",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    const wishlistItem = document.getElementById("w" + productId);
+                    const container = document.getElementById("container");
+                    const favorite = document.getElementById("favorite");
+                    wishlistItem.style.display = "none";
+                    if(response.size==="0") {
+                        container.style.display = "none";
+                    } else {
+                        favorite.style.display = "none";
+                    }
+                } else {
+                    window.location.href = context + "/user/signin";
+                }
+            }
+        });
+    }
 </script>
 </body>
 </html>

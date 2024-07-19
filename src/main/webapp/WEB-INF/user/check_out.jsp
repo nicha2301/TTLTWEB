@@ -1,8 +1,6 @@
 <%@ page import="vn.edu.hcmuaf.fit.model.Product" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="vn.edu.hcmuaf.fit.service.impl.ProductService" %>
-<%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
-<%@ page import="vn.edu.hcmuaf.fit.model.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/common/taglib.jsp" %>
 <!DOCTYPE html>
@@ -25,6 +23,23 @@
         sizes="192x192" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <title>Checkout</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+    }
+    table tr {
+      background-color: #f9f9f9;
+    }
+    table th, table td {
+      padding: 8px;
+      text-align: left;
+    }
+    table th {
+      background-color: #f2f2f2;
+    }
+  </style>
 </head>
 <body>
 <%@include file="/WEB-INF/user/include/header.jsp" %>
@@ -38,21 +53,24 @@
     <div class="row">
       <div class="col-lg-12">
         <h6>
-          <span class="icon_tag_alt"></span> Đã có mã giảm giá?
-          <a href="${pageContext.request.contextPath}/user/cart">nhấn tại đây</a> để nhập mã giảm giá
+          <span class="icon_tag_alt"></span>
+          <form class="d-flex align-items-center w-50 mx-auto mt-2">
+            <input type="text" id="discount" class="form-control" placeholder="Nhập mã giảm giá" value="${sessionScope.discount.code}">
+            <button type="submit" id="btnDiscount" class="btn btn-success" style="white-space: nowrap">Áp dụng</button>
+          </form>
+          <span id="errorDiscount" style="color: red;"></span>
         </h6>
       </div>
     </div>
     <h4>Chi tiết đơn hàng</h4>
     <form>
-
       <div class="row">
-        <div class="col-lg-8 col-md-6">
+        <div class="col-lg-5 col-md-6">
           <div class="row">
             <div class="col-lg-6">
               <div class="checkout__input">
                 <p>Họ và tên<span>*</span></p>
-                <input type="text" id="full_name" required />
+                <input class="form-control" type="text" id="full_name" required />
               </div>
             </div>
             <div class="col-lg-6">
@@ -62,30 +80,28 @@
               </div>
             </div>
           </div>
-
           <div class="checkout__input">
             <p>Địa chỉ<span>*</span></p>
             <input type="text" id="address" placeholder="Số nhà / Đường" class="checkout__input__add" required />
           </div>
-
           <div class="checkout__input">
             <p>Tỉnh / Thành phố<span>*</span></p>
-            <select id="tinh" name="tinh" title="Chọn Tỉnh Thành">
-              <option value="0">Tỉnh Thành</option>
+            <select class="form-control" id="tinh" name="tinh" title="Chọn Tỉnh Thành" required>
+              <option value="0">--Chọn Tỉnh/Thành phố--</option>
             </select>
           </div>
 
           <div class="checkout__input">
             <p>Huyện / Quận<span>*</span></p>
-            <select id="quan" name="quan" title="Chọn Quận Huyện">
-              <option value="0">Quận Huyện</option>
+            <select class="form-control" id="quan" name="quan" title="Chọn Quận Huyện" required>
+              <option value="0">--Chọn Quận/ Huyện--</option>
             </select>
           </div>
 
           <div class="checkout__input">
             <p>Xã / Phường / Thị trấn<span>*</span></p>
-            <select id="phuong" name="phuong" title="Chọn Phường Xã">
-              <option value="0">Phường Xã</option>
+            <select class="form-control" id="phuong" name="phuong" title="Chọn Phường Xã" required>
+              <option value="0">--Chọn Phường/ Xã/ Thị trấn--</option>
             </select>
           </div>
 
@@ -93,27 +109,26 @@
             <div class="col-lg-6">
               <div class="checkout__input">
                 <p>Email<span>*</span></p>
-                <input type="email" id="email" name="email" required />
+                <input class="form-control" type="email" id="email" name="email" required />
               </div>
             </div>
             <div class="col-lg-6">
               <div class="checkout__input">
                 <p>At Home?<span></span></p>
-                <input type="checkbox" id="at-home" name="at-home">
+                <input class="form-control" type="checkbox" style="width: 30px;height: 30px" id="at-home" name="at-home">
               </div>
             </div>
           </div>
 
         </div>
-        <div class="col-lg-4 col-md-6">
-          <div class="checkout__order">
+        <div class="col-lg-7 col-md-6">
+          <div class="checkout__order" style="background-color: #ccc">
             <div >
               <h2>Thông tin sản phẩm trong giỏ hàng:</h2>
               <c:set var="unit" value="VND"/>
               <%
                 String ip = request.getHeader("X-FORWARDED-FOR");
                 if (ip == null) ip = request.getRemoteAddr();
-                double result = (double) session.getAttribute("result");
                 List<CartItem> temp = (List<CartItem>) request.getAttribute("temp");
                 if (temp == null || temp.isEmpty()) {
                   temp = cart;
@@ -121,47 +136,55 @@
                   int id = temp.getFirst().getProduct().getId();
                   int quantity = temp.getFirst().getQuantity();
                 }
-                for (CartItem item : temp) {
-                  Product p = new Product(item.getProduct().getId());
-                  Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(p, ip, "/user/checkout.jsp");
-                  for (Map.Entry<Product, List<String>> entry : products.entrySet()) {
               %>
-                <div class="checkout__order__subtotal">
-                  <p>Tên sản phẩm: <%=entry.getKey().getProductName()%></p>
-                  <p>Giá bán: <fmt:formatNumber value="<%=entry.getKey().getPrice()%>" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit} ${unit}</p>
-                  <p>Số lượng: <%=item.getQuantity()%></p>
-                </div>
-              <%
+              <table>
+                <tr>
+                  <th>Hình ảnh</th>
+                  <th>Tên sản phẩm</th>
+                  <th>Giá bán</th>
+                  <th>Số lượng</th>
+                </tr>
+                <%
+                  for (CartItem item : temp) {
+                    Product p = new Product(item.getProduct().getId());
+                    Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(p, ip, "/user/checkout.jsp");
+                    for (Map.Entry<Product, List<String>> entry : products.entrySet()) {
+                %>
+                <tr sy>
+                  <td>
+                    <img style="width: 100px;height: 100px;object-fit: cover" src="<%=entry.getValue().get(0)%>" alt="">
+                  </td>
+                  <td><%=entry.getKey().getProductName()%></td>
+                  <td>
+                    <fmt:formatNumber value="<%=entry.getKey().getPrice()%>" type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}
+                  </td>
+                  <td><%=item.getQuantity()%></td>
+                </tr>
+                <%
+                    }
                   }
-                }
-              %>
+                %>
+              </table>
+
               <div class="checkout__order__subtotal">
-                <p>Tổng: <%=result%> ${unit}</p>
+                Tổng: <br><strong id="result">${requestScope.totalNotVoucher} ${unit}</strong>
               </div>
               <div class="checkout__order__subtotal">
-                <p>Phí vận chuyển:  <fmt:formatNumber value='<%=request.getAttribute("priceShipment")%>' type="number" maxFractionDigits="0" pattern="#,##0"/>${unit}</p>
+                Giảm: <br><strong id="retain">${sessionScope.retain==null?0.0:sessionScope.retain} ${unit}</strong>
+              </div>
+              <div class="checkout__order__subtotal">
+                Phí vận chuyển: <br><strong><%=request.getAttribute("priceShipment")%> ${unit}</strong>
               </div>
               <div class="checkout__order__total">
-                <p style="color: red;">Tổng tiền thanh toán:  <fmt:formatNumber value='<%=request.getAttribute("totalPrice")%>' type="number" maxFractionDigits="0" pattern="#,##0"/> ${unit}</p>
+                Tổng tiền thanh toán: <br><strong id="all" style="color: red;"><%=request.getAttribute("totalPrice")%> ${unit}</strong>
               </div>
-            </div>
-            <div class="checkout__input__checkbox" >
-              <label for="cash">
-                Cash on delivery (COD)
-                <input type="checkbox" id="cash" name="cash" class="payment-option group-checkbox" />
-                <span class="checkmark"></span>
-              </label>
-            </div>
-            <div class="checkout__input__checkbox">
-              <label for="momo">
-                MOMO
-                <input type="checkbox" id="momo" name="momo" class="payment-option group-checkbox" data-toggle="collapse" data-target="#momo-code" />
-                <span class="checkmark"  ></span>
-              </label>
             </div>
             <span style="color:red; margin-top: 10px;" id="error"></span>
             <div>
                 <button id="btn_submit" type="submit"  class="site-btn">Đặt hàng</button>
+            </div>
+            <div>
+              <button id="btn_vnpay" type="submit"  class="site-btn">Thanh toán ngay</button>
             </div>
           </div>
         </div>
@@ -174,19 +197,50 @@
 <script src="/assets/user/js/thuvien/jquery-3.3.1.min.js"></script>
 <script src="/assets/user/js/thuvien/bootstrap.min.js"></script>
 <script src="/assets/user/js/thuvien/main.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://esgoo.net/scripts/jquery.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var checkboxes = document.querySelectorAll('.group-checkbox');
-    checkboxes.forEach(function(checkbox) {
-      checkbox.addEventListener('change', function() {
-        if (this.checked) {
-          checkboxes.forEach(function(box) {
-            if (box !== checkbox) {
-              box.checked = false;
-            }
-          });
+  var context = "${pageContext.request.contextPath}";
+  $(document).ready(function() {
+    $('#btnDiscount').click(function (event) {
+      event.preventDefault();
+      var code = $('#discount').val();
+      var id = '${param.id}';
+      var quantity = '${param.quantity}';
+      $.ajax({
+        type: 'POST',
+        data: {
+          discountCode: code,
+          action: "check",
+          id: id,
+          quantity: quantity
+        },
+        url: '${pageContext.request.contextPath}/user/checkout',
+        success: function (response) {
+          const retain = document.getElementById("retain");
+          const result = document.getElementById("result");
+          const all = document.getElementById("all");
+          if (response.state === "notfound" || response.state === "notempty" || response.state === "outquantity") {
+            $('#errorDiscount').html(response.error);
+            all.innerHTML = response.last + " VND";
+            result.innerHTML = response.result + " VND";
+            retain.innerHTML = response.rect + " VND"
+          } else if (response.state === "duplicate") {
+            $('#errorDiscount').html(response.error);
+          } else {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Thêm Sản Phẩm Vào Giỏ Hàng Thành Công!",
+              showConfirmButton: false,
+              timer: 1500
+            });
+            $('#errorDiscount').html("");
+            all.innerHTML = response.last + " VND";
+            result.innerHTML = response.result + " VND";
+            retain.innerHTML = response.rect + " VND"
+          }
         }
       });
     });
@@ -203,7 +257,6 @@
     });
     $("#tinh").change(function (e) {
       var idtinh = $(this).val();
-      var fullNameTinh = $("#tinh option:selected").data('full-name');
       $.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
         if (data_quan.error == 0) {
           $("#quan").empty().append('<option value="0">--Chọn Quận Huyện--</option>');
@@ -216,7 +269,6 @@
     });
     $("#quan").change(function (e) {
       var idquan = $(this).val();
-      var fullNameQuan = $("#quan option:selected").data('full-name');
       $.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
         if (data_phuong.error == 0) {
           $("#phuong").empty().append('<option value="0">--Chọn Phường/ Xã/ Thị trấn--</option>');
@@ -229,7 +281,79 @@
   });
 </script>
 <script>
-  var context = "${pageContext.request.contextPath}";
+  document.getElementById("btn_vnpay").addEventListener("click", function () {
+    const fullName = document.getElementById("full_name").value;
+    const phone = document.getElementById("phone").value;
+    const address = document.getElementById("address").value;
+    const email = document.getElementById("email").value;
+    const atHome = document.getElementById("at-home").value;
+    const id = '${param.id}';
+    const quantity = '${param.quantity}';
+
+    // Lấy giá trị price ngay tại thời điểm click
+    const priceElement = document.getElementById('all');
+    const priceText = priceElement.innerText.split(' ')[0];
+    const price = parseFloat(priceText);
+    const amount = Math.round(price);
+
+    const tinhText = document.getElementById('tinh').options[document.getElementById('tinh').selectedIndex].text;
+    const quanText = document.getElementById('quan').options[document.getElementById('quan').selectedIndex].text;
+    const phuongText = document.getElementById('phuong').options[document.getElementById('phuong').selectedIndex].text;
+
+    // Kiểm tra các trường thông tin có rỗng hay không
+    const fields = [fullName, phone, address, email, tinhText, quanText, phuongText, amount];
+    const emptyField = fields.some(field => field === "" || field === undefined || field === null);
+
+    if (emptyField) {
+      document.getElementById('error').innerHTML = "Please fill in all information completely";
+      return; // Ngăn chặn việc gửi dữ liệu nếu có trường rỗng
+    }
+
+    const data = {
+      tinhText: tinhText,
+      quanText: quanText,
+      phuongText: phuongText,
+      vnp_OrderInfo: "Thanh toan don hang",
+      ordertype: "Sample order type",
+      amount: amount,
+      language: "vn",
+      txt_billing_mobile: phone,
+      txt_billing_email: email,
+      txt_billing_fullname: fullName,
+      txt_inv_addr1: address,
+      txt_bill_city: tinhText,
+      txt_bill_country: "Vietnam",
+      txt_bill_state: "HN",
+      txt_inv_mobile: phone,
+      txt_inv_email: email,
+      txt_inv_customer: '${sessionScope.auth.fullName}',
+      txt_inv_addr1: address,
+      txt_inv_company: "Cong Ty TNHH Thuong Mai va Dich Vu Phat Trien Tien Thang Pet",
+      txt_inv_taxcode: "123456789",
+      cbo_inv_type: "I",
+      atHome: atHome,
+      id: id,
+      quantity: quantity
+    };
+
+    const formBody = Object.keys(data).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key])).join('&');
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "http://localhost:8080/user/vnpay", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        const response = JSON.parse(xhr.responseText);
+        if (response.code === "00") {
+          window.location.href = response.data;
+        } else {
+          alert("Error: " + response.message);
+        }
+      }
+    };
+    xhr.send(formBody);
+  });
+</script>
+<script>
   $(document).ready(function() {
     $('#btn_submit').click(function (event) {
       event.preventDefault();
@@ -241,11 +365,8 @@
       var fullNamePhuong = $("#phuong option:selected").data('full-name');
       var email = $('#email').val();
       var atHome = $('#at-home').is(':checked');
-      var cash = $('#cash').is(':checked');
-      var momo = $('#momo').is(':checked');
       var id = '${param.id}';
       var quantity = '${param.quantity}';
-      console.log(fullName, phone, address, fullNameTinh,  fullNameQuan, fullNamePhuong, email, atHome, momo, cash, id, quantity)
       $.ajax({
         type: 'POST',
         data: {
@@ -257,27 +378,27 @@
           phuong: fullNamePhuong,
           address: address,
           atHome: atHome,
-          momo: momo,
-          cash: cash,
+          id: id,
+          quantity: quantity
         },
-        url: '${pageContext.request.contextPath}/user/checkout',
-        success: function (response) {
-          console.log(response)
-          try {
-            if (response.status !== "success") {
-              $('#error').html(response.error);
-            } else {
-              window.location.href = context + "/user/order_success.jsp";
-            }
-          } catch (e) {
-            $('#error').html("Error loading request, please try again!");
-          }
-        },
-        error: function() {
-          $('#error').html("Connection errors. Please check your network and try again!");
-        }
+        url: context + '/user/checkout',
+        success: handleResponse,
+        error: handleError
       });
     });
+    function handleResponse(response) {
+      console.log(response);
+      if (response.status === "success") {
+        window.location.href = context + "/user/success";
+      } else if(response.status === "failed") {
+        window.location.href = context + "/user/signin";
+      } else {
+        $('#error').html(response.error);
+      }
+    }
+    function handleError() {
+      $('#error').html("Connection errors. Please check your network and try again!");
+    }
   });
 </script>
 </body>

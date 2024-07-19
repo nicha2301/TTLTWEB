@@ -1,14 +1,15 @@
 package vn.edu.hcmuaf.fit.dao;
 
 import vn.edu.hcmuaf.fit.model.Wishlist;
+import vn.edu.hcmuaf.fit.model.WishlistItem;
 
 import java.util.List;
 
 public interface IWishlistDAO extends GenericDAO<Wishlist> {
 
-    List<Wishlist> getWishlistByUser(Integer userId);
+    List<WishlistItem> getWishlistByUser(Integer userId);
 
-    Wishlist addWishList(Integer userId, Integer productId);
+    WishlistItem addWishList(Integer userId, Integer productId);
 
     boolean deleteWishlist(Integer userId, Integer productId);
 

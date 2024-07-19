@@ -21,6 +21,73 @@
             border: 1px solid #dee2e6;
             padding: 6px 12px;
         }
+        .product-element-top {
+            position: relative;
+        }
+
+        .product-element-top .btn-buy {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%) translateY(100%);
+            opacity: 0;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .product-element-top:hover .btn-buy {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .btn-buy a {
+            --color: #66b840;
+            font-family: inherit;
+            display: inline-block;
+            width: 8em;
+            height: 2.6em;
+            cursor: pointer;
+            line-height: 2.5em;
+            margin: 20px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--color);
+            transition: color .5s;
+            z-index: 1;
+            font-size: 17px;
+            border-radius: 6px;
+            font-weight: 500;
+            color: var(--color);
+        }
+
+        .btn-buy a:before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            background: var(--color);
+            height: 150px;
+            width: 200px;
+            border-radius: 50%;
+        }
+
+        .btn-buy a:hover {
+            color: #fff;
+        }
+
+        .btn-buy a:before {
+            top: 100%;
+            left: 100%;
+            transition: all .7s;
+        }
+
+        .btn-buy a:hover:before {
+            top: -30px;
+            left: -30px;
+        }
+
+        .btn-buy a:active:before {
+            background: #ffa500;
+            transition: background 0s;
+        }
     </style>
 </head>
 <body>
@@ -169,6 +236,9 @@
                                                 <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">
                                                     <img src="${pageContext.request.contextPath}<%=entry.getValue().get(0)%>" alt="">
                                                 </a>
+                                                <div class="btn-buy">
+                                                    <a style="display: block;text-align: center"  href="${pageContext.request.contextPath}/user/checkout?id=<%=entry.getKey().getId()%>">Mua ngay</a>
+                                                </div>
                                             </div>
                                             <div class="product-element-bottom">
                                                 <a href="${pageContext.request.contextPath}/user/product?id=<%=entry.getKey().getId()%>">

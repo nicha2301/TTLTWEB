@@ -45,4 +45,7 @@ public interface IProductDAO extends GenericDAO<Product> {
 
     Map<Product, List<String>> getProductsLimit(Integer type_id, Integer limit);
 
+    boolean setQuantity(Integer id);
+
+    List<Product> getOutOfProducts();
 }
