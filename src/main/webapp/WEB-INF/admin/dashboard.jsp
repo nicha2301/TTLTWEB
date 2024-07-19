@@ -1,4 +1,3 @@
-
 <%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -21,6 +20,28 @@
     <link rel="stylesheet" href="/assets/admin/css/animate.min.css">
     <!-- Main CSS -->
     <link rel="stylesheet" href="/assets/admin/css/admin.css">
+    <style>
+        .btn-custom {
+            background-color: #7fad39;
+            border-color: #7fad39;
+            color: white;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover {
+            background-color: #7fad39;
+            color: #757575;
+        }
+        .btn-group {
+            margin: 10px 0;
+        }
+        .btn-group .btn {
+            margin: 5px;
+        }
+    </style>
 
 </head>
 
@@ -87,51 +108,23 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12 d-flex">
-                    <!-- Recent Bookings -->
-                    <div class="card card-table flex-fill">
-                        <div class="card-header">
-                            <h4 class="card-title">Đặt hàng gần đây</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-center">
-                                    <thead>
-                                    <tr>
-                                        <th>Tên khách hàng</th>
-                                        <th>Ngày đặt</th>
-                                        <th>Trạng thái</th>
-                                        <th>Tổng tiền</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-<%--                                    <c:forEach items="${orderlist}" var="ol">--%>
-<%--&lt;%&ndash;                                        <c:set var="totalPay" value="${ol.totalPay}"></c:set>&ndash;%&gt;--%>
-<%--                                        <tr>--%>
-<%--                                            <td>${ol.username}</td>--%>
-<%--                                            <td class="text-nowrap">${Util.formatTimestamp(ol.dateCreated)}</td>--%>
-<%--                                           <td>--%>
-<%--                                               <c:if test="${ol.status eq 1}"><span class="badge badge-info">Chờ Thanh Toán</span></c:if>--%>
-<%--                                               <c:if test="${ol.status eq 2}"><span class="badge badge-danger">Chờ vận chuyển</span></c:if>--%>
-<%--                                               <c:if test="${ol.status eq 3}"><span class="badge badge-warning">Chờ giao hàng</span></c:if>--%>
-<%--                                               <c:if test="${ol.status eq 4}"><span class="badge badge-dark"> Chờ đánh giá</span></c:if>--%>
-<%--                                               <c:if test="${ol.status eq 5}"><span class="badge badge-success">Đã huỷ</span></c:if>--%>
-<%--                                               <c:if test="${ol.status eq 6}"><span class="badge badge-success">Trả hàng/ Hoàn tiền</span></c:if>--%>
-<%--                                           </td>--%>
-<%--                                            <td>--%>
-<%--&lt;%&ndash;                                                <div class="font-weight-600"><%= Utils.formatCurrency((double)pageContext.getAttribute("totalPay")) %>VND</div>&ndash;%&gt;--%>
-<%--                                            </td>--%>
-
-<%--                                        </tr>--%>
-<%--                                    </c:forEach>--%>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+            <div class="row mb-4">
+                <div class="col-md-12 text-left">
+                    <div class="btn-group" role="group" aria-label="Dashboard Buttons">
+                        <button class="btn btn-custom mr-1" onclick="drawMonthlySalesChart()">Doanh thu theo tháng</button>
+                        <button class="btn btn-custom mr-1" onclick="drawOrderStatusCountsChart()">Số Lượng Đơn Hàng</button>
+                        <button class="btn btn-custom mr-1" onclick="drawTopSellingProductsChart()">Sản Phẩm Bán Chạy</button>
+                        <button class="btn btn-custom mr-1" onclick="drawCategoryRevenuesChart()">Doanh Thu Theo Danh Mục</button>
+                        <button class="btn btn-custom mr-1" onclick="drawNewUserRegistrationsChart()">Đăng Ký Người Dùng Mới</button>
+                        <button class="btn btn-custom mr-1" onclick="drawPaymentMethodRevenuesChart()">Doanh Thu Theo Phương Thức Thanh Toán</button>
+                        <button class="btn btn-custom mr-1" onclick="drawStockOverviewChart()">Tồn kho</button>
                     </div>
-                    <!-- /Recent Bookings -->
+                </div>
+            </div>
 
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="chart-container" style="width: 100%; height: 500px;"></div>
                 </div>
             </div>
         </div>
@@ -141,6 +134,155 @@
 
 <!-- jQuery -->
 <script src="/assets/admin/js/jquery-3.5.0.min.js"></script>
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script>
+    google.charts.load('current', {packages: ['corechart', 'bar']});
+    google.charts.setOnLoadCallback(drawCharts);
+
+    function drawCharts() {
+        drawMonthlySalesChart();
+    }
+
+    function drawMonthlySalesChart() {
+        const data = new google.visualization.DataTable();
+        data.addColumn('string', 'Tháng');
+        data.addColumn('number', 'Doanh thu');
+
+        const salesData = JSON.parse('${monthlySalesData}');
+        console.log(salesData);
+        salesData.forEach(item => {
+            data.addRow([item.month, item.totalSales]);
+        });
+
+        const options = {
+            title: 'Doanh thu hàng tháng',
+            hAxis: {title: 'Tháng'},
+            vAxis: {title: 'Doanh thu'}
+        };
+
+        const chart = new google.visualization.ColumnChart(document.getElementById('chart-container'));
+        chart.draw(data, options);
+    }
+
+    function drawOrderStatusCountsChart() {
+        const data = new google.visualization.DataTable();
+        data.addColumn('string', 'Trạng Thái');
+        data.addColumn('number', 'Số Lượng');
+
+        const statusData = JSON.parse('${orderStatusCountsData}');
+        statusData.forEach(item => {
+            data.addRow([item.statusName, item.count]);
+        });
+
+        const options = {
+            title: 'Số Lượng Theo Trạng Thái Đơn Hàng',
+            pieHole: 0.4
+        };
+
+        const chart = new google.visualization.PieChart(document.getElementById('chart-container'));
+        chart.draw(data, options);
+    }
+
+    function drawTopSellingProductsChart() {
+        const data = new google.visualization.DataTable();
+        data.addColumn('string', 'Sản Phẩm');
+        data.addColumn('number', 'Doanh Thu');
+
+        const productsData = JSON.parse('${topSellingProductsData}');
+        productsData.forEach(item => {
+            data.addRow([item.productName, item.totalSold]);
+        });
+
+        const options = {
+            title: 'Các Sản Phẩm Bán Chạy Nhất',
+            hAxis: {title: 'Sản Phẩm'},
+            vAxis: {title: 'Doanh Thu'}
+        };
+
+        const chart = new google.visualization.BarChart(document.getElementById('chart-container'));
+        chart.draw(data, options);
+    }
+
+    function drawCategoryRevenuesChart() {
+        const data = new google.visualization.DataTable();
+        data.addColumn('string', 'Danh Mục');
+        data.addColumn('number', 'Doanh Thu');
+
+        const categoryData = JSON.parse('${categoryRevenuesData}');
+        categoryData.forEach(item => {
+            data.addRow([item.categoryName, item.totalRevenue]);
+        });
+
+        const options = {
+            title: 'Doanh Thu Theo Danh Mục',
+            hAxis: {title: 'Danh Mục'},
+            vAxis: {title: 'Doanh Thu'}
+        };
+
+        const chart = new google.visualization.BarChart(document.getElementById('chart-container'));
+        chart.draw(data, options);
+    }
+
+    function drawNewUserRegistrationsChart() {
+        const data = new google.visualization.DataTable();
+        data.addColumn('string', 'Ngày');
+        data.addColumn('number', 'Đăng Ký');
+
+        const userData = JSON.parse('${newUserRegistrationsData}');
+        userData.forEach(item => {
+            data.addRow([item.month, item.newUsers]);
+        });
+
+        const options = {
+            title: 'Số Lượng Đăng Ký Người Dùng Mới',
+            hAxis: {title: 'Ngày'},
+            vAxis: {title: 'Số Lượng Đăng Ký'}
+        };
+
+        const chart = new google.visualization.LineChart(document.getElementById('chart-container'));
+        chart.draw(data, options);
+    }
+
+    function drawPaymentMethodRevenuesChart() {
+        const data = new google.visualization.DataTable();
+        data.addColumn('string', 'Phương Thức Thanh Toán');
+        data.addColumn('number', 'Doanh Thu');
+
+        const paymentData = JSON.parse('${paymentMethodRevenuesData}');
+        paymentData.forEach(item => {
+            data.addRow([item.paymentMethod, item.totalRevenue]);
+        });
+
+        const options = {
+            title: 'Doanh Thu Theo Phương Thức Thanh Toán',
+            pieHole: 0.4
+        };
+
+        const chart = new google.visualization.PieChart(document.getElementById('chart-container'));
+        chart.draw(data, options);
+    }
+
+    function drawStockOverviewChart() {
+        const data = new google.visualization.DataTable();
+        data.addColumn('string', 'Sản Phẩm');
+        data.addColumn('number', 'Kho');
+
+        const stockData = JSON.parse('${stockOverviewData}');
+        stockData.forEach(item => {
+            data.addRow([item.productName, item.stockQuantity]);
+        });
+
+        const options = {
+            title: 'Stock Overview',
+            hAxis: {title: 'Sản Phẩm'},
+            vAxis: {title: 'Số Lượng Kho'}
+        };
+
+        const chart = new google.visualization.BarChart(document.getElementById('chart-container'));
+        chart.draw(data, options);
+    }
+</script>
 
 <!-- Bootstrap Core JS -->
 <script src="/assets/admin/js/popper.min.js"></script>
