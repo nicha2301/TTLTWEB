@@ -47,7 +47,7 @@ public class OrderDAO extends AbsDAO<Order> implements IOrderDAO {
 
     @Override
     public Integer countSaleProducts(Integer productId) {
-        String sql = "SELECT SUM(quantity) FROM order_items WHERE product_id =? ";
+        String sql = "SELECT SUM(quantity) FROM order_items WHERE product_id = ?";
         return count(sql, productId);
     }
 
@@ -82,6 +82,14 @@ public class OrderDAO extends AbsDAO<Order> implements IOrderDAO {
                 " SELECT * FROM orders WHERE user_id = ?" +
                 ") AS o LEFT JOIN order_items i ON o.id = i.order_id";
         return queryForMap(sql, new OrderItemMapper(), true, userId);
+    }
+
+    public static void main(String[] args) {
+        Map<Order, List<OrderItem>> entry = OrderDAO.getInstance().loadOrderProductByUser(80);
+        for (Map.Entry<Order, List<OrderItem>> e : entry.entrySet()) {
+            System.out.println(e.getKey());
+            System.out.println(e.getValue());
+        }
     }
 
     @Override

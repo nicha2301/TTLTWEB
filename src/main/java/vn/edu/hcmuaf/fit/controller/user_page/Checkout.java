@@ -225,7 +225,7 @@ public class Checkout extends HttpServlet {
                     order.setNote("");
 
                     OrderStatus status = new OrderStatus();
-                    status.setId(1);
+                    status.setId(7);
                     order.setStatus(status);
 
                     List<OrderItem> items = new ArrayList<>();
