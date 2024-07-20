@@ -1,6 +1,7 @@
 <%@ page import="vn.edu.hcmuaf.fit.model.Product" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="vn.edu.hcmuaf.fit.model.User" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.WishlistItem" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/common/taglib.jsp" %>
 <html>
@@ -218,6 +219,7 @@
                                 <c:otherwise>
                                     <%
                                         Map<Product, List<String>> products = (Map<Product, List<String>>) request.getAttribute("product");
+                                        List<WishlistItem> wishlist = (List<WishlistItem>) session.getAttribute("wishlist");
                                         User user = (User) session.getAttribute("auth");
                                         if (products != null && !products.isEmpty()) {
                                             for (Map.Entry<Product, List<String>> entry : products.entrySet()) {
@@ -226,6 +228,14 @@
                                                     for (CartItem item : cart) {
                                                         if (item.getProduct().getId()==entry.getKey().getId() && item.getUser().getId()==user.getId()) {
                                                             remain = entry.getKey().getQuantity() - item.getQuantity();
+                                                        }
+                                                    }
+                                                }
+                                                boolean favorite = false;
+                                                if (user != null && wishlist != null && !wishlist.isEmpty()) {
+                                                    for (WishlistItem w : wishlist) {
+                                                        if (w.getProduct().getId().equals(entry.getKey().getId()) && w.getUser().getId().equals(user.getId())) {
+                                                            favorite = true;
                                                         }
                                                     }
                                                 }
@@ -271,10 +281,15 @@
                                                 </a>
                                             </div>
                                             <div class="wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon">
-                                                <a class="wd-tltp wd-tooltip-inited" href="" data-added-text="Browse Wishlist">
-                                                        <span class="wd-tooltip-label">
-                                                            <i class="fa-regular fa-heart"></i>
-                                                        </span>
+                                                <a class="wd-tltp wd-tooltip-inited" href="javascript:void(0)" id="w<%=entry.getKey().getId()%>"
+                                                   data-added-text="Browse Wishlist" onclick="toggleWishlist(this, '<%=entry.getKey().getId()%>')">
+                                                    <span class="wd-tooltip-label">
+                                                    <% if(favorite) {%>
+                                                        <i class="fa-solid fa-heart"></i>
+                                                    <%} else {%>
+                                                        <i class="fa-regular fa-heart"></i>
+                                                    <%}%>
+                                                    </span>
                                                 </a>
                                             </div>
                                         </div>
@@ -390,6 +405,66 @@
                         });
                         const badge = document.getElementById("badge");
                         badge.innerHTML = response.total;
+                    }
+                }
+            });
+        }
+        function toggleWishlist(element, productId) {
+            var icon = element.querySelector('i');
+
+            if (icon.classList.contains('fa-solid')) {
+                icon.classList.remove('fa-solid');
+                icon.classList.add('fa-regular');
+                removeFromWishlist(productId);
+            } else {
+                icon.classList.remove('fa-regular');
+                icon.classList.add('fa-solid');
+                addToWishlist(productId);
+            }
+        }
+        function addToWishlist(productId) {
+            $.ajax({
+                url: "${request.servletContext.contextPath}/user/wishlist",
+                method: "POST",
+                data: {
+                    productId: productId,
+                    action: "add"
+                },
+                success: function (response) {
+                    if (response.status === "success") {
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Thêm Vào Wishlist Thành Công!",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    } else {
+                        window.location.href = context + "/user/signin";
+                    }
+                }
+            });
+        }
+
+        function removeFromWishlist(productId) {
+            $.ajax({
+                url: "${request.servletContext.contextPath}/user/wishlist",
+                method: "POST",
+                data: {
+                    productId: productId,
+                    action: "remove"
+                },
+                success: function (response) {
+                    if (response.status === "success") {
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Xoá Khỏi Wishlist Thành Công!",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    } else {
+                        window.location.href = context + "/user/signin";
                     }
                 }
             });
