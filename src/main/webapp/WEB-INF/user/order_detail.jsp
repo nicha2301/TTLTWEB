@@ -128,7 +128,7 @@
                                     </div>
                                     </td>
                                 <td class="price"><%=Utils.formatCurrency((double) orderItem.getOrderPrice())%> VND</td>
-                                    <td class="quantity"><%=orderItem.getQuantity()%></td>
+                                <td class="quantity"><%=orderItem.getQuantity()%></td>
                                 <td class="raw-total"><%= Utils.formatCurrency((double) orderItem.getOrderPrice()*orderItem.getQuantity())%> VND</td>
                                 </tr>
                             <%
@@ -168,51 +168,56 @@
                         <a class="view-list-order" href="${pageContext.request.contextPath}/user/updateinfouser">Quay lại đơn hàng của tôi</a>
                         <c:if test="${status.id == 1 || status.id == 2 || status.id == 7}">
                             <button id="cancel" class="cancel-order" style="color: white; background-color: red;" onclick="confirmCancelOrder()">Hủy Đơn Hàng</button>
+                            <button id="rollback" class="cancel-order" style="color: white; background-color:green; display: none" onclick="confirmRollbackOrder()">Hoàn tác</button>
+                        </c:if>
+                        <c:if test="${status.id == 5}">
+                            <button id="cancel" class="cancel-order" style="color: white; background-color: red; display: none" onclick="confirmCancelOrder()">Hủy Đơn Hàng</button>
+                            <button id="rollback" class="cancel-order" style="color: white; background-color:green;" onclick="confirmRollbackOrder()">Hoàn tác</button>
                         </c:if>
                         <span id="error"></span>
                     </div>
                 </div>
             </div>
         </div>
+<%--            <div style="display: block;!important; opacity: unset" class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">--%>
+<%--                <div class="modal-dialog modal-dialog-centered" role="document">--%>
+<%--                    <div class="modal-content">--%>
+<%--                        <div class="modal-header">--%>
+<%--                            <h5 style="color:#7fad39 ;" class="modal-title" id="exampleModalLongTitle">Viết nhận xét</h5>--%>
+<%--                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">--%>
+<%--                                <span aria-hidden="true">&times;</span>--%>
+<%--                            </button>--%>
+<%--                        </div>--%>
+<%--                        <div class="modal-body">--%>
+<%--                            <div class="container-cm col-lg-12">--%>
+
+<%--                            <h5>ĐÁNH GIÁ SẢN PHẨM</h5>--%>
+<%--                            <form id="form-cm">--%>
+<%--                            <label for="sao">Đánh giá của bạn về sản phẩm này</label>--%>
+<%--                            <select id="sao" class="fullname-cm" name="star" >--%>
+<%--                                <option value="154" selected>😍 Rất tốt</option>--%>
+<%--                                <option value="155">😀 Tốt</option>--%>
+<%--                                <option value="156">🙂 Được</option>--%>
+<%--                                <option value="157">😐 Tệ </option>--%>
+<%--                                <option value="158">😌 Rất tệ</option>--%>
+<%--                            </select>--%>
+<%--                            <h6>Viết nhận xét của bạn vào bên dưới:</h6>--%>
+<%--                            <input id="feedback" class="message" type="text" name="message" placeholder="Hãy chia sẻ những điều bạn thích về sản phẩm này nhé!" style="background-color: white"><br>--%>
+<%--                            <label for="feedback">Thêm hình sản phẩm nếu có (tối đa 5 hình): </label> <button style="color: #ffffff;background-color:#5e6158;border-radius: 5px;" class="chonhinh">Chọn Hình</button> <br>--%>
+<%--                            <button type="button" class="submit-cm" name="submit-cm">Gửi Nhận Xét</button>--%>
+
+<%--                                            </form>--%>
+
+<%--                            </div>--%>
+<%--                            <div class="modal-footer">--%>
+<%--                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>--%>
+<%--                              <button type="button" class="btn btn-primary">Save changes</button>--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
+<%--                    </div>--%>
+<%--                </div>--%>
+<%--            </div>--%>
     </section>
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 style="color:#7fad39 ;" class="modal-title" id="exampleModalLongTitle">Viết nhận xét</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- <div class="container-cm col-lg-12"> -->
-
-                        <!-- <h5>ĐÁNH GIÁ SẢN PHẨM</h5> -->
-                        <!-- <form id="form-cm"> -->
-                        <!-- <label for="sao">Đánh giá của bạn về sản phẩm này</label> -->
-                        <select class="fullname-cm" name="star" >
-                            <option value="154" selected>😍 Rất tốt</option>
-                            <option value="155">😀 Tốt</option>
-                            <option value="156">🙂 Được</option>
-                            <option value="157">😐 Tệ </option>
-                            <option value="158">😌 Rất tệ</option>
-                        </select>
-                        <!-- <h6>Viết nhận xét của bạn vào bên dưới:</h6> -->
-                        <input id="feedback" class="message" type="text" name="message" placeholder="Hãy chia sẻ những điều bạn thích về sản phẩm này nhé!" style="background-color: white"><br>
-                        <label for="feedback">Thêm hình sản phẩm nếu có (tối đa 5 hình): </label> <button style="color: #ffffff;background-color:#5e6158;border-radius: 5px;" class="chonhinh">Chọn Hình</button> <br>
-                        <button type="button" class="submit-cm" name="submit-cm">Gửi Nhận Xét</button>
-                        <!--
-                                        </form> -->
-
-                        <!-- </div> -->
-                        <!-- <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                          <button type="button" class="btn btn-primary">Save changes</button>
-                        </div> -->
-                    </div>
-                </div>
-            </div>
-        </div>
     <%@include file="/WEB-INF/user/include/footer.jsp" %>
 </div>
 <script src="/assets/user/js/thuvien/jquery-3.3.1.min.js"></script>
@@ -237,7 +242,8 @@
             type: "POST",
             url: url,
             data: {
-                id: orderId
+                id: orderId,
+                action: "cancel"
             },
             success: function(response) {
                 if (response.status === "empty") {
@@ -246,6 +252,7 @@
                     window.location.href = context + "/user/signin";
                 } else {
                     const cancel = document.getElementById("cancel");
+                    const rollback = document.getElementById("rollback");
                     Swal.fire({
                         position: "center",
                         icon: "success",
@@ -254,7 +261,50 @@
                         timer: 1500
                     });
                     cancel.style.display = "none";
+                    rollback.style.display = "block";
                     $("#status").html("Đã huỷ");
+                }
+            },
+            error: function() {
+                alert("Lỗi: Không thể hủy đơn hàng.");
+            }
+        });
+    }
+    function confirmRollbackOrder() {
+        var confirmation = confirm("Bạn có chắc chắn muốn hoàn tác đơn hàng không?");
+        if (confirmation) {
+            rollbackOrder();
+        }
+    }
+    function rollbackOrder() {
+        var url = '${pageContext.request.contextPath}/user/order_detail';
+        var orderId = '${requestScope.order.id}';
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                id: orderId,
+                action: "rollback",
+                payment: '${payment.id}'
+            },
+            success: function(response) {
+                if (response.status === "empty") {
+                    $("#error").html(response.error);
+                } else if (response.status === "failed") {
+                    window.location.href = context + "/user/signin";
+                } else {
+                    const cancel = document.getElementById("cancel");
+                    const rollback = document.getElementById("rollback");
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Set status Thành Công!",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    cancel.style.display = "block";
+                    rollback.style.display = "none";
+                    $("#status").html(response.message);
                 }
             },
             error: function() {

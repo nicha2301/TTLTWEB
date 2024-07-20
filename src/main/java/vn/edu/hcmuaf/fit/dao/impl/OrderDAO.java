@@ -150,5 +150,9 @@ public class OrderDAO extends AbsDAO<Order> implements IOrderDAO {
         return update(sql, delivery, orderId);
     }
 
-
+    @Override
+    public List<Order> hasDatePayment(Integer orderId) {
+        String sql = "SELECT * FROM orders WHERE id = ? AND date_payment IS NOT NULL";
+        return query(sql, Order.class, orderId);
+    }
 }

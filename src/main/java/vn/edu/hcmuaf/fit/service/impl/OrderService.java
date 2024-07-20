@@ -113,6 +113,15 @@ public class OrderService extends LogDAO<Order> implements IOrderService {
     }
 
     @Override
+    public Order hasDatePayment(Order order) {
+        try {
+            return OrderDAO.getInstance().hasDatePayment(order.getId()).get(0);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
     public Map<Order, List<OrderItem>> insertOrders(Order order, List<OrderItem> orderItems, String ip, String address) {
         Map<Order, List<OrderItem>> re = new HashMap<>();
         try {

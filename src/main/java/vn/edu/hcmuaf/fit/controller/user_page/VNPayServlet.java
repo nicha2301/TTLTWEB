@@ -182,13 +182,13 @@ public class VNPayServlet extends HttpServlet {
                 for (Product p: products.keySet()) {
                     product = p;
                 }
-                if(quantity != 0) items.add(new OrderItem(order, product, product.getPrice(), quantity));
-                else items.add(new OrderItem(order, product, product.getPrice(), 1));
+                if(quantity != 0) items.add(new OrderItem(order, product,  quantity, product.getPrice()));
+                else items.add(new OrderItem(order, product, 1, product.getPrice()));
             } else {
                 for(CartItem i : cart) {
                     Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(i.getProduct(), ip, "/user/checkout");
                     for (Product p: products.keySet()) {
-                        items.add(new OrderItem(order, p, p.getPrice(), i.getQuantity()));
+                        items.add(new OrderItem(order, p, i.getQuantity(), p.getPrice()));
                     }
                 }
             }
