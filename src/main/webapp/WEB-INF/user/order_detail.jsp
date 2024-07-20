@@ -1,19 +1,12 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: DINHTUNG
-  Date: 09/12/2023
-  Time: 1:01 CH
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="vn.edu.hcmuaf.fit.model.*" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="vn.edu.hcmuaf.fit.service.impl.ProductService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/common/taglib.jsp" %>
-<%@ page import="vn.edu.hcmuaf.fit.model.Utils" %>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
-
     <link rel="stylesheet" href="/assets/user/css/thuvien/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="/assets/user/css/thuvien/font-awesome.min.css" type="text/css">
     <link rel="stylesheet" href="/assets/user/css/thuvien/elegant-icons.css" type="text/css">
@@ -30,18 +23,14 @@
           sizes="192x192" />
     <title>Chi tiết đơn hàng</title>
 </head>
-
 <body>
 <div class="website-wrapper">
     <%@include file="/WEB-INF/user/include/header.jsp" %>
-    <div class="page-title" style="
-            background-image: url(https://tienthangvet.vn/wp-content/uploads/title-tag-tien-thang-vet-tsd1.jpg);
-          ">
+    <div class="page-title" style="background-image: url(https://tienthangvet.vn/wp-content/uploads/title-tag-tien-thang-vet-tsd1.jpg);">
         <div class="container">
             <h1 class="title">Chi tiết đơn hàng</h1>
         </div>
     </div>
-
     <section class="follow spad">
         <%--    <c:set var="or" value="${order}"></c:set>--%>
         <div class="container">
@@ -49,39 +38,41 @@
                 <div class="col-lg">
                     <div class="Account__Style">
                         <div class="heading">
-                            <span>Chi tiết đơn hàng #${order.id}</span>
+                            <span>Chi tiết đơn hàng #${requestScope.order.id}</span>
                             <span class="split">-</span>
                             <span class="status">
-                             <c:if test="${order.status eq 'Chờ xử lý'}">
-                                  Chờ xử lý
-                                     </c:if>
-                                <c:if test="${order.status eq 'Bị từ chối'}">
-                                    Bị từ chối
-                                         </c:if>
-                                <c:if test="${order.status eq 'Đã hủy'}">
-                                    Đã hủy
-                                        </c:if>
-                                 <c:if test="${order.status eq 'Đang giao hàng'}">
-                                     Đang giao hàng
+                                <c:set var="status" value="${requestScope.order.status}" />
+                                <c:if test="${status.id == 1}">
+                                    Chờ thanh toán
+                                </c:if>
+                                 <c:if test="${status.id == 2}">
+                                    Chờ vận chuyển
+                                </c:if>
+                                 <c:if test="${status.id == 3}">
+                                    Chờ giao hàng
+                                </c:if>
+                                  <c:if test="${status.id == 5}">
+                                     Đã huỷ
                                  </c:if>
-                                        <c:if test="${order.status eq 'Giao hàng thành công'}">
-                                            Giao hàng thành công
-                                    </c:if>
+                                 <c:if test="${status.id == 6}">
+                                     Trả hàng/ Hoàn tiền
+                                 </c:if>
+                                 <c:if test="${status.id == 7}">
+                                    Chờ xử lý
+                                </c:if>
                             </span>
                         </div>
-                        <div class="created-date">Ngày đặt hàng: ${order.dateCreated}</div>
+                        <div class="created-date">Ngày đặt hàng: ${requestScope.order.dateCreated}</div>
                         <div class="styles_section-2">
                             <div class="styles_group_1">
                                 <div class="title">Địa chỉ người nhận</div>
                                 <div class="content">
-                                    <p class="name">${order.username}</p>
+                                    <p class="name">${requestScope.address.fullName}</p>
                                     <p class="address">
                                         <span>Địa chỉ: </span>
-                                        ${order.detailAddress}
+                                        ${requestScope.address.detailAddress}
                                     </p>
-                                    <p class="phone">
-                                        <span>Điện thoại: </span>0${order.phone}
-                                    </p>
+                                    <p class="phone"><span>Điện thoại: </span>${requestScope.address.phone}</p>
                                 </div>
                             </div>
                             <div class="styles_group_1">
@@ -93,13 +84,16 @@
                             <div class="styles_group_1">
                                 <div class="title">Hình thức thanh toán</div>
                                 <div class="content">
-                                    <c:if test="${order.payment}">
+                                    <c:set var="payment" value="${requestScope.order.payment}" />
+                                    <c:if test="${payment.id == 1}">
                                         <p class="">Tiền mặt</p>
                                     </c:if>
-                                    <c:if test="${not order.payment}">
+                                    <c:if test="${payment.id == 2}">
                                         <p class="">Momo</p>
                                     </c:if>
-
+                                    <c:if test="${payment.id == 3}">
+                                        <p class="">VNPay</p>
+                                    </c:if>
                                 </div>
                             </div>
                         </div>
@@ -113,52 +107,59 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach items="${p_list}" var="pl">
-                                            <c:set var="price" value="${pl.price}"></c:set>
-                                            <c:set var="total" value="${pl.total}"></c:set>
+                            <%
+                                String ip = request.getHeader("X-FORWARDED-FOR");
+                                if (ip == null) ip = request.getRemoteAddr();
+                                List<OrderItem> items = (List<OrderItem>) request.getAttribute("item");
+                                for (OrderItem orderItem : items) {
+                                    Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(orderItem.getProduct(), ip, "user/order_detail.jsp");
+                                    for(Map.Entry<Product, List<String>> product : products.entrySet()) {
+                                        Product prod = product.getKey();
+//                                        for (String img : product.getValue()) {
+                            %>
                             <tr>
                                 <td>
                                     <div class="product-item">
-                                        <img src="${pageContext.request.contextPath}/${pl.imageUrl}" alt="${pl.productName}">
+                                        <img src="${pageContext.request.contextPath}<%=product.getValue().get(0)%>" alt="<%=prod.getProductName()%>">
                                         <div class="product-info">
-                                            <a class="product-name" href="shop-detail?id=${pl.id}">${pl.productName}</a>
+                                            <a class="product-name" href="${pageContext.request.contextPath}/user/product?id=<%=prod.getId()%>"><%=prod.getProductName()%></a>
                                             <p class="product-seller">Cung cấp bởi Thú Y The Pet </p>
                                         </div>
                                     </div>
                                     </td>
-                                <td class="price"><%= Utils.formatCurrency((double) pageContext.getAttribute("price"))%> VND</td>
-                                    <td class="quantity">${pl.quantity}</td>
-                                <td class="raw-total"><%= Utils.formatCurrency((double) pageContext.getAttribute("total"))%>VND</td>
+                                <td class="price"><%=Utils.formatCurrency((double) orderItem.getOrderPrice())%> VND</td>
+                                    <td class="quantity"><%=orderItem.getQuantity()%></td>
+                                <td class="raw-total"><%= Utils.formatCurrency((double) orderItem.getOrderPrice()*orderItem.getQuantity())%> VND</td>
                                 </tr>
-                            </c:forEach>
+                            <%
+                                }
+                            }
+                            %>
                             </tbody>
                             <tfoot>
-                            <c:set var="sum" value="${sum}"></c:set>
-                            <c:set var="ship" value="${ship}"></c:set>
-                            <c:set var="total_money" value="${total_money}"></c:set>
                             <tr>
                                 <td colspan="4">
                                     <span>Tạm tính</span>
                                 </td>
-                                <td><%= Utils.formatCurrency((double) pageContext.getAttribute("sum"))%>VND</td>
+                                <td><%=Utils.formatCurrency((Integer) request.getAttribute("sum"))%>VND</td>
                             </tr>
                             <tr>
                                 <td colspan="4">
                                     <span>Phí vận chuyển</span>
                                 </td>
-                                <td><%= Utils.formatCurrency((double) pageContext.getAttribute("ship"))%>VND</td>
+                                <td><%= Utils.formatCurrency((double) request.getAttribute("ship"))%>VND</td>
                             </tr>
                             <tr>
                                 <td colspan="4">
                                     <span>Tổng cộng</span>
                                 </td>
                                 <td>
-                                    <span class="sum"><%= Utils.formatCurrency((double) pageContext.getAttribute("total_money"))%>VND</span>
+                                    <span class="sum"><%= Utils.formatCurrency((double) request.getAttribute("total_money"))%>VND</span>
                                 </td>
                             </tr>
                             </tfoot>
                         </table>
-                        <a class="view-list-order" href="updateinfouser">Quay lại đơn hàng của tôi</a>
+                        <a class="view-list-order" href="${pageContext.request.contextPath}/user/updateinfouser">Quay lại đơn hàng của tôi</a>
                         <button class="cancel-order" style="color: white; background-color: red;" onclick="confirmCancelOrder()">Hủy Đơn Hàng</button>
                     </div>
                 </div>
@@ -188,8 +189,8 @@
                             <option value="158">😌 Rất tệ</option>
                         </select>
                         <!-- <h6>Viết nhận xét của bạn vào bên dưới:</h6> -->
-                        <input class="message" type="text" name="message" placeholder="Hãy chia sẻ những điều bạn thích về sản phẩm này nhé!" style="background-color: white"><br>
-                        <label for="">Thêm hình sản phẩm nếu có (tối đa 5 hình): </label> <button style="color: #ffffff;background-color:#5e6158;border-radius: 5px;" class="chonhinh">Chọn Hình</button> <br>
+                        <input id="feedback" class="message" type="text" name="message" placeholder="Hãy chia sẻ những điều bạn thích về sản phẩm này nhé!" style="background-color: white"><br>
+                        <label for="feedback">Thêm hình sản phẩm nếu có (tối đa 5 hình): </label> <button style="color: #ffffff;background-color:#5e6158;border-radius: 5px;" class="chonhinh">Chọn Hình</button> <br>
                         <button type="button" class="submit-cm" name="submit-cm">Gửi Nhận Xét</button>
                         <!--
                                         </form> -->
@@ -227,7 +228,7 @@
 <script>
     function confirmCancelOrder() {
         // Kiểm tra trạng thái đơn hàng
-        var status = "${order.status}";
+        var status = "";
 
         // Nếu đơn hàng đang ở trạng thái "Đang giao hàng" hoặc "Giao hàng thành công", không cho phép hủy
         if (status === "Đang giao hàng" || status === "Giao hàng thành công") {
@@ -242,13 +243,10 @@
             }
         }
     }
-
     function cancelOrder() {
         // Thêm logic xử lý khi nút được nhấn
         // Ví dụ: hiển thị cảnh báo, gửi yêu cầu hủy đơn hàng, v.v.
     }
 </script>
-
 </body>
-
 </html>

@@ -252,7 +252,6 @@
                                     <th>Thời gian thanh toán</th>
                                     <th>Hình thức thanh toán</th>
                                     <th>Trạng thái đơn hàng</th>
-                                    <th>Hành động</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -291,40 +290,27 @@
                                         %>
                                             Chờ thanh toán
                                         <%
-                                        } else if (entry.getPayment().getId() == 2) {
+                                        } else if (entry.getStatus().getId() == 2) {
                                         %>
                                             Chờ vận chuyển
                                         <%
-                                        } else if (entry.getPayment().getId() == 3) {
+                                        } else if (entry.getStatus().getId() == 3) {
                                         %>
                                             Chờ giao hàng
-                                        <%
-                                        } else if (entry.getPayment().getId() == 4) {
-                                        %>
-                                            Chờ đánh giá
                                         <%
                                         } else if (entry.getStatus().getId() == 5) {
                                         %>
                                             Đã huỷ
                                         <%
-                                        } else if (entry.getPayment().getId() == 6) {
+                                        } else if (entry.getStatus().getId() == 6) {
                                         %>
                                             Trả hàng/ Hoàn tiền
                                         <%
-                                        } else if (entry.getPayment().getId() == 7) {
+                                        } else if (entry.getStatus().getId() == 7) {
                                         %>
                                             Chờ xử lý
                                         <%
                                         }
-                                        %>
-                                    </td>
-                                    <td>
-                                        <%
-                                            if (entry.getStatus().getId() == 1 || entry.getStatus().getId() == 5 || entry.getStatus().getId() == 7 || entry.getStatus().getId() == 2) {
-                                        %>
-                                        <a href="javascript:void(0);" onclick="cancelOrder(this)">X</a>
-                                        <%
-                                            }
                                         %>
                                     </td>
                                 </tr>
