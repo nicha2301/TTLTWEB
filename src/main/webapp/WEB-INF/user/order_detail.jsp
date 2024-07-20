@@ -40,7 +40,7 @@
                         <div class="heading">
                             <span>Chi tiết đơn hàng #${requestScope.order.id}</span>
                             <span class="split">-</span>
-                            <span class="status">
+                            <span id="status" class="status">
                                 <c:set var="status" value="${requestScope.order.status}" />
                                 <c:if test="${status.id == 1}">
                                     Chờ thanh toán
@@ -70,7 +70,7 @@
                                     <p class="name">${requestScope.address.fullName}</p>
                                     <p class="address">
                                         <span>Địa chỉ: </span>
-                                        ${requestScope.address.detailAddress}
+                                        ${requestScope.address.detailAddress}, ${requestScope.address.ward}, ${requestScope.address.district}, ${requestScope.address.province}
                                     </p>
                                     <p class="phone"><span>Điện thoại: </span>${requestScope.address.phone}</p>
                                 </div>
@@ -141,7 +141,13 @@
                                 <td colspan="4">
                                     <span>Tạm tính</span>
                                 </td>
-                                <td><%=Utils.formatCurrency((Integer) request.getAttribute("sum"))%>VND</td>
+                                <td><%=Utils.formatCurrency((double) request.getAttribute("sum"))%>VND</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <span>Giá giảm: </span>
+                                </td>
+                                <td><%=Utils.formatCurrency((double) request.getAttribute("retain"))%>VND</td>
                             </tr>
                             <tr>
                                 <td colspan="4">
@@ -160,7 +166,10 @@
                             </tfoot>
                         </table>
                         <a class="view-list-order" href="${pageContext.request.contextPath}/user/updateinfouser">Quay lại đơn hàng của tôi</a>
-                        <button class="cancel-order" style="color: white; background-color: red;" onclick="confirmCancelOrder()">Hủy Đơn Hàng</button>
+                        <c:if test="${status.id == 1 || status.id == 2 || status.id == 7}">
+                            <button id="cancel" class="cancel-order" style="color: white; background-color: red;" onclick="confirmCancelOrder()">Hủy Đơn Hàng</button>
+                        </c:if>
+                        <span id="error"></span>
                     </div>
                 </div>
             </div>
@@ -209,43 +218,49 @@
 <script src="/assets/user/js/thuvien/jquery-3.3.1.min.js"></script>
 <script src="/assets/user/js/thuvien/bootstrap.min.js"></script>
 <script src="/assets/user/js/thuvien/main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    var context = "${pageContext.request.contextPath}";
     function confirmCancelOrder() {
-        // Sử dụng hộp thoại xác nhận
         var confirmation = confirm("Bạn có chắc chắn muốn hủy đơn hàng không?");
-
-        // Nếu người dùng xác nhận, thực hiện hành động hủy đơn hàng
         if (confirmation) {
             cancelOrder();
         }
     }
-
     function cancelOrder() {
-        // Thêm logic xử lý khi nút được nhấn
-        // Ví dụ: hiển thị cảnh báo, gửi yêu cầu hủy đơn hàng, v.v.
-    }
-</script>
-<script>
-    function confirmCancelOrder() {
-        // Kiểm tra trạng thái đơn hàng
-        var status = "";
-
-        // Nếu đơn hàng đang ở trạng thái "Đang giao hàng" hoặc "Giao hàng thành công", không cho phép hủy
-        if (status === "Đang giao hàng" || status === "Giao hàng thành công") {
-            alert("Không thể hủy đơn hàng ở trạng thái " + status);
-        } else {
-            // Nếu không ở trạng thái trên, hiển thị hộp thoại xác nhận
-            var confirmation = confirm("Bạn có chắc chắn muốn hủy đơn hàng không?");
-
-            // Nếu người dùng xác nhận, thực hiện hành động hủy đơn hàng
-            if (confirmation) {
-                cancelOrder();
+        var url = '${pageContext.request.contextPath}/user/order_detail';
+        var orderId = '${requestScope.order.id}';
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                id: orderId
+            },
+            success: function(response) {
+                if (response.status === "empty") {
+                    $("#error").html(response.error);
+                } else if (response.status === "failed") {
+                    window.location.href = context + "/user/signin";
+                } else {
+                    const cancel = document.getElementById("cancel");
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Set status Thành Công!",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    cancel.style.display = "none";
+                    $("#status").html("Đã huỷ");
+                }
+            },
+            error: function() {
+                alert("Lỗi: Không thể hủy đơn hàng.");
             }
-        }
-    }
-    function cancelOrder() {
-        // Thêm logic xử lý khi nút được nhấn
-        // Ví dụ: hiển thị cảnh báo, gửi yêu cầu hủy đơn hàng, v.v.
+        });
     }
 </script>
 </body>

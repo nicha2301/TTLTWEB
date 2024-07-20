@@ -6,14 +6,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import vn.edu.hcmuaf.fit.model.DeliveryAddress;
-import vn.edu.hcmuaf.fit.model.Order;
-import vn.edu.hcmuaf.fit.model.OrderItem;
-import vn.edu.hcmuaf.fit.model.User;
+import vn.edu.hcmuaf.fit.model.*;
 import vn.edu.hcmuaf.fit.service.impl.DeliveryService;
 import vn.edu.hcmuaf.fit.service.impl.OrderService;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,11 +51,12 @@ public class OrderDetailServlet extends HttpServlet {
                     Integer sum = OrderService.getInstance().getOrderPriceHasVoucher(o);
                     if (sum == null) sum = OrderService.getInstance().getOrderPriceNotVoucher(o);
 
-                    double ship = re - sum;
+                    double ship = 20000.0;
 
-                    request.setAttribute("sum", sum);
+                    request.setAttribute("sum", re);
+                    request.setAttribute("retain", re - sum);
                     request.setAttribute("ship", ship);
-                    request.setAttribute("total_money", re);
+                    request.setAttribute("total_money", sum + ship);
 
                     request.getRequestDispatcher(request.getServletContext().getContextPath() + "/WEB-INF/user/order_detail.jsp").forward(request, response);
                 } catch (NumberFormatException e) {
@@ -71,6 +70,34 @@ public class OrderDetailServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+
+        String ip = request.getHeader("X-FORWARDED-FOR");
+        if (ip == null) ip = request.getRemoteAddr();
+
+        PrintWriter out = response.getWriter();
+        HttpSession session = request.getSession(true);
+        User user = (User) session.getAttribute("auth");
+        if (user == null) {
+            out.write("{\"status\": \"failed\"}");
+            out.close();
+            return;
+        }
+        String id = request.getParameter("id");
+        if (id != null && !id.isEmpty()) {
+            Order order = new Order();
+            order.setId(Integer.parseInt(id));
+            OrderStatus status = new OrderStatus();
+            status.setId(5);
+            order.setStatus(status);
+            OrderService.getInstance().updateOrderStatus(order, ip, "/user/order_detail");
+            out.write("{\"status\": \"success\"}");
+        } else {
+            out.write("{ \"status\": \"empty\", \"error\": \"Order ID is missing.\"}");
+        }
+        out.flush();
+        out.close();
     }
 }
