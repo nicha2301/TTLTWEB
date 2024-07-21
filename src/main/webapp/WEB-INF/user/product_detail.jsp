@@ -429,7 +429,6 @@
                                                                  data-widget_type="text-editor.default">
                                                                 <div class="elementor-widget-container">
                                                                     <h2>Bình luận sản phẩm</h2>
-                                                                    <!-- Nội dung bình luận sẽ được chèn vào đây -->
                                                                     <div class="fb-comments"
                                                                          data-href="https://tienthangvet.vn/?id=<%=request.getParameter("id")%>"
                                                                          data-width="1100" data-numposts="5">
@@ -461,13 +460,22 @@
                                                                  data-widget_type="text-editor.default">
                                                                 <div class="elementor-widget-container">
                                                                     <h2>Đánh giá sản phẩm</h2>
-                                                                    <!-- Nội dung bình luận sẽ được chèn vào đây -->
+                                                                    <c:choose>
+                                                                        <c:when test="${not empty sessionScope.comment}">
+                                                                            <c:forEach var="cmt" items="${sessionScope.comment}">
+                                                                                <br><span id="content">#${cmt.user.id}: ${cmt.content}</span><br>
+                                                                            </c:forEach>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <p id="empty">Chưa có đánh giá nào.</p>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                    <span id="content"></span>
                                                                     <div id="comments-section">
-                                                                        <p>Chưa có đánh giá nào.</p>
-                                                                        <!-- Form để thêm bình luận -->
+<%--                                                                        <p id="empty"></p>--%>
                                                                         <form id="comment-form">
                                                                             <textarea id="comment-text" rows="4" placeholder="Viết đánh giá..."></textarea>
-                                                                            <button type="submit">Gửi</button>
+                                                                            <button id="comment" type="submit">Gửi</button>
                                                                         </form>
                                                                     </div>
                                                                 </div>
@@ -880,6 +888,34 @@
             }
         });
     }
+</script>
+<script type="text/javascript">
+    var context = "${pageContext.request.contextPath}";
+    $(document).ready(function() {
+        $('#comment').click(function (event) {
+            event.preventDefault();
+            var content = $('#comment-text').val();
+
+            $.ajax({
+                type: 'POST',
+                data: {
+                    content: content,
+                    productId: '${prod.id}'
+                },
+                url: "${request.servletContext.contextPath}/user/product",
+                success: function (result) {
+                   if (result.status === "failed") {
+                       window.location.href = context + "/user/signin";
+                   } else if(result.status === "empty") {
+                       alert(result.message);
+                   } else {
+                      document.getElementById('content').innerHTML += "<br>" + result.message + "<br>";
+                      $('#empty').html("");
+                   }
+                },
+            });
+        });
+    });
 </script>
 <!-- Add jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
