@@ -47,13 +47,13 @@ public class OrderDAO extends AbsDAO<Order> implements IOrderDAO {
 
     @Override
     public Integer countSaleProducts(Integer productId) {
-        String sql = "SELECT SUM(quantity) FROM order_items WHERE product_id =? ";
+        String sql = "SELECT SUM(quantity) FROM order_items WHERE product_id = ?";
         return count(sql, productId);
     }
 
     @Override
     public Integer getOrderPriceHasVoucher(Integer orderId) {
-        String sql = "SELECT (SUM(i.quantity * i.order_price) - (d.sale_percent / 100.0 * SUM(i.quantity * i.order_price))) " +
+        String sql = "SELECT (SUM(i.quantity * i.order_price) - (d.sale_percent * SUM(i.quantity * i.order_price))) " +
                 "FROM orders o LEFT JOIN order_items i ON o.id = i.order_id " +
                 "LEFT JOIN discounts d ON o.discount_id = d.id WHERE o.id = ? GROUP BY o.id, d.sale_percent";
         return count(sql, orderId);
@@ -61,7 +61,9 @@ public class OrderDAO extends AbsDAO<Order> implements IOrderDAO {
 
     @Override
     public Integer getProfitOfProduct(Integer productId) {
-        String sql = "SELECT (SUM(i.quantity * i.order_price) - (SUM(i.quantity * i.order_price) - (d.sale_percent / 100.0 * SUM(i.quantity * i.order_price)))) " +
+        String sql = "SELECT (SUM(i.quantity * i.order_price) - (SUM(i.quantity * i.order_price) - (d.sale_percentSELECT (SUM(i.quantity * i.order_price) - (d.sale_percent * SUM(i.quantity * i.order_price))) \" +\n" +
+                "                \"FROM orders o LEFT JOIN order_items i ON o.id = i.order_id \" +\n" +
+                "                \"LEFT JOIN discounts d ON o.discount_id = d.id WHERE o.id = ? GROUP BY o.id, d.sale_percent * SUM(i.quantity * i.order_price)))) " +
                 "FROM orders o LEFT JOIN order_items i ON o.id = i.order_id " +
                 "LEFT JOIN discounts d ON o.discount_id = d.id " +
                 "WHERE o.id = ? GROUP BY o.id, d.sale_percent";
@@ -82,6 +84,14 @@ public class OrderDAO extends AbsDAO<Order> implements IOrderDAO {
                 " SELECT * FROM orders WHERE user_id = ?" +
                 ") AS o LEFT JOIN order_items i ON o.id = i.order_id";
         return queryForMap(sql, new OrderItemMapper(), true, userId);
+    }
+
+    public static void main(String[] args) {
+        Map<Order, List<OrderItem>> entry = OrderDAO.getInstance().loadOrderProductByUser(80);
+        for (Map.Entry<Order, List<OrderItem>> e : entry.entrySet()) {
+            System.out.println(e.getKey());
+            System.out.println(e.getValue());
+        }
     }
 
     @Override
@@ -140,5 +150,9 @@ public class OrderDAO extends AbsDAO<Order> implements IOrderDAO {
         return update(sql, delivery, orderId);
     }
 
-
+    @Override
+    public List<Order> hasDatePayment(Integer orderId) {
+        String sql = "SELECT * FROM orders WHERE id = ? AND date_payment IS NOT NULL";
+        return query(sql, Order.class, orderId);
+    }
 }

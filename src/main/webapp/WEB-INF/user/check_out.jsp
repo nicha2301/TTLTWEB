@@ -281,7 +281,7 @@
   });
 </script>
 <script>
-  document.getElementById("btn_vnpay").addEventListener("click", function () {
+  document.getElementById("btn_vnpay").addEventListener("click", function (event) {
     const fullName = document.getElementById("full_name").value;
     const phone = document.getElementById("phone").value;
     const address = document.getElementById("address").value;
@@ -296,19 +296,23 @@
     const price = parseFloat(priceText);
     const amount = Math.round(price);
 
-    const tinhText = document.getElementById('tinh').options[document.getElementById('tinh').selectedIndex].text;
-    const quanText = document.getElementById('quan').options[document.getElementById('quan').selectedIndex].text;
-    const phuongText = document.getElementById('phuong').options[document.getElementById('phuong').selectedIndex].text;
+    var tinhId = document.getElementById("tinh").value;
+    var quanId = document.getElementById("quan").value;
+    var phuongId = document.getElementById("phuong").value;
+
+    var tinhText = tinhId === "0" ? "" : $("#tinh option:selected").data('full-name');
+    var quanText = quanId === "0" ? "" : $("#quan option:selected").data('full-name');
+    var phuongText = phuongId === "0" ? "" : $("#phuong option:selected").data('full-name');
+    console.log(tinhText, quanText, phuongText)
 
     // Kiểm tra các trường thông tin có rỗng hay không
-    const fields = [fullName, phone, address, email, tinhText, quanText, phuongText, amount];
+    const fields = [fullName, phone, address, email, amount, tinhText, quanText, phuongText];
     const emptyField = fields.some(field => field === "" || field === undefined || field === null);
-
-    if (emptyField) {
+    if (emptyField || tinhText === "0" || quanText === "0" || phuongText === "0") {
+      event.preventDefault();
       document.getElementById('error').innerHTML = "Please fill in all information completely";
-      return; // Ngăn chặn việc gửi dữ liệu nếu có trường rỗng
+      return;
     }
-
     const data = {
       tinhText: tinhText,
       quanText: quanText,

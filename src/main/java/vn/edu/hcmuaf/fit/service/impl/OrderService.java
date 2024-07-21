@@ -1,6 +1,9 @@
 package vn.edu.hcmuaf.fit.service.impl;
 
-import vn.edu.hcmuaf.fit.dao.impl.*;
+import vn.edu.hcmuaf.fit.dao.impl.LevelDAO;
+import vn.edu.hcmuaf.fit.dao.impl.LogDAO;
+import vn.edu.hcmuaf.fit.dao.impl.OrderDAO;
+import vn.edu.hcmuaf.fit.dao.impl.OrderItemDAO;
 import vn.edu.hcmuaf.fit.model.*;
 import vn.edu.hcmuaf.fit.service.IOrderService;
 
@@ -104,6 +107,15 @@ public class OrderService extends LogDAO<Order> implements IOrderService {
     public Map<Order, List<OrderItem>> loadOrderNear(Integer limit) {
         try {
             return OrderDAO.getInstance().loadOrderNear(limit);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Order hasDatePayment(Order order) {
+        try {
+            return OrderDAO.getInstance().hasDatePayment(order.getId()).get(0);
         } catch (Exception e) {
             return null;
         }

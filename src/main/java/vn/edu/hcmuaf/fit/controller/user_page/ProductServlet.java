@@ -6,10 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import vn.edu.hcmuaf.fit.model.CartItem;
-import vn.edu.hcmuaf.fit.model.Product;
-import vn.edu.hcmuaf.fit.model.User;
-import vn.edu.hcmuaf.fit.model.Utils;
+import vn.edu.hcmuaf.fit.model.*;
 import vn.edu.hcmuaf.fit.service.impl.ProductService;
 
 import java.io.IOException;
@@ -209,6 +206,7 @@ public class ProductServlet extends HttpServlet {
                     HttpSession session = request.getSession(true);
                     User user = (User) session.getAttribute("auth");
                     List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+                    List<WishlistItem> wishlist = (List<WishlistItem>) session.getAttribute("wishlist");
                     if (products != null && !products.isEmpty()) {
                         for (Map.Entry<Product, List<String>> entry : products.entrySet()) {
                             int remain = entry.getKey().getQuantity();
@@ -219,12 +217,23 @@ public class ProductServlet extends HttpServlet {
                                     }
                                 }
                             }
+                            boolean favorite = false;
+                            if (user != null && wishlist != null && !wishlist.isEmpty()) {
+                                for (WishlistItem w : wishlist) {
+                                    if (w.getProduct().getId().equals(entry.getKey().getId()) && w.getUser().getId().equals(user.getId())) {
+                                        favorite = true;
+                                    }
+                                }
+                            }
                             data += "<div class=\"item\">\n" +
                                     "       <div>\n" +
                                     "           <div class=\"product-element-top\">\n" +
                                     "               <a href=\"" + request.getServletContext().getContextPath() + "/user/product?id=" + entry.getKey().getId() + "\">\n" +
                                     "                   <img src=\"" + request.getServletContext().getContextPath() + entry.getValue().get(0) + "\" alt=\"\">\n" +
                                     "               </a>\n" +
+                                    "               <div class=\"btn-buy\">\n" +
+                                    "                   <a style=\"display: block;text-align: center\"  href=\"" + request.getServletContext().getContextPath() + "/user/checkout?id=" + entry.getKey().getId() + "\">Mua ngay</a>" +
+                                    "               </div>\n" +
                                     "           </div>\n" +
                                     "           <div class=\"product-element-bottom\">\n" +
                                     "               <a href=\"" + request.getServletContext().getContextPath() + "/user/product?id=" + entry.getKey().getId() + "\">\n" +
@@ -256,10 +265,15 @@ public class ProductServlet extends HttpServlet {
                                     "               </a>\n" +
                                     "           </div>\n" +
                                     "           <div class=\"wd-wishlist-btn wd-action-btn wd-style-icon wd-wishlist-icon\">\n" +
-                                    "               <a class=\"wd-tltp wd-tooltip-inited\" href=\"\" data-added-text=\"Browse Wishlist\">\n" +
-                                    "                   <span class=\"wd-tooltip-label\">\n" +
-                                    "                       <i class=\"fa-regular fa-heart\"></i>\n" +
-                                    "                   </span>\n" +
+                                    "               <a class=\"wd-tltp wd-tooltip-inited\" href=\"javascript:void(0)\" id=\"w" + entry.getKey().getId() + "\"\n" +
+                                    "                       data-added-text=\"Browse Wishlist\" onclick=\"toggleWishlist(this, '" + entry.getKey().getId() + "')\">\n" +
+                                    "                   <span class=\"wd-tooltip-label\">\n";
+                                                        if (favorite) {
+                                                            data += "<i class=\"fa-solid fa-heart\"></i>\n";
+                                                        } else {
+                                                            data += "<i class=\"fa-regular fa-heart\"></i>\n";
+                                                        }
+                            data += "                   </span>\n" +
                                     "               </a>\n" +
                                     "           </div>\n" +
                                     "       </div>\n" +

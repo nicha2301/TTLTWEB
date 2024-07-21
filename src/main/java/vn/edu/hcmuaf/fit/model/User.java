@@ -33,7 +33,7 @@ public class User extends AbsModel implements Serializable {
      @Nested("role")
      Role role;
      Timestamp dateCreated;
-    
+
     @Nested("role")
     public Role getRole() {
         return role;

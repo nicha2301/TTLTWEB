@@ -5,6 +5,7 @@ import vn.edu.hcmuaf.fit.dao.impl.LevelDAO;
 import vn.edu.hcmuaf.fit.dao.impl.LogDAO;
 import vn.edu.hcmuaf.fit.model.DeliveryAddress;
 import vn.edu.hcmuaf.fit.model.Level;
+import vn.edu.hcmuaf.fit.model.Order;
 import vn.edu.hcmuaf.fit.model.User;
 import vn.edu.hcmuaf.fit.service.IDeliveryService;
 
@@ -24,6 +25,15 @@ public class DeliveryService extends LogDAO<DeliveryAddress> implements IDeliver
     public List<DeliveryAddress> loadAddressByUser(User user) {
         try {
             return DeliveryDAO.getInstance().loadAddressByUser(user.getId());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public DeliveryAddress loadAddressByOrder(Order order) {
+        try {
+            return DeliveryDAO.getInstance().loadAddressByOrder(order.getId()).get(0);
         } catch (Exception e) {
             return null;
         }

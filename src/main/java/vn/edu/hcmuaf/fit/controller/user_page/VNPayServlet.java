@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import vn.edu.hcmuaf.fit.controller.user_page.VNPayService.VnpayConfig;
+import vn.edu.hcmuaf.fit.controller.user_page.APIService.VnpayConfig;
 import vn.edu.hcmuaf.fit.model.*;
 import vn.edu.hcmuaf.fit.service.impl.*;
 
@@ -154,7 +154,7 @@ public class VNPayServlet extends HttpServlet {
             List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
             User user = (User) session.getAttribute("auth");
 
-            DeliveryAddress dev = new DeliveryAddress(user, fullName, phone, tinhText, quanText, phuongText, address, atHome.equals("on"), true);
+            DeliveryAddress dev = new DeliveryAddress(user, fullName, phone, tinhText, quanText, phuongText, homeNumber, atHome.equals("on"), true);
             DeliveryAddress delivery = DeliveryService.getInstance().addDeliveryAddress(dev, ip, "/user/checkout");
             Order order = new Order();
             order.setUser(user);
@@ -182,13 +182,13 @@ public class VNPayServlet extends HttpServlet {
                 for (Product p: products.keySet()) {
                     product = p;
                 }
-                if(quantity != 0) items.add(new OrderItem(order, product, product.getPrice(), quantity));
-                else items.add(new OrderItem(order, product, product.getPrice(), 1));
+                if(quantity != 0) items.add(new OrderItem(order, product,  quantity, product.getPrice()));
+                else items.add(new OrderItem(order, product, 1, product.getPrice()));
             } else {
                 for(CartItem i : cart) {
                     Map<Product, List<String>> products = ProductService.getInstance().getProductByIdWithSupplierInfo(i.getProduct(), ip, "/user/checkout");
                     for (Product p: products.keySet()) {
-                        items.add(new OrderItem(order, p, p.getPrice(), i.getQuantity()));
+                        items.add(new OrderItem(order, p, i.getQuantity(), p.getPrice()));
                     }
                 }
             }

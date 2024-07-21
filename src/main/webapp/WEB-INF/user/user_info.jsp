@@ -1,8 +1,6 @@
-<%@ page import="vn.edu.hcmuaf.fit.model.WishlistItem" %>
-<%@ page import="vn.edu.hcmuaf.fit.model.User" %>
-<%@ page import="vn.edu.hcmuaf.fit.model.Product" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="vn.edu.hcmuaf.fit.service.impl.ProductService" %>
+<%@ page import="vn.edu.hcmuaf.fit.model.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/common/taglib.jsp" %>
 <!DOCTYPE html>
@@ -250,48 +248,76 @@
                                 <thead>
                                 <tr>
                                     <th>Mã đơn hàng</th>
-                                    <th>Ngày mua</th>
-                                    <th>Thanh toán</th>
+                                    <th>Thời gian đặt hàng</th>
+                                    <th>Thời gian thanh toán</th>
+                                    <th>Hình thức thanh toán</th>
                                     <th>Trạng thái đơn hàng</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <c:forEach items="${order}" var="o">
-                                    <c:if test="${not (o.status eq 'Đã hủy' or o.status eq 'Bị từ chối')}">
-                                        <tr>
-                                            <td>
-                                                <a href="${pageContext.request.contextPath}/user/order_detail?id=${o.id}">${o.id}</a>
-                                            </td>
-                                            <td>${Util.formatTimestamp(o.dateCreated)}</td>
-                                            <td>
-                                                <c:if test="${o.payment}">
-                                                    Momo
-                                                </c:if>
-                                                <c:if test="${not o.payment}">
-                                                    Tiền Mặt
-                                                </c:if>
-                                            </td>
-                                            <td>
-                                                <c:if test="${o.status eq 'Chờ xử lý'}">
-                                                    Chờ xử lý
-                                                </c:if>
-                                                <c:if test="${o.status eq 'Bị từ chối'}">
-                                                    Bị từ chối
-                                                </c:if>
-                                                <c:if test="${o.status eq 'Đã hủy'}">
-                                                    Đã hủy
-                                                </c:if>
-                                                <c:if test="${o.status eq 'Đang giao hàng'}">
-                                                    Đang giao hàng
-                                                </c:if>
-                                                <c:if test="${o.status eq 'Giao hàng thành công'}">
-                                                    Giao hàng thành công
-                                                </c:if>
-                                            </td>
-                                        </tr>
-                                    </c:if>
-                                </c:forEach>
-
+                                <%
+                                    Map<Order, List<OrderItem>> orders = (Map<Order, List<OrderItem>>) request.getAttribute("order");
+                                    User user = (User) session.getAttribute("auth");
+                                    if (user != null && orders != null && !orders.isEmpty()) {
+                                        for (Order entry : orders.keySet()) {
+                                %>
+                                <tr>
+                                    <td>
+                                        <a href="${pageContext.request.contextPath}/user/order_detail?id=<%=entry.getId()%>"><%=entry.getId()%></a>
+                                    </td>
+                                    <td><%=entry.getDateCreated()%></td>
+                                    <td><%=entry.getDatePayment()==null?"":entry.getDatePayment()%></td>
+                                    <td>
+                                        <%
+                                            if (entry.getPayment().getId() == 1) {
+                                        %>
+                                            Tiền Mặt
+                                        <%
+                                            } else if (entry.getPayment().getId() == 3) {
+                                        %>
+                                            VNPay
+                                        <%
+                                            } else {
+                                        %>
+                                            Momo
+                                        <%
+                                            }
+                                        %>
+                                    </td>
+                                    <td>
+                                        <%
+                                            if (entry.getStatus().getId() == 1) {
+                                        %>
+                                            Chờ thanh toán
+                                        <%
+                                        } else if (entry.getStatus().getId() == 2) {
+                                        %>
+                                            Chờ vận chuyển
+                                        <%
+                                        } else if (entry.getStatus().getId() == 3) {
+                                        %>
+                                            Chờ giao hàng
+                                        <%
+                                        } else if (entry.getStatus().getId() == 5) {
+                                        %>
+                                            Đã huỷ
+                                        <%
+                                        } else if (entry.getStatus().getId() == 6) {
+                                        %>
+                                            Trả hàng/ Hoàn tiền
+                                        <%
+                                        } else if (entry.getStatus().getId() == 7) {
+                                        %>
+                                            Chờ xử lý
+                                        <%
+                                        }
+                                        %>
+                                    </td>
+                                </tr>
+                                <%
+                                    }
+                                }
+                                %>
                                 </tbody>
                             </table>
                         </div>
@@ -301,7 +327,6 @@
     <div class="container" id="container">
         <%
             List<WishlistItem> wishlist = (List<WishlistItem>) session.getAttribute("wishlist");
-            User user = (User) session.getAttribute("auth");
             String ip = request.getHeader("X-FORWARDED-FOR");
             if (ip == null) ip = request.getRemoteAddr();
             if(user!=null && wishlist !=null && !wishlist.isEmpty()) {

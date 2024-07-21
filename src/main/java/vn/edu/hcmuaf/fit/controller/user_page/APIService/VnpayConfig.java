@@ -1,4 +1,4 @@
-package vn.edu.hcmuaf.fit.controller.user_page.VNPayService;
+package vn.edu.hcmuaf.fit.controller.user_page.APIService;
 
 import jakarta.servlet.http.HttpServletRequest;
 

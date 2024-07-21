@@ -40,4 +40,6 @@ public interface IOrderService {
     boolean updateDelivery(Order order, String ip, String address);
 
     Order getOrderStatus(Order od);
+
+    Order hasDatePayment(Order order);
 }

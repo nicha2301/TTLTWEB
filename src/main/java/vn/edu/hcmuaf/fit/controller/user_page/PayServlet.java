@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import vn.edu.hcmuaf.fit.model.Order;
 import vn.edu.hcmuaf.fit.model.OrderItem;
+import vn.edu.hcmuaf.fit.model.OrderStatus;
 import vn.edu.hcmuaf.fit.service.impl.OrderService;
 
 import java.io.IOException;
@@ -42,6 +43,10 @@ public class PayServlet extends HttpServlet {
                     for (Order order : map.keySet()) {
                         boolean success = OrderService.getInstance().updateTimePayment(order, formattedDate, ip, "user/success");
                         if (success) {
+                            OrderStatus status = new OrderStatus();
+                            status.setId(2);
+                            order.setStatus(status);
+                            OrderService.getInstance().updateOrderStatus(order, ip, "user/success");
                             session.removeAttribute("orders");
                         }
                         break;

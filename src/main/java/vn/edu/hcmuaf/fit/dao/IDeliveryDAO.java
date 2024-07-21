@@ -3,6 +3,7 @@ package vn.edu.hcmuaf.fit.dao;
 import vn.edu.hcmuaf.fit.model.DeliveryAddress;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IDeliveryDAO extends GenericDAO<DeliveryAddress> {
 
@@ -18,4 +19,5 @@ public interface IDeliveryDAO extends GenericDAO<DeliveryAddress> {
 
     boolean deleteDeliveryAddress(Integer userId, Integer addressId);
 
+    List<DeliveryAddress> loadAddressByOrder(Integer id);
 }

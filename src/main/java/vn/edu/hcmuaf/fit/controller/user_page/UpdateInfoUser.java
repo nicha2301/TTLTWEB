@@ -6,8 +6,11 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import org.mindrot.jbcrypt.BCrypt;
+import vn.edu.hcmuaf.fit.model.Order;
+import vn.edu.hcmuaf.fit.model.OrderItem;
 import vn.edu.hcmuaf.fit.model.User;
 import vn.edu.hcmuaf.fit.model.Utils;
+import vn.edu.hcmuaf.fit.service.impl.OrderService;
 import vn.edu.hcmuaf.fit.service.impl.UserService;
 
 import java.io.File;
@@ -18,6 +21,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @WebServlet("/user/updateinfouser")
 @MultipartConfig
@@ -36,6 +41,8 @@ public class UpdateInfoUser extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/user/signIn.jsp").forward(request, response);
             return;
         }
+        Map<Order, List<OrderItem>> orders = OrderService.getInstance().loadOrderProductByUser(user);
+        request.setAttribute("order", orders);
         request.getRequestDispatcher("/WEB-INF/user/user_info.jsp").forward(request, response);
     }
 

@@ -19,6 +19,7 @@ import java.util.Map;
 @WebServlet("/user/product")
 public class ProductDetailsServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private static final String JSP_PATH = "http://localhost:8080/WEB-INF/user/product_detail.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -61,6 +62,7 @@ public class ProductDetailsServlet extends HttpServlet {
                 }
                 Map<Product, List<String>> similar = ProductService.getInstance().getAllProducts();
                 request.setAttribute("products", similar);
+                request.setAttribute("commentURL",  JSP_PATH + "?id=" + id);
                 request.getRequestDispatcher("/WEB-INF/user/product_detail.jsp").forward(request, response);
             } catch (Exception e) {
                 out.println(e.getLocalizedMessage());
