@@ -7,9 +7,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import vn.edu.hcmuaf.fit.model.CartItem;
+import vn.edu.hcmuaf.fit.model.Comment;
 import vn.edu.hcmuaf.fit.model.Product;
 import vn.edu.hcmuaf.fit.model.User;
+import vn.edu.hcmuaf.fit.service.impl.CommentService;
 import vn.edu.hcmuaf.fit.service.impl.ProductService;
+import vn.edu.hcmuaf.fit.service.impl.UserService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -76,8 +79,38 @@ public class ProductDetailsServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
-        out.println("POST method not allowed for this servlet");
+
+        HttpSession session = request.getSession(true);
+        User user = (User) session.getAttribute("auth");
+        if (user == null) {
+            out.write("{\"status\": \"failed\"}");
+            return;
+        }
+        String ip = request.getHeader("X-FORWARDED-FOR");
+        if (ip == null) ip = request.getRemoteAddr();
+
+        String content = request.getParameter("content");
+        String productId = request.getParameter("productId");
+        if (content == null || content.isEmpty()) {
+            out.write("{\"status\": \"empty\", \"message\": \"Khong dc de trong\" }");
+        } else {
+            Product p = new Product(Integer.parseInt(productId));
+            Comment comment = new Comment();
+            comment.setContent(content);
+            comment.setProduct(p);
+            comment.setUser(user);
+            Comment success = CommentService.getInstance().addComment(comment, ip, "/user/product");
+            if (success != null) {
+                session.setAttribute("comment", CommentService.getInstance().getCommentsByProduct(p));
+                out.write("{\"status\": \"success\", \"message\": \""+("#" + success.getUser().getId()  + ": " + success.getContent())+"\"}");
+            } else {
+                out.write("{\"status\": \"empty\", \"message\": \"Insert into database failed!\" }");
+            }
+        }
         out.flush();
         out.close();
     }

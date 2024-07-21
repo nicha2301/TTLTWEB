@@ -17,6 +17,22 @@ public class Utils {
         return formattedPrice.trim();
     }
 
+    public static String convertDateFormat(Timestamp inputDate) {
+        // Kiểm tra inputDate có null không
+        if (inputDate == null) {
+            return null;
+        }
+
+        // Tạo đối tượng SimpleDateFormat để định dạng ngày tháng
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+        // Sử dụng Timestamp để lấy Date
+        Date date = new Date(inputDate.getTime());
+
+        // Định dạng Date và trả về kết quả dưới dạng chuỗi
+        return outputFormat.format(date);
+    }
+
     public static int convertToInt(String price) {
         String cleaner = price.replace(".", "").trim();
         return Integer.parseInt(cleaner);
