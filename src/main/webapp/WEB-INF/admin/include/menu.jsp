@@ -75,7 +75,7 @@
                 <li class="submenu">
                     <a href="#"><i class="fas fa-users"></i><span>Người dùng</span> <span class="menu-arrow"></span></a>
                     <ul style="display: none;">
-                        <li><a href="users"
+                        <li><a href="user"
                                <c:if test="${current_page=='users'}">class="active"</c:if>>Khách hàng</a></li>
                         <li><a href="list-admin"
                                <c:if test="${current_page=='admin-list'}">class="active"</c:if>>Danh sách admin</a></li>

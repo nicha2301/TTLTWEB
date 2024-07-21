@@ -12,15 +12,15 @@
     <title>${title}</title>
     <link rel="icon" href="https://tienthangvet.vn/wp-content/uploads/cropped-favicon-Tien-Thang-Vet-192x192.png"
           sizes="192x192" />
-    <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/admin/plugins/bootstrap/css/bootstrap.min.css">
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
-    <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/admin/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/assets/admin/plugins/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/assets/admin/css/font-awesome.min.css">
     <!-- Animate CSS -->
-    <link rel="stylesheet" href="assets/css/animate.min.css">
+    <link rel="stylesheet" href="/assets/admin/css/animate.min.css">
     <!-- Main CSS -->
-    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="/assets/admin/css/admin.css">
 
 </head>
 <body>
@@ -112,11 +112,11 @@
     </div>
 </div>
 <!-- jQuery -->
-<script src="assets/js/jquery-3.5.0.min.js"></script>
+<script src="/assets/admin/js/jquery-3.5.0.min.js"></script>
 <!-- Bootstrap Core JS -->
-<script src="assets/js/popper.min.js"></script>
-<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assets/admin/js/popper.min.js"></script>
+<script src="/assets/admin/plugins/bootstrap/js/bootstrap.min.js"></script>
 <!-- Custom JS -->
-<script src="assets/js/admin.js"></script>
+<script src="/assets/admin/js/admin.js"></script>
 </body>
 </html>

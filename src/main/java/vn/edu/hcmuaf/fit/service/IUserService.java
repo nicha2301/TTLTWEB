@@ -28,7 +28,7 @@ public interface IUserService {
 
     Integer sumOfUsers();
 
-    boolean updateUserInAdmin(User user, String email, String name, String birthday, String detail_address, Timestamp dateCreated, String ip, String address);
+    boolean updateUserInAdmin(User user, String ip, String address);
 
     boolean updateUserById(User user, String name, String phone, String email, String detail_address, String ip, String address);
 

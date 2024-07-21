@@ -2,8 +2,10 @@ package vn.edu.hcmuaf.fit.dao.impl;
 
 import org.mindrot.jbcrypt.BCrypt;
 import vn.edu.hcmuaf.fit.dao.IUserDAO;
+import vn.edu.hcmuaf.fit.model.Role;
 import vn.edu.hcmuaf.fit.model.User;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -139,15 +141,22 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
         return count(sql);
     }
 
+
+
     /**
      * TESTED
      * Updates a user's information in the database for admin panel.
      */
+
+
     @Override
-    public boolean updateUserInAdmin(Integer id, String email, String name, String birthday, String address, Timestamp dateCreated) {
-        String sql = "UPDATE users SET email = ?, fullName = ?, dateOfBirth = ?, detail_address = ?, date_created = ? WHERE id = ?";
-        return update(sql, email, name, birthday, address, dateCreated, id);
+    public boolean updateUserInAdmin(Integer id, String username, String email, String fullName, Date dateOfBirth, String city, String district, String ward, String detail_address, String phone, String avatar, Boolean verified, Integer role_id, Timestamp date_Created) {
+        String sql = "UPDATE users SET username = ?, email = ?, fullName = ?, dateOfBirth = ?, city = ?, district = ?, ward = ?, detail_address = ?, phone = ?, avatar = ?, verified = ?, role_id = ?, date_created = ? WHERE id = ?";
+        int verifiedInt = (verified != null && verified) ? 1 : 0;
+        return update(sql, username, email, fullName, dateOfBirth, city, district, ward, detail_address, phone, avatar, verifiedInt, role_id, date_Created, id);
     }
+
+
 
     /**
      * TESTED
@@ -168,5 +177,9 @@ public class UserDAO extends AbsDAO<User> implements IUserDAO {
         String sql = "DELETE FROM users WHERE id =?";
         return update(sql, userId);
     }
+
+
+
+
 
 }
