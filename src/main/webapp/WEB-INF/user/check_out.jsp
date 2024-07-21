@@ -109,7 +109,7 @@
             <div class="col-lg-6">
               <div class="checkout__input">
                 <p>Email<span>*</span></p>
-                <input class="form-control" type="email" id="email" name="email" required />
+                <input class="form-control" type="email" id="email" required />
               </div>
             </div>
             <div class="col-lg-6">
@@ -181,10 +181,10 @@
             </div>
             <span style="color:red; margin-top: 10px;" id="error"></span>
             <div>
-                <button id="btn_submit" type="submit"  class="site-btn">Đặt hàng</button>
+                <button type="submit" id="btn_submit" class="site-btn">Đặt hàng</button>
             </div>
             <div>
-              <button id="btn_vnpay" type="submit"  class="site-btn">Thanh toán ngay</button>
+              <button type="button" id="btn_vnpay" class="site-btn">Thanh toán ngay</button>
             </div>
           </div>
         </div>
@@ -281,8 +281,9 @@
   });
 </script>
 <script>
-  document.getElementById("btn_vnpay").addEventListener("click", function (event) {
+  function handleVnpayClick() {
     const fullName = document.getElementById("full_name").value;
+    console.log(fullName)
     const phone = document.getElementById("phone").value;
     const address = document.getElementById("address").value;
     const email = document.getElementById("email").value;
@@ -290,7 +291,6 @@
     const id = '${param.id}';
     const quantity = '${param.quantity}';
 
-    // Lấy giá trị price ngay tại thời điểm click
     const priceElement = document.getElementById('all');
     const priceText = priceElement.innerText.split(' ')[0];
     const price = parseFloat(priceText);
@@ -303,43 +303,39 @@
     var tinhText = tinhId === "0" ? "" : $("#tinh option:selected").data('full-name');
     var quanText = quanId === "0" ? "" : $("#quan option:selected").data('full-name');
     var phuongText = phuongId === "0" ? "" : $("#phuong option:selected").data('full-name');
-    console.log(tinhText, quanText, phuongText)
 
-    // Kiểm tra các trường thông tin có rỗng hay không
     const fields = [fullName, phone, address, email, amount, tinhText, quanText, phuongText];
     const emptyField = fields.some(field => field === "" || field === undefined || field === null);
     if (emptyField || tinhText === "0" || quanText === "0" || phuongText === "0") {
-      event.preventDefault();
       document.getElementById('error').innerHTML = "Please fill in all information completely";
       return;
     }
     const data = {
-      tinhText: tinhText,
-      quanText: quanText,
-      phuongText: phuongText,
-      vnp_OrderInfo: "Thanh toan don hang",
-      ordertype: "Sample order type",
-      amount: amount,
-      language: "vn",
-      txt_billing_mobile: phone,
-      txt_billing_email: email,
-      txt_billing_fullname: fullName,
-      txt_inv_addr1: address,
-      txt_bill_city: tinhText,
-      txt_bill_country: "Vietnam",
-      txt_bill_state: "HN",
-      txt_inv_mobile: phone,
-      txt_inv_email: email,
-      txt_inv_customer: '${sessionScope.auth.fullName}',
-      txt_inv_addr1: address,
-      txt_inv_company: "Cong Ty TNHH Thuong Mai va Dich Vu Phat Trien Tien Thang Pet",
-      txt_inv_taxcode: "123456789",
-      cbo_inv_type: "I",
-      atHome: atHome,
-      id: id,
-      quantity: quantity
+      tinhText:tinhText, // oke
+      quanText: quanText, // oke
+      phuongText: phuongText, // oke
+      vnp_OrderInfo: "Thanh toan don hang", // oke
+      ordertype: "Sample order type", // oke
+      amount: amount, // oke
+      language: "vn", // oke
+      txt_billing_mobile: phone, // oke
+      txt_billing_email: email, // oke
+      txt_billing_fullname: fullName, // oke
+      txt_inv_addr1: address, // chưa test
+      txt_bill_city: tinhText, // oke
+      txt_bill_country: "Vietnam", // oke
+      txt_bill_state: "HN", // oke
+      txt_inv_mobile: phone, // oke
+      txt_inv_email: email, // oke
+      txt_inv_customer: fullName, // oke
+      txt_inv_addr1: address, // chưa test
+      txt_inv_company: "Sample Company", // oke
+      txt_inv_taxcode: "123456789", // oke
+      cbo_inv_type: "I", // oke
+      atHome: atHome, // oke
+      id: id, // oke
+      quantity: quantity // oke
     };
-
     const formBody = Object.keys(data).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key])).join('&');
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "http://localhost:8080/user/vnpay", true);
@@ -355,7 +351,8 @@
       }
     };
     xhr.send(formBody);
-  });
+  }
+  document.getElementById("btn_vnpay").addEventListener("click", handleVnpayClick);
 </script>
 <script>
   $(document).ready(function() {
@@ -391,7 +388,6 @@
       });
     });
     function handleResponse(response) {
-      console.log(response);
       if (response.status === "success") {
         window.location.href = context + "/user/success";
       } else if(response.status === "failed") {

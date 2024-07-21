@@ -7,8 +7,6 @@ import vn.edu.hcmuaf.fit.model.Address;
 import vn.edu.hcmuaf.fit.model.Level;
 import vn.edu.hcmuaf.fit.service.IAddressService;
 
-import java.util.List;
-
 public class AddressService extends LogDAO<Address> implements IAddressService {
     private static IAddressService instance;
 
@@ -20,8 +18,16 @@ public class AddressService extends LogDAO<Address> implements IAddressService {
     }
 
     @Override
-    public List<Address> loadAddress() {
-        return AddressDAO.getInstance().loadAddress();
+    public Address loadAddress() {
+        try {
+            return AddressDAO.getInstance().loadAddress().get(0);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(AddressService.getInstance().loadAddress());
     }
 
     @Override

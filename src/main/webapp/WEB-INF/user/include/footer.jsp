@@ -22,7 +22,7 @@
                         <i aria-hidden="true" class="fas fa-map-marker-alt"></i>
                       </span>
                                     <span class="elementor-icon-list-text">
-                                         ${applicationScope.address.get(0).address}
+                                         ${applicationScope.address.address}
                                     </span>
                                 </a>
                             </li>
@@ -31,7 +31,7 @@
                       <span class="elementor-icon-list-icon">
                         <i aria-hidden="true" class="fas fa-phone-volume"></i>
                       </span>
-                                    <span class="elementor-icon-list-text"> NVKD SP gia súc - gia cầm: ${applicationScope.address.get(0).phone}</span>
+                                    <span class="elementor-icon-list-text"> NVKD SP gia súc - gia cầm: ${applicationScope.address.phone}</span>
                                 </a>
                             </li>
                             <li class="elementor-icon-list-item">
@@ -39,7 +39,7 @@
                       <span class="elementor-icon-list-icon">
                         <i aria-hidden="true" class="fas fa-headphones-alt"></i>
                       </span>
-                                    <span class="elementor-icon-list-text">Hotline: ${applicationScope.address.get(0).hotline}</span>
+                                    <span class="elementor-icon-list-text">Hotline: ${applicationScope.address.hotline}</span>
                                 </a>
                             </li>
                             <li class="elementor-icon-list-item">
@@ -47,7 +47,7 @@
                       <span class="elementor-icon-list-icon">
                         <i aria-hidden="true" class="far fa-envelope"></i>
                       </span>
-                                    <span class="elementor-icon-list-text"> Email: ${applicationScope.address.get(0).email}</span>
+                                    <span class="elementor-icon-list-text"> Email: ${applicationScope.address.email}</span>
                                 </a>
                             </li>
                             <li class="elementor-icon-list-item">
@@ -55,7 +55,7 @@
                       <span class="elementor-icon-list-icon">
                         <i aria-hidden="true" class="fas fa-map-marker-alt"></i>
                       </span>
-                                    <span class="elementor-icon-list-text"> Time Open: ${applicationScope.address.get(0).timeOpen}</span>
+                                    <span class="elementor-icon-list-text"> Time Open: ${applicationScope.address.timeOpen}</span>
                                 </a>
                             </li>
                         </ul>
@@ -112,7 +112,7 @@
                      data-widget_type="html.default">
                     <div class="elementor-widget-container">
                         <iframe
-                                src="${applicationScope.address.get(0).map}"
+                                src="${applicationScope.address.map}"
                                 width="100%" height="250" style="border: 0" allowfullscreen="" loading="lazy"></iframe>
                     </div>
                 </div>
