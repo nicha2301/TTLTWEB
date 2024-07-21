@@ -18,7 +18,7 @@ public class LoadAddress extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        List<Address> addresses = AddressService.getInstance().loadAddress();
+        Address addresses = AddressService.getInstance().loadAddress();
         getServletContext().setAttribute("address", addresses);
 
         SocialMedia socialMedia = SocialMediaService.getInstance().load();

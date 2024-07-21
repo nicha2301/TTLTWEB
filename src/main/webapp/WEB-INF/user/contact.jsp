@@ -20,7 +20,7 @@
     <div class="body">
         <div class="col-lg-12">
             <div class="map">
-                <iframe src="${applicationScope.address.get(0).map}"
+                <iframe src="${applicationScope.address.map}"
                     height="500" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
             </div>
             <!-- Map End -->
@@ -92,9 +92,9 @@
                                                         <div class="info-box-content">
                                                             <div class="info-box-inner"
                                                                  data-elementor-setting-key="content">
-                                                                <p><span style="color: #333333;"><strong>Địa chỉ:</strong></span> ${applicationScope.address.get(0).address}</p>
-                                                                <p><span style="color: #333333;"><strong>Điện thoại:</strong></span> ${applicationScope.address.get(0).phone}</p>
-                                                                <p><span style="color: #333333;"><strong>Email:</strong></span> ${applicationScope.address.get(0).email}</p>
+                                                                <p><span style="color: #333333;"><strong>Địa chỉ:</strong></span> ${applicationScope.address.address}</p>
+                                                                <p><span style="color: #333333;"><strong>Điện thoại:</strong></span> ${applicationScope.address.phone}</p>
+                                                                <p><span style="color: #333333;"><strong>Email:</strong></span> ${applicationScope.address.email}</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -111,9 +111,9 @@
                                                     <div class="wd-info-box ">
                                                         <div class="info-box-content">
                                                             <div class="info-box-inner ">
-                                                                <p><span style="color: #333333;"><strong>Hotline:</strong></span> ${applicationScope.address.get(0).hotline}</p>
+                                                                <p><span style="color: #333333;"><strong>Hotline:</strong></span> ${applicationScope.address.hotline}</p>
                                                                 <p><span style="color: #333333;"><strong>Thời gian hoạt động:</strong></span>
-                                                                <p>${applicationScope.address.get(0).timeOpen}</p>
+                                                                <p>${applicationScope.address.timeOpen}</p>
                                                             </div>
                                                         </div>
                                                     </div>

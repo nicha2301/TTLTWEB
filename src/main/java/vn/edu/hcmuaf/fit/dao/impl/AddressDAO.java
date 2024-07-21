@@ -22,7 +22,7 @@ public class AddressDAO extends AbsDAO<Address> implements IAddressDAO {
      */
     @Override
     public List<Address> loadAddress() {
-        String sql = "SELECT * FROM address";
+        String sql = "SELECT * FROM `address` WHERE is_main = 1";
         return query(sql, Address.class);
     }
 
@@ -68,6 +68,6 @@ public class AddressDAO extends AbsDAO<Address> implements IAddressDAO {
 
 
     public static void main(String[] args) {
-
+        System.out.println(AddressDAO.getInstance().loadAddress());
     }
 }

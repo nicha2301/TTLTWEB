@@ -175,10 +175,9 @@ public class Checkout extends HttpServlet {
             String tinh = request.getParameter("tinh");
             String quan = request.getParameter("quan");
             String phuong = request.getParameter("phuong");
-            System.out.println(tinh + " " + quan + " " + phuong);
 
             String address = request.getParameter("address");
-            boolean atHome = request.getParameter("atHome") != null;
+            boolean atHome = request.getParameter("atHome")==null? false: Boolean.parseBoolean(request.getParameter("atHome"));
 
             boolean ok = true;
             if ((fullName == null) || (fullName.equals(""))) {
@@ -209,6 +208,7 @@ public class Checkout extends HttpServlet {
                 if (user != null) {
                     DeliveryAddress dev = new DeliveryAddress(user, fullName, phone, tinh, quan, phuong, address, atHome, true);
                     DeliveryAddress delivery = DeliveryService.getInstance().addDeliveryAddress(dev, ip, "/user/checkout");
+
                     Order order = new Order();
                     order.setUser(user);
                     order.setAddress(delivery);
