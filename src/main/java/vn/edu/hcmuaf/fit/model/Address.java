@@ -19,5 +19,6 @@ public class Address extends AbsModel implements Serializable {
     String email;
     String timeOpen;
     String map;
+     Integer isMain;
 
 }
