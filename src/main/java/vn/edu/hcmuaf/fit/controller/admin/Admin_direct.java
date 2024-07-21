@@ -57,7 +57,7 @@ public class Admin_direct extends HttpServlet {
 
         request.setAttribute("user", user);
         request.setAttribute("users", users);
-        request.getRequestDispatcher("/WEB-INF/admin/add-admin.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/admin/list-admin.jsp").forward(request, response);
     }
 
     @Override
@@ -127,6 +127,8 @@ public class Admin_direct extends HttpServlet {
                     String formattedDateCreated = dateCreated.replace("T", " ");
                     user.setDateCreated(Timestamp.valueOf(formattedDateCreated));
                 }
+
+
 
                 boolean valid = username != null && email != null  && password != null;
 
