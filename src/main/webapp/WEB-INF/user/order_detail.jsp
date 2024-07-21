@@ -37,6 +37,7 @@
             <div class="row">
                 <div class="col-lg">
                     <div class="Account__Style">
+                        <button onclick="confirmdownloadPDF()">Download PDF</button>
                         <div class="heading">
                             <span>Chi tiết đơn hàng #${requestScope.order.id}</span>
                             <span class="split">-</span>
@@ -62,7 +63,9 @@
                                 </c:if>
                             </span>
                         </div>
-                        <div class="created-date">Ngày đặt hàng: ${requestScope.order.dateCreated}</div>
+                        <div class="created-date">
+                            Ngày đặt hàng: ${requestScope.order.dateCreated}
+                        </div>
                         <div class="styles_section-2">
                             <div class="styles_group_1">
                                 <div class="title">Địa chỉ người nhận</div>
@@ -227,6 +230,7 @@
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 <script>
     var context = "${pageContext.request.contextPath}";
     function confirmCancelOrder() {
@@ -311,6 +315,19 @@
                 alert("Lỗi: Không thể hủy đơn hàng.");
             }
         });
+    }
+</script>
+<script>
+    function confirmdownloadPDF() {
+        var confirmation = confirm("Bạn có chắc chắn muốn xuất đơn hàng không?");
+        if (confirmation) {
+            downloadPDF();
+        }
+    }
+    function downloadPDF() {
+        var url = '${pageContext.request.contextPath}/user/download';
+        var orderId = '${requestScope.order.id}';
+        window.location = url + "?id=" + orderId; // Redirect để tải file
     }
 </script>
 </body>
