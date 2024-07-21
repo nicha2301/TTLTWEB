@@ -359,7 +359,7 @@
         $(document).on('click', '.delete-supplier', function (event) {
             var id = $(this).data('id');
             var $supplierItem = $(this).closest('.supplier-item');
-            if (confirm('Bạn có chắc chắn muốn xóa san phẩm này không?')) {
+            if (confirm('Bạn có chắc chắn muốn xóa nhà cung cấp này không?')) {
                 $.ajax({
                     type: 'POST',
                     url: context + '/admin/supplier',

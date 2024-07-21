@@ -114,7 +114,6 @@ public class Product_direct extends HttpServlet {
 
                 if (valid && "edit".equals(action)) {
                     productService.updateProduct(product, ip, "admin/product");
-
                     jsonResponse.put("status", "success");
 
                 } else if (valid && "add".equals(action)) {

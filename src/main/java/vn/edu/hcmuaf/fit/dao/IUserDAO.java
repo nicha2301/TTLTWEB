@@ -2,6 +2,7 @@ package vn.edu.hcmuaf.fit.dao;
 
 import vn.edu.hcmuaf.fit.model.User;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public interface IUserDAO extends GenericDAO<User> {
 
     Integer sumOfUsers();
 
-    boolean updateUserInAdmin(Integer id, String email, String name, String birthday, String address, Timestamp dateCreated);
+    boolean updateUserInAdmin(Integer id, String  username, String email, String fullName, Date dateOfBirth,String city, String district, String ward,  String detail_address, String phone, String avatar, Boolean verified, Integer role_id , Timestamp dateCreated);
 
     boolean updateUserById(Integer id, String name, String phone, String email, String address);
 
