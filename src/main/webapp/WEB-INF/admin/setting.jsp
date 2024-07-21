@@ -48,7 +48,7 @@
                         <a class="nav-link">Thiết lập chung</a>
                     </li>
                     <li class="nav-item ">
-                        <a class="nav-link" href="setting-address">Địa chỉ</a>
+                        <a class="nav-link" href="list-address">Địa chỉ</a>
                     </li>
                 </ul>
             </ul>
