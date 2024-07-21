@@ -458,39 +458,6 @@ public class UserService extends LogDAO<User> implements IUserService {
         }
     }
 
-    public static void main(String[] args) {
-        User user = new User();
-        user.setId(76);
-        user.setUsername("testUser1");
-        user.setEmail("test@example.com");
-        user.setFullName("Test User");
-        user.setDateOfBirth(Date.valueOf("2000-01-01"));
-        user.setCity("City");
-        user.setDistrict("District");
-        user.setWard("Ward");
-        user.setDetail_address("Detail Address");
-        user.setPhone("1234567890");
-        user.setAvatar("avatar.png");
-        user.setVerified(false);
-        user.setRole(new Role(1));
-        user.setDateCreated(new Timestamp(System.currentTimeMillis()));
-
-        String ip = "127.0.0.1";
-        String address = "admin/user";
-        UserService  userService = new UserService();
-
-        // Cấu hình hành vi của các đối tượng mock
-
-
-        // Thực hiện phương thức kiểm thử
-        boolean result = userService.updateUserInAdmin(user, ip, address);
-
-        // Kiểm tra kết quả
-        if (result){
-            System.out.println("yes");
-    }else
-            System.out.println("no");
-    }
 
 
 }

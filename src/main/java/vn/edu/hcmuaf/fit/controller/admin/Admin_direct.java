@@ -17,8 +17,8 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
-@WebServlet(urlPatterns = "/admin/user")
-public class Users_direct extends HttpServlet {
+@WebServlet(urlPatterns = "/admin/list-admin")
+public class Admin_direct extends HttpServlet {
     private final UserService userService = (UserService) UserService.getInstance();
 
     @Override
@@ -27,8 +27,8 @@ public class Users_direct extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        request.setAttribute("current_page", "user");
-        request.setAttribute("title", "Quản lý người dùng");
+        request.setAttribute("current_page", "Admin");
+        request.setAttribute("title", "Quản lý Admin");
 
         String type = request.getParameter("type");
         String id = request.getParameter("id");
@@ -36,7 +36,7 @@ public class Users_direct extends HttpServlet {
         User user = new User();
 
         Role role = new Role();
-        role.setId(1);
+        role.setId(2);
         List<User> users = userService.loadUsersWithRole(role);
 
         if (type != null && !type.isEmpty()) {
@@ -57,7 +57,7 @@ public class Users_direct extends HttpServlet {
 
         request.setAttribute("user", user);
         request.setAttribute("users", users);
-        request.getRequestDispatcher("/WEB-INF/admin/users.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/admin/list-admin.jsp").forward(request, response);
     }
 
     @Override
@@ -72,6 +72,7 @@ public class Users_direct extends HttpServlet {
         String id = request.getParameter("id");
         String username = request.getParameter("username");
         String email = request.getParameter("email");
+        String password = request.getParameter("password");
         String fullName = request.getParameter("fullName");
         String dateOfBirth = request.getParameter("dateOfBirth");
         String city = request.getParameter("city");
@@ -87,12 +88,13 @@ public class Users_direct extends HttpServlet {
         String dateCreated = request.getParameter("dateCreated");
 
 
+
         String ip = request.getHeader("X-FORWARDED-FOR");
         if (ip == null) ip = request.getRemoteAddr();
 
         User user;
 
-        if ("edit".equals(action)) {
+        if ("edit".equals(action) || "add".equals(action)) {
             try {
                 user = new User();
                 if (id != null && !id.isEmpty()) {
@@ -104,6 +106,7 @@ public class Users_direct extends HttpServlet {
                 }
 
                 user.setUsername(username);
+                user.setPassword(password);
                 user.setEmail(email);
                 user.setFullName(fullName);
                 if (dateOfBirth != null && !dateOfBirth.isEmpty()) {
@@ -125,22 +128,20 @@ public class Users_direct extends HttpServlet {
                     user.setDateCreated(Timestamp.valueOf(formattedDateCreated));
                 }
 
-                boolean valid = username != null && email != null && fullName != null && role_id != null;
 
-                if (valid) {
+
+                boolean valid = username != null && email != null  && password != null;
+
+                if (valid && "edit".equals(action)) {
                     userService.updateUserInAdmin(user, ip, "admin/user");
                     jsonResponse.put("status", "success");
-                } else {
-                    jsonResponse.put("status", "error");
-                    jsonResponse.put("message", "Validation failed. Please check the input values.");
-
+                } else if (valid && "add".equals(action)) {
+                    userService.addAdmin(user, ip, "admin/user");
+                    jsonResponse.put("status", "success");
                 }
             } catch (NumberFormatException e) {
                 jsonResponse.put("error", "Invalid number format.");
                 System.out.println("Number format exception: " + e.getMessage());
-            } catch (Exception e) {
-                jsonResponse.put("error", "An unexpected error occurred.");
-                System.out.println("Exception: " + e.getMessage());
             }
         } else if ("delete".equals(action)) {
             try {
